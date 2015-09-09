@@ -1,37 +1,43 @@
 <?php
-class model_parcours extends abstract_model{
+class model_events extends abstract_model{
 	
-	protected $sClassRow='row_parcours';
+	protected $sClassRow='row_events';
 	
-	protected $sTable='parcours';
+	protected $sTable='events';
 	protected $sConfig='benevoleOmss';
 	
-	protected $tId=array('id');
+	protected $tId=array('idEvent');
 
 	public static function getInstance(){
 		return self::_getInstance(__CLASS__);
 	}
 
 	public function findById($uId){
-		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE id=?',$uId );
+		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idEvent=?',$uId );
 	}
 	public function findAll(){
 		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
-        
-        public function findOneParcour($iIdEvent){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE event_id=?',$iIdEvent);
+	
+	
+	public function getSelect(){
+		$tab=$this->findAll();
+		$tSelect=array();
+		if($tab){
+		foreach($tab as $oRow){
+			$tSelect[ $oRow->idEvent ]=$oRow->nomEvent;
+		}
+		}
+		return $tSelect;
 	}
 	
-	public function findByCheckSum($checksum){
-		return $this->findOne('SELECT count(*) AS NbCheckSum, label FROM '.$this->sTable.' WHERE checksum=?',$checksum );
-	}
+
 	
 }
 
-class row_parcours extends abstract_row{
+class row_events extends abstract_row{
 	
-	protected $sClassModel='model_parcours';
+	protected $sClassModel='model_events';
 	
 	/*exemple jointure 
 	public function findAuteur(){
@@ -39,9 +45,24 @@ class row_parcours extends abstract_row{
 	}
 	*/
 	/*exemple test validation*/
+        
+        public function __construct($tRow=null){
+            
+            parent::__construct($tRow);
+            
+            //on modifie le champ date avant d'initialiser l'objet
+            
+            if (is_null($tRow['date'])){
+                $tRow['date'] = date('Y-m-d',  time ());
+            }
+            $oDate = new plugin_date($tRow['date'],'Y-m-d');
+            $tRow['date'] = $oDate->toString('d/m/Y');           
+        }
+        
+        
 	private function getCheck(){
 		$oPluginValid=new plugin_valid($this->getTab());
-		$oPluginValid->isNotEmpty('label','Le champ ne doit pas &ecirc;tre vide');
+		
 		
 		/* renseigner vos check ici
 		$oPluginValid->isEqual('champ','valeurB','Le champ n\est pas &eacute;gal &agrave; '.$valeurB);
@@ -70,6 +91,12 @@ class row_parcours extends abstract_row{
 		if(!$this->isValid()){
 			return false;
 		}
+                
+                //on formate à la volée la date
+                
+                $oDate = new plugin_date($this->date,'d/m/Y');
+                $this->date = $oDate->toString('Y-m-d');
+               
 		parent::save();
 		return true;
 	}

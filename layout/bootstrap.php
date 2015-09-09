@@ -9,6 +9,9 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="./css/bootstrap.css">
     <link rel="stylesheet" href="./css/bootstrap-switch.min.css">
+    <link rel="stylesheet" href="./css/jquery-ui.min.css">
+    <link rel="stylesheet" href="./css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="./css/jquery-ui.theme.min.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,10 +33,16 @@
 	</div>
 
       <script src="js/main.js" type="text/javascript"></script>
+      
+  
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="./js/jquery-1.11.3.min.js"></script>
+    <script src="./js/jquery-ui.js"></script>
+    <script src="./js/datepicker-fr.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="./js/bootstrap.min.js"></script>
         <script src="./js/bootstrap-switch.min.js"></script>
+  
+        
   </body>
 </html>

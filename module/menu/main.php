@@ -12,6 +12,8 @@ Class module_menu extends abstract_moduleembedded{
                             'Mail' => 'membres::listEmptyMail',
                             'Permis de conduire' => 'membres::listEmptyPermis',
 			),
+                
+                        'Liste des Evènements' =>'events::list',
  
 			'Outils' => array(
 				'Traces Parcours' => 'parcours::list',

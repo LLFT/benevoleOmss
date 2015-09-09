@@ -1,5 +1,5 @@
 <?php 
-class module_element extends abstract_module{
+class module_events extends abstract_module{
 	
 	public function before(){
 		$this->oLayout=new _layout('bootstrap');
@@ -16,10 +16,10 @@ class module_element extends abstract_module{
 	
 	public function _list(){
 		
-		$tElement=model_element::getInstance()->findAll();
+		$tEvents=model_events::getInstance()->findAll();
 		
-		$oView=new _view('element::list');
-		$oView->tElement=$tElement;
+		$oView=new _view('events::list');
+		$oView->tEvents=$tEvents;
 		
 		
 		
@@ -32,10 +32,10 @@ class module_element extends abstract_module{
 	public function _new(){
 		$tMessage=$this->processSave();
 	
-		$oElement=new row_element;
+		$oEvents=new row_events;
 		
-		$oView=new _view('element::new');
-		$oView->oElement=$oElement;
+		$oView=new _view('events::new');
+		$oView->oEvents=$oEvents;
 		
 		
 		
@@ -51,14 +51,12 @@ class module_element extends abstract_module{
 	public function _edit(){
 		$tMessage=$this->processSave();
 		
-		$oElement=model_element::getInstance()->findById( _root::getParam('id') );
-		
-		$oView=new _view('element::edit');
-		$oView->oElement=$oElement;
-		$oView->tId=model_element::getInstance()->getIdTab();
-		
-		
-		
+		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
+
+		$oView=new _view('events::edit');
+		$oView->oEvents=$oEvents;
+		$oView->tId=model_events::getInstance()->getIdTab();
+					
 		$oPluginXsrf=new plugin_xsrf();
 		$oView->token=$oPluginXsrf->getToken();
 		$oView->tMessage=$tMessage;
@@ -68,15 +66,26 @@ class module_element extends abstract_module{
 
 	
 	
+	public function _show(){
+		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
+                $oParcours=model_parcours::getInstance()->findOneParcour(_root::getParam('id'));
+		
+		$oView=new _view('events::show');
+		$oView->oEvents=$oEvents;
+		$oView->oParcours=$oParcours;
+		
+		$this->oLayout->add('main',$oView);
+	}
+
 	
 	
 	public function _delete(){
 		$tMessage=$this->processDelete();
 
-		$oElement=model_element::getInstance()->findById( _root::getParam('id') );
+		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
 		
-		$oView=new _view('element::delete');
-		$oView->oElement=$oElement;
+		$oView=new _view('events::delete');
+		$oView->oEvents=$oEvents;
 		
 		
 
@@ -99,23 +108,24 @@ class module_element extends abstract_module{
 		}
 	
 		$iId=_root::getParam('id',null);
-		if($iId==null){
-			$oElement=new row_element;	
+		if($iId==null){                        
+			$oEvents=new row_events;	
 		}else{
-			$oElement=model_element::getInstance()->findById( _root::getParam('id',null) );
+			$oEvents=model_events::getInstance()->findById( _root::getParam('id',null) );
 		}
 		
-		$tColumn=array('element','descElement');
+		$tColumn=array('nomEvent','date','lieux','description');
+                
 		foreach($tColumn as $sColumn){
-			$oElement->$sColumn=_root::getParam($sColumn,null) ;
+			$oEvents->$sColumn=_root::getParam($sColumn,null) ;
 		}
 		
 		
-		if($oElement->save()){
+		if($oEvents->save()){
 			//une fois enregistre on redirige (vers la page liste)
-			_root::redirect('element::list');
+			_root::redirect('events::list');
 		}else{
-			return $oElement->getListError();
+			return $oEvents->getListError();
 		}
 		
 	}
@@ -131,11 +141,11 @@ class module_element extends abstract_module{
 			return array('token'=>$oPluginXsrf->getMessage() );
 		}
 	
-		$oElement=model_element::getInstance()->findById( _root::getParam('id',null) );
+		$oEvents=model_events::getInstance()->findById( _root::getParam('id',null) );
 				
-		$oElement->delete();
+		$oEvents->delete();
 		//une fois enregistre on redirige (vers la page liste)
-		_root::redirect('element::list');
+		_root::redirect('events::list');
 		
 	}
 

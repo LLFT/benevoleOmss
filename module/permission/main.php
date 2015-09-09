@@ -26,6 +26,7 @@ class module_permission extends abstract_module{
 		$oView->tPermission=$tPermission;
 		
 		$oView->tJoinmodel_groupe=model_groupe::getInstance()->getSelect();
+                
 		
 		$this->oLayout->add('main',$oView);
 		 
@@ -41,6 +42,8 @@ class module_permission extends abstract_module{
 		$oView=new _view('permission::new');
 		$oView->oPermission=$oPermission;
 		$oView->tJoinmodel_groupe=model_groupe::getInstance()->getSelect();
+                $oView->tJoinmodel_element=model_element::getInstance()->getSelect();
+                $oView->tAllowDeny= array('DENY'=>'Interdire','ALLOW'=>'Authoriser');
 		
 		
 		$oPluginXsrf=new plugin_xsrf();
@@ -61,6 +64,8 @@ class module_permission extends abstract_module{
 		$oView->oPermission=$oPermission;
 		$oView->tId=model_permission::getInstance()->getIdTab();
 		$oView->tJoinmodel_groupe=model_groupe::getInstance()->getSelect();
+                $oView->tJoinmodel_element=model_element::getInstance()->getSelect();
+                $oView->tAllowDeny=  array('DENY'=>'Interdire','ALLOW'=>'Authoriser');
 		
 		
 		$oPluginXsrf=new plugin_xsrf();

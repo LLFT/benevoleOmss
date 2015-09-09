@@ -1,3 +1,4 @@
 logs/*
 session/*
 conf/connexion.ini.php
+conf/salt.ini.php

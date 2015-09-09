@@ -10,6 +10,7 @@
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
 			
 		<td><?php echo $oElement->element ?></td>
+                <td><?php echo $oElement->descElement ?></td>
 
 			<td>
 				
@@ -36,5 +37,5 @@
 	<?php endif;?>
 </table>
 
-<p><a class="btn btn-primary" href="<?php echo $this->getLink('element::new') ?>">New</a></p>
+<p><a class="btn btn-primary" href="<?php echo $this->getLink('element::new') ?>">Ajouter un élément</a></p>
 

@@ -54,7 +54,7 @@ var initialize;
  
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <a class="btn btn-danger" href="<?php echo $this->getLink('parcours::list')?>">Retour à la liste des parcours</a>
+            <a class="btn btn-danger" href="<?php echo $this->getLink('events::show',array('id'=>_root::getParam('idEvent')))?>">Retour à l'évènement</a>
         </div>
     </div>
  

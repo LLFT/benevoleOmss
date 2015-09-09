@@ -41,8 +41,7 @@ class module_parcours extends abstract_module{
 	
 	public function _list(){
 	
-            //Liste de tous les Membres
-            $tAllParcours=model_parcours::getInstance()->findAll();
+           $tAllParcours=model_parcours::getInstance()->findAll();
             
 		$oView=new _view('parcours::list');
                 $oView->tParcours=$tAllParcours;
@@ -56,22 +55,26 @@ class module_parcours extends abstract_module{
 	}
 	
         public function _new(){
-             $tMessage=$this->checkUpload();
-             
-             $oView=new _view('parcours::new');
-             $oView->tMessage=$tMessage['message'];            
+            $tMessage=$this->processSave();
+            $oParcours=new row_events;
+            $oView=new _view('parcours::new');
+            $oView->oParcours=$oParcours;
+            $oView->tMessage=$tMessage;
+     
              $this->oLayout->add('main',$oView);
         }
             
-        private function checkUpload(){
-            
-            $retour=array();
-            
+        private function processSave(){
             if(!_root::getRequest()->isPost() ){ //si ce n'est pas une requete POST on ne soumet pas
-                return null;
-            }
+			return null;
+		}
+            $retour=array();
+
 
             $oFile=new row_parcours;
+            if (!$oFile->isValid()){
+                return $oFile->getListError();
+            }
             
             $tFields=array('label');
 
