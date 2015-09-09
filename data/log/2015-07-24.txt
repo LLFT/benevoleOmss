@@ -1,0 +1,17 @@
+Trying to get property of non-object
+#0 /var/www/html/omss42/module/membres/main.php(286): exception_error_handler(8, 'Trying to get p...', '/var/www/html/o...', 286, Array)
+#1 /var/www/html/omss42/module/membres/main.php(151): module_membres->processSave()
+#2 /var/www/html/omss42/lib/framework/class_root.php(263): module_membres->_new()
+#3 /var/www/html/omss42/public/index.php(47): _root->run()
+#4 {main}
+
+Detail:
+#0 /var/www/html/omss42/module/membres/main.php (286) 
+ exception_error_handler(  , 'Trying to get property of non-object' , '/var/www/html/omss42/module/membres/main.php' ,  , Array (     [oPluginXsrf] => plugin_xsrf Object         (             [sSalt:plugin_xsrf:private] => fdsfA34T679hjfdsAfef             [iLifetime:plugin_xsrf:private] => 360             [sMsg:plugin_xsrf:private] =>              [bUseSession:plugin_xsrf:private] => 0             [sSessionVar:plugin_xsrf:private] => xsrfTokenArray         )      [iId] =>      [oMembres] => row_membres Object         (             [sClassModel:protected] => model_membres             [_bChooseUpdate:abstract_row:private] =>              [_tProperty:protected] => Array                 (                 )              [_tPropertyToUpdate:protected] =>          )  )  ) 
+#1 /var/www/html/omss42/module/membres/main.php (151) 
+ module_membres -> processSave(  ) 
+#2 /var/www/html/omss42/lib/framework/class_root.php (263) 
+ module_membres -> _new(  ) 
+#3 /var/www/html/omss42/public/index.php (47) 
+ _root -> run(  ) 
+#4 {main}
