@@ -13,7 +13,10 @@ Class module_menu extends abstract_moduleembedded{
                             'Permis de conduire' => 'membres::listEmptyPermis',
 			),
                 
+                        'Activité' => array(              
                         'Liste des Evènements' =>'events::list',
+                        'Liste des Parcours' =>'parcours::list',
+                        ),
  
 			'Outils' => array(
 				'Traces Parcours' => 'parcours::list',

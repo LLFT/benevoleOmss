@@ -42,7 +42,8 @@ class row_parcours extends abstract_row{
 	private function getCheck(){
 		$oPluginValid=new plugin_valid($this->getTab());
 		$oPluginValid->isNotEmpty('label','Le champ ne doit pas &ecirc;tre vide');
-		
+		$oPluginValid->isNotEmpty('url','Un fichier GPX doit être joint');
+                
 		/* renseigner vos check ici
 		$oPluginValid->isEqual('champ','valeurB','Le champ n\est pas &eacute;gal &agrave; '.$valeurB);
 		$oPluginValid->isNotEqual('champ','valeurB','Le champ est &eacute;gal &agrave; '.$valeurB);
@@ -70,6 +71,7 @@ class row_parcours extends abstract_row{
 		if(!$this->isValid()){
 			return false;
 		}
+                $this->label = strtoupper($this->label);
 		parent::save();
 		return true;
 	}
