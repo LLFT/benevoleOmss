@@ -1,4 +1,5 @@
 logs/*
 session/*
-conf/connexion.ini.php
-conf/salt.ini.php
+/conf/connexion.ini.php
+/conf/auth.ini.php
+/data/upload/

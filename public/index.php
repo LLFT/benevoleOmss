@@ -42,6 +42,7 @@ $oRoot->setConfigVar('path',$tIni['path']);
 $oRoot->addConf('../conf/mode.ini.php');
 $oRoot->addConf('../conf/connexion.ini.php');
 $oRoot->addConf('../conf/site.ini.php');
+$oRoot->addConf('../conf/auth.ini.php');
 $oRoot->addRequest($_GET);
 $oRoot->addRequest($_POST);
 $oRoot->run();

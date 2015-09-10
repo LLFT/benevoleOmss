@@ -36,12 +36,12 @@
       
   
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="./js/jquery-1.11.3.min.js"></script>
-    <script src="./js/jquery-ui.js"></script>
-    <script src="./js/datepicker-fr.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-ui.js"></script>
+    <script type="text/javascript" src="./js/datepicker-fr.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="./js/bootstrap.min.js"></script>
-        <script src="./js/bootstrap-switch.min.js"></script>
+	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="./js/bootstrap-switch.min.js"></script>
   
         
   </body>

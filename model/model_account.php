@@ -44,7 +44,8 @@ class model_account extends abstract_model{
    
         public function hashPassword($sPassword){
             //utiliser ici la methode de votre choix pour hasher votre mot de passe
-            return md5('2foisCtoutMoa2'.$sPassword);
+            $salt = _root::getConfigVar('salt.authKey');
+            return md5($salt.$sPassword);
         }
 }
 
