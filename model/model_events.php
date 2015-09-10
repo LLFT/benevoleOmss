@@ -56,7 +56,7 @@ class row_events extends abstract_row{
                 $tRow['date'] = date('Y-m-d',  time ());
             }
             $oDate = new plugin_date($tRow['date'],'Y-m-d');
-            $tRow['date'] = $oDate->toString('d/m/Y');           
+            $this->date = $oDate->toString('d/m/Y');           
         }
         
         
