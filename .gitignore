@@ -2,4 +2,4 @@ logs/*
 session/*
 /conf/connexion.ini.php
 /conf/auth.ini.php
-/data/upload/
+/data/upload/GPX

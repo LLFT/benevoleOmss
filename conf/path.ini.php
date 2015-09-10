@@ -3,6 +3,7 @@ lib=../lib/framework/
 
 data=../data/
 upload=../data/upload/
+uploadGPX=../data/upload/GPX/
 log=../data/log/
 img=../data/img/
 i18n=../data/i18n/
