@@ -39,11 +39,18 @@
         
     <p><a class="btn btn-success" href="<?php echo $this->getLink('parcours::new',array('idEvent'=>_root::getParam('id'))) ?>">Ajouter parcours</a></p>
     </fieldset>
-    
-    
-<div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-		 <a class="btn btn-default" href="<?php echo $this->getLink('events::list')?>">Retour</a>
-	</div>
-</div>
+    <fieldset>
+        <legend>Actions </legend>  
+        <div class="form-group">
+            <div class="col-sm-offset-7 col-sm-1">
+                <a class="btn btn-default" href="<?php echo $this->getLink('events::list')?>">Retour</a>
+            </div>
+            <div class="col-sm-1">
+                <a class="btn btn-success" href="<?php echo $this->getLink('events::edit',array('id'=>$this->oEvents->getId()))?>">Modifier</a>
+            </div>
+            <div class=" col-sm-1">
+                <a class="btn btn-danger" href="<?php echo $this->getLink('events::delete',array('id'=>$this->oEvents->getId()))?>">Supprimer</a>
+            </div>
+        </div>
+    </fieldset>
 </form>

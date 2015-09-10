@@ -38,7 +38,7 @@ window.onload=chargeDatePicker ;
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-		<input type="submit" class="btn btn-success" value="Modifier" /> <a class="btn btn-link" href="<?php echo $this->getLink('events::list')?>">Annuler</a>
+		<input type="submit" class="btn btn-success" value="Modifier" /> <a class="btn btn-link" href="<?php echo $this->getLink('events::show',array('id'=>  _root::getParam('id')))?>">Annuler</a>
 	</div>
 </div>
 </form>

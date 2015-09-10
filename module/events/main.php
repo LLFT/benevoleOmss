@@ -16,10 +16,10 @@ class module_events extends abstract_module{
 	
 	public function _list(){
 		
-		$tEvents=model_events::getInstance()->findAll();
+		$oEvents=model_events::getInstance()->findAll();
 		
 		$oView=new _view('events::list');
-		$oView->tEvents=$tEvents;
+		$oView->oEvents=$oEvents;
 		
 		
 		
