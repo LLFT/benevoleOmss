@@ -6,12 +6,12 @@ Class module_menu extends abstract_moduleembedded{
             $tLink=array(
                
                         'Liste des Membres' => 'membres::list',
- 
-			'Informations Manquantes' => array(
-                            'Adresse Postale' => 'membres::listEmptyAdress',
-                            'Mail' => 'membres::listEmptyMail',
-                            'Permis de conduire' => 'membres::listEmptyPermis',
-			),
+// 
+//			'Informations Manquantes' => array(
+//                            'Adresse Postale' => 'membres::listEmptyAdress',
+//                            'Mail' => 'membres::listEmptyMail',
+//                            'Permis de conduire' => 'membres::listEmptyPermis',
+//			),
                 
                         'Activité' => array(              
                         'Liste des Evènements' =>'events::list',
@@ -19,11 +19,8 @@ Class module_menu extends abstract_moduleembedded{
                         ),
  
 			'Outils' => array(
-				'Traces Parcours' => 'parcours::list',
 				'Localisation Global' => 'membres::localizeMembers',
-                                'Rapprochement' => 'membres::reIndexAllMembers',
-                                
-                           
+                                'Rapprochement' => 'membres::reIndexAllMembers',    
 			),
         
                         'Administration' => array(
