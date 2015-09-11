@@ -58,7 +58,18 @@ class module_parcours extends abstract_module{
 		
 		$oView=new _view('parcours::show');
 		$oView->oParcours=$oParcours;
-                $oView->iHeight=500;
+                
+                $oModuleGoogleMap=new module_googleMap();
+                $oModuleGoogleMap->setWidth(800);
+                $oModuleGoogleMap->setHeight(500);
+                $oModuleGoogleMap->setZoom(15);
+                $oModuleGoogleMap->setMinZoom(12); //Zoom Arriere
+                $oModuleGoogleMap->setEnableZoomControl('true');
+                $oModuleGoogleMap->setEnableScrollwheel('true');
+                $oModuleGoogleMap->setDisableDoubleClickZoom('false');
+                $oModuleGoogleMap->setTraceGPX(true);
+                $oModuleGoogleMap->setUrlTraceGPX($oParcours->url);
+                $oView->oModuleGoogleMap=$oModuleGoogleMap->getMap(); 	          
 		
 		
 		$this->oLayout->add('main',$oView);

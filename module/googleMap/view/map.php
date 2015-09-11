@@ -12,14 +12,14 @@ function initialize(){
 	var myOptions = {
 	zoom      : <?php echo $this->iZoom?>,
 	center    : latLng,
-        draggable: false,
+        draggable: <?php echo $this->sEnableDraggable?>, //Déplacement à la souris
 	mapTypeId : google.maps.MapTypeId.TERRAIN, // Type de carte, différentes valeurs possible HYBRID, ROADMAP, SATELLITE, TERRAIN
 	maxZoom   : <?php echo $this->iMaxZoom?>,
         minZoom : <?php echo $this->iMinZoom?>,
-        disableDefaultUI : true,
-//        mapTypeControl : true,
-//        streetViewControl : true,
-//        panControl : true,
+        disableDefaultUI : <?php echo $this->sDisableDefaultUI?>, //Affiche l'ensemble des controles
+        mapTypeControl : <?php echo $this->sEnableMapTypeControl?>, // SATELLITE ou TERRAIN
+        streetViewControl : <?php echo $this->sEnableStreetViewControl?>, //Bonhomme de StreeView
+        panControl : <?php echo $this->sEnablePanControl?>, // Panneau de déplacement
         zoomControl : <?php echo $this->sEnableZoomControl?>,             // supprime l'icône de contrôle du zoom  
         scrollwheel : <?php echo $this->sEnableScrollwheel?>,             // désactive le zoom avec la molette de la souris 
         disableDoubleClickZoom : <?php echo $this->sDisableDoubleClickZoom?>    // désactive le zoom sur le double-clic
@@ -80,12 +80,12 @@ function setPointWithContent(address,sTitle,sContent){
 	});
 
 }
-function setGpxOnMap(urlGpx){
+function showGpxOnMap(){
     
     $.ajax({
         //Je charge le fichier GPX au format XML
      type: "GET",
-     url: urlGpx,
+     url: "<?php echo $this->sUrlTraceGPX; ?>",
      dataType: "xml",
      success: function(xml) {
          //Initialise un tableau qui va contenir les coordonnées du tracé
@@ -138,29 +138,30 @@ function test(message){
 
 <script>initialize();</script>
 
-<?php if($this->tPosition or $this->tPositionWithContent or $this->sUrlTraceGPX):?>
+<?php if($this->tPosition or $this->tPositionWithContent or $this->bTraceGPX):?>
 <script>
 <?php 
-if($this->tPosition):
-	foreach($this->tPosition as $tAdresse):
-		list($sAdresse,$sTitle,$sLink)=$tAdresse;
-		?>setPoint('<?php echo $sAdresse?>','<?php echo $sTitle?>','<?php echo $sLink?>');<?php
-	endforeach;
-endif;
+    if($this->tPosition):
+        foreach($this->tPosition as $tAdresse):
+            list($sAdresse,$sTitle,$sLink)=$tAdresse;
+            ?>setPoint('<?php echo $sAdresse?>','<?php echo $sTitle?>','<?php echo $sLink?>');<?php
+        endforeach;
+    endif;
 
-if($this->tPositionWithContent):
-	foreach($this->tPositionWithContent as $tAdresse):
-		list($sAdresse,$sTitle,$tContent)=$tAdresse;
-		$sContent='';
-		foreach($tContent as $sLine){
-			$sContent.=str_replace("'",'\'',$sLine);
-		}
-		?>setPointWithContent('<?php echo $sAdresse?>','<?php echo $sTitle?>','<?php echo $sContent?>');<?php
-	endforeach;
-endif;
+    if($this->tPositionWithContent):
+        foreach($this->tPositionWithContent as $tAdresse):
+            list($sAdresse,$sTitle,$tContent)=$tAdresse;
+            $sContent='';
+            foreach($tContent as $sLine){
+                    $sContent.=str_replace("'",'\'',$sLine);
+            }
+            ?>setPointWithContent('<?php echo $sAdresse?>','<?php echo $sTitle?>','<?php echo $sContent?>');
+            <?php
+        endforeach;
+    endif;
 
-if($this->sUrlTraceGPX):
-        ?>test('<?php echo $this->sUrlTraceGPX; ?>');<?php
+    if($this->bTraceGPX):?> 
+        window.onload=showGpxOnMap; <?php
     endif; 
 
 ?>
