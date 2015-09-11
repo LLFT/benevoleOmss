@@ -197,7 +197,7 @@ class module_membres extends abstract_module{
             if($oMembre->coord==1){
                 $oModuleGoogleMap=new module_googleMap();
                 $oModuleGoogleMap->setWidth(500);
-                $oModuleGoogleMap->setHeight(400);
+                $oModuleGoogleMap->setHeight(500);
                 $oModuleGoogleMap->setZoom(15);
                 $oModuleGoogleMap->setMinZoom(13); //Zoom Arriere
                 $oModuleGoogleMap->setMaxZoom(18); //Zoom Avant

@@ -11,12 +11,13 @@ class module_googleMap extends abstract_moduleembedded{
         protected $sEnableZoomControl;
         protected $sEnableScrollwheel;
         protected $sDisableDoubleClickZoom;
+        protected $sUrlTraceGPX;
         
                 
 	
 	public function __construct(){
 		$this->tPosition=array();
-		$this->iWidth=500;
+		$this->iWidth=800;
 		$this->iHeight=500;
 		$this->iZoom=1;
                 $this->iMinZoom=1;
@@ -24,6 +25,7 @@ class module_googleMap extends abstract_moduleembedded{
                 $this->sEnableZoomControl='false';
                 $this->sEnableScrollwheel='false';
                 $this->sDisableDoubleClickZoom='false';
+                $this->sUrlTraceGPX=false;
                 
 	}
 	
@@ -41,6 +43,7 @@ class module_googleMap extends abstract_moduleembedded{
                 $oView->sEnableZoomControl=$this->sEnableZoomControl;
                 $oView->sEnableScrollwheel=$this->sEnableScrollwheel;
                 $oView->sDisableDoubleClickZoom=$this->sDisableDoubleClickZoom;
+                $oView->sUrlTraceGPX=$this->sUrlTraceGPX;
 		
 		return $oView;
 		

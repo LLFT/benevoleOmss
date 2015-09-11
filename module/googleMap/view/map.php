@@ -80,6 +80,53 @@ function setPointWithContent(address,sTitle,sContent){
 	});
 
 }
+function setGpxOnMap(urlGpx){
+    
+    $.ajax({
+        //Je charge le fichier GPX au format XML
+     type: "GET",
+     url: urlGpx,
+     dataType: "xml",
+     success: function(xml) {
+         //Initialise un tableau qui va contenir les coordonnées du tracé
+       var points = [];
+       // On constitu le rectangle qui va représenter la vue englobant le tracé.
+       var bounds = new google.maps.LatLngBounds ();
+       
+       //Pour chaque point référencé dans le GPX on ajoute ces coord a point[].
+       $(xml).find("trkpt").each(function() {
+         var lat = $(this).attr("lat");
+         var lon = $(this).attr("lon");
+         // Crée un point en coordonnées géographiques
+        var p = new google.maps.LatLng(lat, lon);
+         //Ajoute le point de coord au tableau Points
+         points.push(p);
+         //Ajoute le point de coord au rectangle
+         bounds.extend(p);
+       });
+       
+       //Initialise le Polygone qui va représenter la trace sur la map
+       var poly = new google.maps.Polyline({
+         // use your own style here
+         path: points,
+         strokeColor: "#FF00AA",
+         strokeOpacity: .7,
+         strokeWeight: 4
+       });
+//       Rend cette forme sur la carte spécifiée.
+       poly.setMap(map);
+       
+       // Ajuste le zoom de la map en fonction des limites définie par le rectangle bounds
+       map.fitBounds(bounds);
+     }
+    });
+}
+
+function test(message){
+    alert('toto');
+    alert(message);
+}
+
 </script>
 
  <style>
@@ -91,7 +138,7 @@ function setPointWithContent(address,sTitle,sContent){
 
 <script>initialize();</script>
 
-<?php if($this->tPosition or $this->tPositionWithContent):?>
+<?php if($this->tPosition or $this->tPositionWithContent or $this->sUrlTraceGPX):?>
 <script>
 <?php 
 if($this->tPosition):
@@ -111,6 +158,10 @@ if($this->tPositionWithContent):
 		?>setPointWithContent('<?php echo $sAdresse?>','<?php echo $sTitle?>','<?php echo $sContent?>');<?php
 	endforeach;
 endif;
+
+if($this->sUrlTraceGPX):
+        ?>test('<?php echo $this->sUrlTraceGPX; ?>');<?php
+    endif; 
 
 ?>
     
