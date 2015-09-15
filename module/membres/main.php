@@ -238,6 +238,21 @@ class module_membres extends abstract_module{
             
         }
         
+        public function _ajaxSignaleur() {
+            $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
+            $oMembres->modifier=date('Y-m-d H:i:s',time());
+            $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
+            
+            if($oMembres->chkSignaleur!=0){
+                $oMembres->chkSignaleur=0;            
+            }else{
+                $oMembres->chkSignaleur=1;
+            }
+            
+            $oMembres->saveF();
+            return true;
+        }
+        
 	public function _delete(){
 		$tMessage=$this->processDelete();
 

@@ -20,7 +20,7 @@
 		<?php foreach($this->tMembres as $oMembres):?>
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
                     
-                <td><?php echo $oMembres->indexMembre .' : '?></td>    
+                <td> <img id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Smiley face" height="15" width="15"><?php echo ' '.$oMembres->indexMembre .' : '?></td>    
 		<td><?php echo $oMembres->nom ?></td>
 
 		<td><?php echo $oMembres->prenom ?></td>
@@ -40,17 +40,15 @@
 				
 
 <div class="btn-group">
-  <button type="button" class="btn btn-primary btn-xs">Actions</button>
+  <a class="btn btn-primary btn-xs" href="<?php echo $this->getLink('membres::show',array( 'id'=>$oMembres->getId()))?>">Consulter Fiche</a>  
   <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class="caret"></span>
     <span class="sr-only">Toggle Dropdown</span>
   </button>
-  <ul class="dropdown-menu">
-      <li><a class="" href="<?php echo $this->getLink('membres::show',array( 'id'=>$oMembres->getId()))?>">Consulter Fiche</a></li>  
-    <li><a href="#">Editer Fiche</a></li>
-    <li><a href="#">Ajouter à un Evènement</a></li>
-<!--    <li role="separator" class="divider"></li>
-    <li><a href="#">Separated link</a></li>-->
+  <ul class="dropdown-menu">      
+    <li><a class="btn btn-large btn-block" href="<?php echo $this->getLink('membres::edit',array( 'id'=>$oMembres->getId()))?>">Editer Fiche</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a onclick="btnSignalFnt(<?php echo $oMembres->getId().','.$oMembres->chkSignaleur ?>)" id="btnSignal" class="btn btn-large btn-block" href="#"> Signaleur <span id="glyphSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?>class="add-on glyphicon glyphicon-ok"></span></a></li>
   </ul>
 </div>
 
@@ -93,7 +91,28 @@
 	<?php if ( _root::getACL()->can('ACCESS','membres::exportCSV')):?>
 		<a class="btn btn-success" href="<?php echo $this->getLink('membres::exportCSV',array('action'=>$this->sAction)) ?>">Exporter</a>
 	<?php endif;?>
-
+<script language="Javascript">
+   window.onload = function(){  
+       console.log( "ready!" );
+    };   
+    
+    function btnSignalFnt(paramId, paramSig){
+        console.log( "click" );
+        $.ajax({
+            url: 'index.php?:nav=membres::ajaxSignaleur&id='+paramId+'',
+            success: function() {
+            // call function
+            showGlyphSignal(paramId);
+            }
+        });
+    }
+    
+    function showGlyphSignal(paramId){
+        $('#glyphSignal_'+paramId).toggle();
+        $('#chasubleSignal_'+paramId).toggle();
+    }
+        
+   
+  </script>
 </div>
-</p>
 
