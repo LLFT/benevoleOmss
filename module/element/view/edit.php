@@ -9,6 +9,11 @@ $oForm->setMessage($this->tMessage);
 		<label class="col-sm-2 control-label">Nom de l'élément</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('element',array('class'=>'form-control'))?></div>
 	</div>
+    
+        <div class="form-group">
+		<label class="col-sm-2 control-label">Description de l'élément</label>
+		<div class="col-sm-10"><?php echo $oForm->getInputText('descElement',array('class'=>'form-control'))?></div>
+	</div>
 
 
 <?php echo $oForm->getToken('token',$this->token)?>

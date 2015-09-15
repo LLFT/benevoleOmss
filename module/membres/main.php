@@ -197,7 +197,7 @@ class module_membres extends abstract_module{
             if($oMembre->coord==1){
                 $oModuleGoogleMap=new module_googleMap();
                 $oModuleGoogleMap->setWidth(500);
-                $oModuleGoogleMap->setHeight(400);
+                $oModuleGoogleMap->setHeight(500);
                 $oModuleGoogleMap->setZoom(15);
                 $oModuleGoogleMap->setMinZoom(13); //Zoom Arriere
                 $oModuleGoogleMap->setMaxZoom(18); //Zoom Avant
@@ -236,6 +236,21 @@ class module_membres extends abstract_module{
             _root::redirect('membres::list',array('nbFound'=>$nbOfReindexion));
         
             
+        }
+        
+        public function _ajaxSignaleur() {
+            $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
+            $oMembres->modifier=date('Y-m-d H:i:s',time());
+            $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
+            
+            if($oMembres->chkSignaleur!=0){
+                $oMembres->chkSignaleur=0;            
+            }else{
+                $oMembres->chkSignaleur=1;
+            }
+            
+            $oMembres->saveF();
+            return true;
         }
         
 	public function _delete(){
@@ -319,7 +334,7 @@ class module_membres extends abstract_module{
                         $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
 		}
 		
-		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis');
+		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur');
 		foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':

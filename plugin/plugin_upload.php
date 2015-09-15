@@ -71,8 +71,18 @@ class plugin_upload{
 	public function getPath(){
 		return $this->sNewPath;
 	}
-	/** 
+        
+        /** 
 	* retourne l'adresse complete du fichier uploade
+	* @access public
+	* @return string l'adresse complete du fichier uploade
+	*/
+	public function getTmpPath(){
+		return $this->sTmpFileName;
+	}
+        
+	/** 
+	* retourne l'adresse complete du fichier uploade -- Heu !!! --
 	* @access public
 	* @return bool true/false selon que le fichier a bien ete uploade ou non
 	*/

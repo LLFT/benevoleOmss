@@ -6,23 +6,23 @@ $oForm->setMessage($this->tMessage);
 
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label">action</label>
+		<label class="col-sm-2 control-label">Actions</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('action',array('class'=>'form-control'))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-2 control-label">element</label>
-		<div class="col-sm-10"><?php echo $oForm->getInputText('element',array('class'=>'form-control'))?></div>
+		<label class="col-sm-2 control-label">Element</label>
+		<div class="col-sm-10"><?php echo $oForm->getSelect('element',$this->tJoinmodel_element,array('class'=>'form-control'))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-2 control-label">allowdeny</label>
-		<div class="col-sm-10"><?php echo $oForm->getInputText('allowdeny',array('class'=>'form-control'))?></div>
+		<label class="col-sm-2 control-label">Permission</label>
+		<div class="col-sm-10"><?php echo $oForm->getSelect('allowdeny',$this->tAllowDeny,array('class'=>'form-control'))?></div>
 	</div>
     
         <div class="form-group">
 		<label class="col-sm-2 control-label">Groupe</label>
-		<div class="col-sm-10"><?php echo $oForm->getSelect('groupe_id',$this->tJoinmodel_groupe,array('class'=>'form-control'))?></div>
+                <div class="col-sm-10"><?php echo $oForm->getSelect('groupe_id',$this->tJoinmodel_groupe,array('class'=>'form-control'))?></div>
 	</div>
 
 

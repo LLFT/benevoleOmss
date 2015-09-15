@@ -18,7 +18,18 @@ class model_element extends abstract_model{
 	public function findAll(){
 		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
-	
+        
+        public function getSelect(){
+		$tab=$this->findAll();
+		$tSelect=array();
+                
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[ $oRow->element ]=$oRow->element;
+                    }
+		}
+		return $tSelect;
+	}
 	
 	
 }

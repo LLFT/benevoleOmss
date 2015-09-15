@@ -11,28 +11,39 @@ class module_googleMap extends abstract_moduleembedded{
         protected $sEnableZoomControl;
         protected $sEnableScrollwheel;
         protected $sDisableDoubleClickZoom;
+        protected $bTraceGPX;
+        protected $sUrlTraceGPX;
+        protected $sDraggable;
+        protected $sDisableDefaultUI;
+        protected $sMapTypeControl;
+        protected $sStreetViewControl;
+        protected $sPanControl;
         
-                
-	
-	public function __construct(){
+        public function __construct(){
 		$this->tPosition=array();
-		$this->iWidth=500;
+		$this->iWidth=800;
 		$this->iHeight=500;
 		$this->iZoom=1;
                 $this->iMinZoom=1;
                 $this->iMaxZoom=24;
                 $this->sEnableZoomControl='false';
                 $this->sEnableScrollwheel='false';
-                $this->sDisableDoubleClickZoom='false';
-                
+                $this->sDisableDoubleClickZoom='true';
+                $this->bTraceGPX=false;
+                $this->sUrlTraceGPX='';
+                $this->sEnableDraggable='false';
+                $this->sDisableDefaultUI='false';
+                $this->sEnableMapTypeControl='false';
+                $this->sEnableStreetViewControl='false';
+                $this->sEnablePanControl='false';
+               
 	}
 	
 	public function getMap(){
 		
 		$oView=new _view('googleMap::map');
 		$oView->tPosition=$this->tPosition;
-		$oView->tPositionWithContent=$this->tPositionWithContent;
-		
+		$oView->tPositionWithContent=$this->tPositionWithContent;		
 		$oView->iWidth=$this->iWidth;
 		$oView->iHeight=$this->iHeight;
 		$oView->iZoom=$this->iZoom;
@@ -41,6 +52,13 @@ class module_googleMap extends abstract_moduleembedded{
                 $oView->sEnableZoomControl=$this->sEnableZoomControl;
                 $oView->sEnableScrollwheel=$this->sEnableScrollwheel;
                 $oView->sDisableDoubleClickZoom=$this->sDisableDoubleClickZoom;
+                $oView->bTraceGPX=$this->bTraceGPX;
+                $oView->sUrlTraceGPX=$this->sUrlTraceGPX;
+                $oView->sEnableDraggable=$this->sEnableDraggable;
+                $oView->sDisableDefaultUI=$this->sDisableDefaultUI;
+                $oView->sEnableMapTypeControl=$this->sEnableMapTypeControl;
+                $oView->sEnableStreetViewControl=$this->sEnableStreetViewControl;
+                $oView->sEnablePanControl=$this->sEnablePanControl;
 		
 		return $oView;
 		
@@ -81,6 +99,34 @@ class module_googleMap extends abstract_moduleembedded{
         
         public function setDisableDoubleClickZoom($sDisableDoubleClickZoom){
 		$this->sDisableDoubleClickZoom=$sDisableDoubleClickZoom;
-	}
+	}        
+        
+        public function setTraceGPX($bTraceGPX){
+            $this->bTraceGPX=$bTraceGPX;            
+        }
+        
+        public function setUrlTraceGPX($sUrlTraceGPX){
+            $this->sUrlTraceGPX=$sUrlTraceGPX;            
+        }
+        
+        public function setEnableDraggable($sEnableDraggable){
+            $this->sEnableDraggable=$sEnableDraggable;        
+        }
+        
+        public function setDisableDefaultUI($sDisableDefaultUI){
+            $this->sDisableDefaultUI=$sDisableDefaultUI;            
+        }
+        
+        public function setEnableMapTypeControl($sEnableMapTypeControl){
+            $this->sEnableMapTypeControl=$sEnableMapTypeControl;            
+        }
+        
+        public function setEnableStreetViewControl($sEnableStreetViewControl){
+            $this->sEnableStreeViewControl=$sEnableStreetViewControl;            
+        }
+        
+        public function setEnablePanControl($sEnablePanControl){
+            $this->sEnablePanControl=$sEnablePanControl;            
+        }
 }
 

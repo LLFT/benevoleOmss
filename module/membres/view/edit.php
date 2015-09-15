@@ -16,8 +16,10 @@ $oForm->setMessage($this->tMessage);
 	</div>
         
         <div class="form-group">
-                <label class="col-sm-2 control-label">Possède une adresse Mail ? : </label>
-                <div class="col-sm-10"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>                    
+                <label class="col-sm-3 control-label">Possède-t-il une adresse Mail ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>
+                <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
         </div>
 	
         <div class="form-group">
@@ -107,6 +109,10 @@ function happycode(){
    $('input[name="chkPermis"]').on('switchChange.bootstrapSwitch', function(event, state) {
        activerNumPermis(state);
    });
+   
+   
+   $('input[name="chkSignaleur"]').bootstrapSwitch();
+   
 }
 
 function activerMail(state) {

@@ -105,7 +105,7 @@ class module_element extends abstract_module{
 			$oElement=model_element::getInstance()->findById( _root::getParam('id',null) );
 		}
 		
-		$tColumn=array('element');
+		$tColumn=array('element','descElement');
 		foreach($tColumn as $sColumn){
 			$oElement->$sColumn=_root::getParam($sColumn,null) ;
 		}

@@ -1,23 +1,22 @@
-<form  class="form-horizontal" action="" method="POST" enctype="multipart/form-data" >
-    <fieldset>
-        <legend>Ajouter un nouveau parcours : </legend>
+<?php 
+$oForm=new plugin_form($this->oParcours);
+$oForm->setMessage($this->tMessage);
+?>
+<form  class="form-horizontal" action="" method="POST"  enctype="multipart/form-data">	
     <div class="form-group">
         <label class="col-sm-2 control-label">Label : </label>
-        <div class="col-sm-10"><input type="text" name="label" /></div>
-        <p class="text-danger"> <?php if($this->tMessage and isset($this->tMessage['label'])): echo  implode(',',$this->tMessage['label']); endif;?></p>
+        <div class="col-sm-10"><?php echo $oForm->getInputText('label',array('class'=>'form-control'))?></div>
     </div>
-
-
     <div class="form-group">
-        <label class="col-sm-2 control-label">Fichier GPX (*.gpx) : </label>
-        <div class="col-sm-10"><input type="file" name="fileGPX" /></div>
-        <?php  if($this->tMessage and isset($this->tMessage['extension'])):?><p class="text-danger" ><?php echo $this->tMessage['extension']; ?></p> <?php endif;?></p>
+        <label class="col-sm-2 control-label">Fichier GPX (*.gpx) :</label>
+        <div class="col-sm-10"><?php echo $oForm->getInputUpload('url',array('accept'=>".gpx"))?></div>
     </div>
+
+        <?php echo $oForm->getToken('token',$this->token)?>
+
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <input type="submit" class="btn btn-success" value="Sauvegarder" /> <a class="btn btn-danger" href="<?php echo $this->getLink('parcours::list')?>">Annuler</a>
+            <input type="submit" class="btn btn-success" value="Ajouter" /> <a class="btn btn-link" href="<?php echo $this->getLink('events::show',array( 'id'=>_root::getParam('idEvent')))?>">Annuler</a>
         </div>
     </div>
-    <?php if($this->tMessage and isset($this->tMessage['message'])):?> <p class="<?php if($this->tMessage['lvlError']!=1){echo 'bg-success'; }else{echo 'bg-warning'; } ?> "><?php echo $this->tMessage['message']; ?></p> <?php endif;?>
-    </fieldset>
 </form>
