@@ -1,6 +1,6 @@
 logs/*
 session/*
-/conf/connexion.ini.php
-/conf/auth.ini.php
-/data/upload/GPX
-/UrlDeReference.txt
+conf/connexion.ini.php
+conf/auth.ini.php
+data/upload/GPX
+UrlDeReference.txt
