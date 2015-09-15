@@ -1,0 +1,7 @@
+http://blog.pascal-martin.fr/post/4-google-maps-marqueurs-fenetres-informations.html
+https://openclassrooms.com/forum/sujet/api-google-maps-v3-recuperer-coordonnees-du-lieu-clique-58165
+https://developers.google.com/maps/documentation/javascript/events?csw=1#EventArguments
+
+http://www.touraineverte.com/google-maps-api-version-3/reference/Polyline.html
+
+http://getbootstrap.com/2.3.2/base-css.html#forms
