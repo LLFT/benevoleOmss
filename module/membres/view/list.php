@@ -20,7 +20,7 @@
 		<?php foreach($this->tMembres as $oMembres):?>
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
                     
-                <td> <img id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Smiley face" height="15" width="15"><?php echo ' '.$oMembres->indexMembre .' : '?></td>    
+                <td> <img id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15"><?php echo ' '.$oMembres->indexMembre .' : '?></td>    
 		<td><?php echo $oMembres->nom ?></td>
 
 		<td><?php echo $oMembres->prenom ?></td>
@@ -96,7 +96,7 @@
        console.log( "ready!" );
     };   
     
-    function btnSignalFnt(paramId, paramSig){
+    function btnSignalFnt(paramId){
         console.log( "click" );
         $.ajax({
             url: 'index.php?:nav=membres::ajaxSignaleur&id='+paramId+'',

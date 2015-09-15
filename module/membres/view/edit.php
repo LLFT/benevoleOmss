@@ -9,38 +9,38 @@ $oForm->setMessage($this->tMessage);
         <p style="font-size:10px" class="col-sm-offset-1"> <i>* Champs obligatoires</i></p>
 
 	<div class="form-group">
-		
-                <label control-label">Nom *</label>
-		<?php echo $oForm->getInputText('nom',array('class'=>'form-control','maxlength'=>"40"))?>
-		<label control-label">Prénom *</label>
-		<?php echo $oForm->getInputText('prenom',array('class'=>'form-control','maxlength'=>"40"))?>
-                
+		<label class="col-sm-2 control-label">Nom *</label>
+		<div class="col-sm-4"><?php echo $oForm->getInputText('nom',array('class'=>'form-control','maxlength'=>"40"))?></div>
+		<label class="col-sm-2 control-label">Prénom *</label>
+		<div class="col-sm-4"><?php echo $oForm->getInputText('prenom',array('class'=>'form-control','maxlength'=>"40"))?></div>
 	</div>
         
         <div class="form-group">
-                <label class=" control-label">Possède une adresse Mail ? : </label>
-                <?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?>                  
+                <label class="col-sm-3 control-label">Possède-t-il une adresse Mail ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>
+                <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
         </div>
 	
         <div class="form-group">
-		<label class=" control-label">Adresse Mail *</label>
+		<label class="col-sm-2 control-label">Adresse Mail *</label>
                 <?php $sParamMail=array('class'=>'form-control','maxlength'=>"40");
                     if ($this->oMembres->chkMail!=1){$sParamMail['disabled']='';}
                 ?>                
-		<?php echo $oForm->getInputText('mail',$sParamMail)?>
+		<div class="col-sm-10"><?php echo $oForm->getInputText('mail',$sParamMail)?></div>
 	</div>
 
 	<div class="form-group">
-		<label class=" control-label">Téléphone Fixe **</label>
-		<?php echo $oForm->getInputText('fixe',array('class'=>'form-control','maxlength'=>"20"))?>
-		<label class=" control-label">Téléphone GSM ** </label>
-		<?php echo $oForm->getInputText('gsm',array('class'=>'form-control','maxlength'=>"20"))?>
+		<label class="col-sm-2 control-label">Téléphone Fixe **</label>
+		<div class="col-sm-4"><?php echo $oForm->getInputText('fixe',array('class'=>'form-control','maxlength'=>"20"))?></div>
+		<label class="col-sm-2 control-label">Téléphone GSM ** </label>
+		<div class="col-sm-4"><?php echo $oForm->getInputText('gsm',array('class'=>'form-control','maxlength'=>"20"))?></div>
 	</div>
         <p style="font-size:10px" class="col-sm-offset-1"> <i>** Au moins l'un des 2 champs obligatoires</i></p>
         
         <div class="form-group">
-		<label class=" control-label">Année de Naissance</label>
-		<?php echo $oForm->getInputText('anneeNaissance',array('class'=>'form-control','maxlength'=>"4", 'placeholder'=>"1900"))?>
+		<label class="col-sm-2 control-label">Année de Naissance</label>
+		<div class="col-sm-1"><?php echo $oForm->getInputText('anneeNaissance',array('class'=>'form-control','maxlength'=>"4", 'placeholder'=>"1900"))?></div>
 	</div>
     </fieldset>
     
@@ -48,22 +48,22 @@ $oForm->setMessage($this->tMessage);
         <legend>Adresse Postale</legend>
 
 	<div class="form-group">
-		<label class=" control-label">Numéro de Rue</label>
-		<?php echo $oForm->getInputText('numero',array('class'=>'form-control','maxlength'=>"4"))?>
-		<label class=" control-label">Nom de Rue *</label>
-		<?php echo $oForm->getInputText('rue',array('class'=>'form-control','maxlength'=>"40",'placeholder'=>"Rue, Boulevard, Place, Chemin, Allée,..."))?>
+		<label class="col-sm-2 control-label">Numéro de Rue</label>
+		<div class="col-sm-1"><?php echo $oForm->getInputText('numero',array('class'=>'form-control','maxlength'=>"4"))?></div>
+		<label class="col-sm-2 control-label">Nom de Rue *</label>
+		<div class="col-sm-7"><?php echo $oForm->getInputText('rue',array('class'=>'form-control','maxlength'=>"40",'placeholder'=>"Rue, Boulevard, Place, Chemin, Allée,..."))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class=" control-label">Complément d'adresse</label>
-		<?php echo $oForm->getInputText('complement',array('class'=>'form-control','maxlength'=>"40", 'placeholder'=>"Lieu-Dit, Lotissement, Bis, A, B, C,..."))?>
+		<label class="col-sm-2 control-label">Complément d'adresse</label>
+		<div class="col-sm-10"><?php echo $oForm->getInputText('complement',array('class'=>'form-control','maxlength'=>"40", 'placeholder'=>"Lieu-Dit, Lotissement, Bis, A, B, C,..."))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class=" control-label">Ville *</label>
-		<?php echo $oForm->getInputText('ville',array('class'=>'form-control','maxlength'=>"40"))?>
-		<label class=" control-label">Code Postal *</label>
-		<?php echo $oForm->getInputText('codePostal',array('class'=>'form-control','maxlength'=>"6"))?>
+		<label class="col-sm-2 control-label">Ville *</label>
+		<div class="col-sm-4"><?php echo $oForm->getInputText('ville',array('class'=>'form-control','maxlength'=>"40"))?></div>
+		<label class="col-sm-2 control-label">Code Postal *</label>
+		<div class="col-sm-4"><?php echo $oForm->getInputText('codePostal',array('class'=>'form-control','maxlength'=>"6"))?></div>
 	</div>
     </fieldset>
 
@@ -71,21 +71,21 @@ $oForm->setMessage($this->tMessage);
         <legend>Informations Complémentaires</legend>
 
 	<div class="form-group">
-		<label class=" control-label">Club / Association </label>
-		<?php echo $oForm->getInputText('club',array('class'=>'form-control','maxlength'=>"40"))?>
+		<label class="col-sm-2 control-label">Club / Association </label>
+		<div class="col-sm-10"><?php echo $oForm->getInputText('club',array('class'=>'form-control','maxlength'=>"40"))?></div>
 	</div>
         
         <div class="form-group">
-                <label class=" control-label">Possède le Permis ? : </label>
-                <?php echo $oForm->getInputCheckbox('chkPermis',1, array('class'=>'form-control'))?>                   
+                <label class="col-sm-2 control-label">Possède le Permis ? : </label>
+                <div class="col-sm-10"><?php echo $oForm->getInputCheckbox('chkPermis',1, array('class'=>'form-control'))?></div>                    
         </div>
             
 	<div class="form-group">
-		<label class=" control-label">Numéros de Permis</label>
+		<label class="col-sm-2 control-label">Numéros de Permis</label>
                 <?php $sParamNumPermis=array('class'=>'form-control','maxlength'=>"20");
                     if ($this->oMembres->chkPermis!=1){$sParamNumPermis['disabled']='';}
                 ?> 
-		<?php echo $oForm->getInputText('numPermis',$sParamNumPermis)?>
+		<div class="col-sm-10"><?php echo $oForm->getInputText('numPermis',$sParamNumPermis)?></div>
 	</div>
     </fieldset>
 
@@ -109,6 +109,10 @@ function happycode(){
    $('input[name="chkPermis"]').on('switchChange.bootstrapSwitch', function(event, state) {
        activerNumPermis(state);
    });
+   
+   
+   $('input[name="chkSignaleur"]').bootstrapSwitch();
+   
 }
 
 function activerMail(state) {
@@ -131,7 +135,7 @@ window.onload=happycode ;
 </script>
 
 <div class="form-group">
-    <div class="col-sm-offset-2 ">
+    <div class="col-sm-offset-2 col-sm-2">
 		<input type="submit" class="btn btn-success" value="Modifier" /> <a class="btn btn-link" href="<?php echo $this->getLink('membres::show',array('id'=>$this->oMembres->idMembre))?>">Annuler</a>
 	</div>
     <div class="col-sm-offset-7 col-sm-1">
