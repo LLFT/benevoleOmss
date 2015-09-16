@@ -15,8 +15,12 @@ class model_events extends abstract_model{
 	public function findById($uId){
 		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idEvent=?',$uId );
 	}
-	public function findAll(){
-		return $this->findMany('SELECT * FROM '.$this->sTable);
+	public function findAllActif(){
+		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE active=1');
+	}
+        
+        public function findAllArchive(){
+		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE active=0' );
 	}
 	
 	

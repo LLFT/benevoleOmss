@@ -1,6 +1,6 @@
 <form class="form-horizontal" action="" method="POST" >
     <fieldset>
-        <legend><?php echo $this->oEvents->nomEvent ?> - (<?php echo $this->oEvents->date ?>)</legend>
+        <legend> <?php if ($this->oEvents->active != 1) :?><s> <?php endif; ?> <?php echo $this->oEvents->nomEvent ?> - (<?php echo $this->oEvents->date ?>)<?php if ($this->oEvents->active != 1) :?></s> <?php endif; ?></legend>
 	
         
         <div class="form-group">
@@ -32,8 +32,9 @@
                 </div>
 	<?php endif;?>
     </table>
-        
+    <?php if ($this->oEvents->active != 0) :?>    
     <p><a class="btn btn-success" href="<?php echo $this->getLink('parcours::new',array('idEvent'=>_root::getParam('id'))) ?>">Ajouter parcours</a></p>
+    <?php endif;?>
     </fieldset>
     <fieldset>
         <legend>Actions </legend>  
@@ -41,12 +42,14 @@
             <div class="col-sm-offset-7 col-sm-1">
                 <a class="btn btn-default" href="<?php echo $this->getLink('events::list')?>">Retour</a>
             </div>
+            <?php if ($this->oEvents->active != 0) :?>
             <div class="col-sm-1">
                 <a class="btn btn-success" href="<?php echo $this->getLink('events::edit',array('id'=>$this->oEvents->getId()))?>">Modifier</a>
             </div>
             <div class=" col-sm-1">
-                <a class="btn btn-danger" href="<?php echo $this->getLink('events::delete',array('id'=>$this->oEvents->getId()))?>">Supprimer</a>
+                <a class="btn btn-danger" href="<?php echo $this->getLink('events::delete',array('id'=>$this->oEvents->getId()))?>">Archiver</a>
             </div>
+            <?php endif;?>
         </div>
     </fieldset>
 </form>

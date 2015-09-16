@@ -6,7 +6,7 @@
         <a class="btn btn-danger" href="<?php echo $this->getLink('events::show',array('id'=>_root::getParam('idEvent')))?>">Retour à l'évènement</a>
     </div>
     <div class="col-sm-offset-2 col-sm-2">
-    <a class="btn btn-danger" href="<?php echo $this->getLink('parcours::delete',array( 'id'=>$this->oParcours->getId(), 'idEvent'=>_root::getParam('idEvent') ) )?>">Delete</a>
+    <a class="btn btn-danger" href="<?php echo $this->getLink('parcours::delete',array( 'id'=>$this->oParcours->getId(), 'idEvent'=>_root::getParam('idEvent') ) )?>">Supprimer</a>
     </div>
  
 
