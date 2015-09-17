@@ -172,10 +172,9 @@ class module_membres extends abstract_module{
 	
 	public function _edit(){
 		$tMessage=$this->processSave();
-		
+                //On liste les informations propres au participant
 		$oMembres=model_membres::getInstance()->findById( _root::getParam('id') );
-		
-		$oView=new _view('membres::edit');
+                $oView=new _view('membres::edit');
 		$oView->oMembres=$oMembres;
 		$oView->tId=model_membres::getInstance()->getIdTab();
 		
@@ -193,23 +192,31 @@ class module_membres extends abstract_module{
 	public function _show(){
             
             $oView=new _view('membres::show');
+            //On liste les informations propres au participant
             $oMembre=model_membres::getInstance()->findById( _root::getParam('id') );
-            if($oMembre->coord==1){
-                $oModuleGoogleMap=new module_googleMap();
-                $oModuleGoogleMap->setWidth(500);
-                $oModuleGoogleMap->setHeight(500);
-                $oModuleGoogleMap->setZoom(15);
-                $oModuleGoogleMap->setMinZoom(13); //Zoom Arriere
-                $oModuleGoogleMap->setMaxZoom(18); //Zoom Avant
-                //$oModuleGoogleMap->setEnableZoomControl('false');
-                $oModuleGoogleMap->setEnableScrollwheel('true');
-                $oModuleGoogleMap->setDisableDoubleClickZoom('true');
-                $sPositionGPS=$oMembre->lat.','.$oMembre->lng;
-                $sTitreGM=$oMembre->indexMembre. ' : ';
-                $tContentGM= array('<b>'.$oMembre->nom.' '.$oMembre->prenom.'</b>');
-                $oModuleGoogleMap->addPositionWithContent($sPositionGPS,$sTitreGM,$tContentGM);
-                $oView->oModuleGoogleMap=$oModuleGoogleMap->getMap(); 	
-            }	
+            //On liste tous les évènements connus et actifs 
+            $tJoinEvents=model_events::getInstance()->getSelect();
+            //On liste toutes les relations connus entre le participant et les évènements
+            $tJoinIdEvents=model_relationeventmemb::getInstance()->getSelectIdEvent(_root::getParam('id'));
+            $oView->tJoinEvents=$tJoinEvents;
+            $oView->tJoinIdEvents=$tJoinIdEvents;
+//            if($oMembre->coord==1){
+//                $oModuleGoogleMap=new module_googleMap();
+//                $oModuleGoogleMap->setWidth(500);
+//                $oModuleGoogleMap->setHeight(500);
+//                $oModuleGoogleMap->setZoom(15);
+//                $oModuleGoogleMap->setMinZoom(13); //Zoom Arriere
+//                $oModuleGoogleMap->setMaxZoom(18); //Zoom Avant
+//                //$oModuleGoogleMap->setEnableZoomControl('false');
+//                $oModuleGoogleMap->setEnableScrollwheel('true');
+//                $oModuleGoogleMap->setDisableDoubleClickZoom('true');
+//                $sPositionGPS=$oMembre->lat.','.$oMembre->lng;
+//                $sTitreGM=$oMembre->indexMembre. ' : ';
+//                $tContentGM= array('<b>'.$oMembre->nom.' '.$oMembre->prenom.'</b>');
+//                $oModuleGoogleMap->addPositionWithContent($sPositionGPS,$sTitreGM,$tContentGM);
+//                $oView->oModuleGoogleMap=$oModuleGoogleMap->getMap(); 	
+//            }
+            
             $oView->oMembres=$oMembre;                           
             $this->oLayout->add('main',$oView);
 	}
@@ -238,6 +245,9 @@ class module_membres extends abstract_module{
             
         }
         
+        /*
+         * Déclare le membre comme étant un signaleur.
+         */        
         public function _ajaxSignaleur() {
             $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
             $oMembres->modifier=date('Y-m-d H:i:s',time());
@@ -252,6 +262,20 @@ class module_membres extends abstract_module{
             $oMembres->saveF();
             return true;
         }
+        /*
+         * Inscrit au Désincrit un membre d'un évènement
+         */
+        public function _ajaxJoinEventMembre() {
+            if(_root::getParam('action')=='join'){
+                model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+                return True;
+            }elseif(_root::getParam('action')=='unjoin'){
+                model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+                return True;
+            }  else {
+                return False;
+            }
+        }   
         
 	public function _delete(){
 		$tMessage=$this->processDelete();
@@ -335,7 +359,9 @@ class module_membres extends abstract_module{
 		}
 		
 		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur');
-		foreach($tColumn as $sColumn){
+		var_dump($_POST);
+                die();
+                foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':
                                 $oMembres->$sColumn= strtoupper(_root::getParam($sColumn,null));

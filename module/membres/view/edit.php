@@ -2,6 +2,8 @@
 $oForm=new plugin_form($this->oMembres);
 $oForm->setMessage($this->tMessage);
 ?>
+
+
 <form class="form-horizontal" action="" method="POST" >
 
     <fieldset>
@@ -89,6 +91,7 @@ $oForm->setMessage($this->tMessage);
 	</div>
     </fieldset>
 
+    
 <?php echo $oForm->getToken('token',$this->token)?>
     
 <script language="Javascript">
@@ -134,9 +137,10 @@ function activerNumPermis(state) {
 window.onload=happycode ; 
 </script>
 
-<div class="form-group">
+<div class="form-horizontal">
     <div class="col-sm-offset-2 col-sm-2">
-		<input type="submit" class="btn btn-success" value="Modifier" /> <a class="btn btn-link" href="<?php echo $this->getLink('membres::show',array('id'=>$this->oMembres->idMembre))?>">Annuler</a>
+		<input type="submit" class="btn btn-success" value="Modifier" /> 
+                <a class="btn btn-default" href="<?php echo $this->getLink('membres::show',array('id'=>$this->oMembres->idMembre))?>">Annuler</a>
 	</div>
     <div class="col-sm-offset-7 col-sm-1">
                     <a class="btn btn-danger" href="<?php echo $this->getLink('membres::delete',array('id'=>$this->oMembres->idMembre))?>">Supprimer</a>
