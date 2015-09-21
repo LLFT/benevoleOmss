@@ -6,22 +6,22 @@ $oForm->setMessage($this->tMessage);
 
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label">Nom de l'évènement</label>
+		<label class="col-sm-2 control-label">Nom de l'évènement :</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('nomEvent',array('class'=>'form-control'))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-2 control-label">Date</label>
+		<label class="col-sm-2 control-label">Date :</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('date',array('class'=>'form-control'))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-2 control-label">Lieux</label>
+		<label class="col-sm-2 control-label">Lieux :</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('lieux',array('class'=>'form-control'))?></div>
 	</div>
 
 	<div class="form-group">
-		<label class="col-sm-2 control-label">description</label>
+		<label class="col-sm-2 control-label">Description :</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputTextarea('description',array('class'=>'form-control'))?></div>
 	</div>
 

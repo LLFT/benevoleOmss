@@ -72,6 +72,11 @@ $oForm->setMessage($this->tMessage);
 		<label class="col-sm-2 control-label">Numéros de Permis</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('numPermis',array('class'=>'form-control','maxlength'=>"20",'disabled'=>""))?></div>
 	</div>
+        
+        <div class="form-group">
+		<label class="col-sm-2 control-label">Commentaire : </label>
+		<div class="col-sm-10"><?php echo $oForm->getInputTextarea('comment',array('class'=>'form-control'))?></div>
+	</div>
     </fieldset>
 
     <script language="Javascript">

@@ -334,7 +334,7 @@ class module_membres extends abstract_module{
                         $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
 		}
 		
-		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur');
+		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','comment');
 		foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':
