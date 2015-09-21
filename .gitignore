@@ -7,3 +7,4 @@ conf/auth.ini.php
 data/upload/GPX
 UrlDeReference.txt
 .gitignore
+/nbproject/
