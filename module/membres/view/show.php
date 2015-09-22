@@ -53,27 +53,35 @@
 	</div>
         
         </fieldset>
-    
-
+    <?php if($this->tJoinEvents):?>
+      <div class="container">
         <fieldset>
-        <legend>Localisation : </legend>
-        <?php if(isset($this->oModuleGoogleMap)):?>
-            <div class="col-sm-offset-3 col-sm-7">
-                <p class="form-control-static"><?php echo $this->oModuleGoogleMap->show();?></p>
-            </div> 
-           
-        <?php else:?>
+            <legend>Participe aux évènements : </legend>
+            <div id="checkboxs" class=" form-group">
+   
+                   <?php foreach ($this->tJoinEvents as $key => $sNameEvent) :?> 
+                    <div class="col-sm-offset-1 checkbox">
+                        
+                        <INPUT type="checkbox" name="<?php echo 'Event_'.$key;?>" value="<?php echo $key;?>" 
+                               <?php if(in_array($key, $this->tJoinIdEvents)) :?> checked="checked" <?php endif;?>
+                             >                  
+                 
+                           <a  href="<?php echo $this->getLink('events::show',array('id'=>$key))?>"><?php echo $sNameEvent ?></a>
+  
+                    </div>
+
+                   <?php endforeach;?>
+
+               
+           </div>
         
-            <?php if($this->oMembres->rue ==""):?>
-                <div class="col-sm-offset-3 col-sm-7">
-                    <p>Les informations sont insuffisantes pour localiser ce membre.</p>
-                </div>
-            <?php endif;?>
-        <?php endif;?>
         </fieldset>
+        </div>
+    <?php endif;?>
+
     
 </fieldset>
-<div class="form-group">
+<div  class="container">
     <div class="col-sm-offset-1 col-sm-10">
         <a class="btn btn-primary btnNext" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre-1)))?>">Membre Prec.</a>	 
 	
@@ -81,13 +89,6 @@
             <a class="col-sm-offset-1 btn btn-success" href="<?php echo $this->getLink('membres::edit',array( 'id'=>$this->oMembres->idMembre))?>">Edit</a>	 
         <?php endif;?>
             
-        <?php if ( _root::getACL()->can('ACCESS','membres::localizeMember')):?>   
-            <?php if (($this->oMembres->rue !="")&&($this->oMembres->coord !=1)):?>            
-                <a class="btn btn-info" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembres->idMembre))?>">Localiser</a>
-            <?php elseif (($this->oMembres->rue !="")&&($this->oMembres->coord == 1)) :?>    
-                <a class="btn btn-info" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembres->idMembre))?>">Re-Localiser</a>
-            <?php endif;?> 
-        <?php endif;?>
                 
         <a class="btn btn-default" href="<?php echo $this->getLink('membres::list',array( 'letter'=>$this->oMembres->nom[0]))?>">Retour</a>
         <a class="col-sm-offset-1 btn btn-primary" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre+1)))?>">Membre Suiv.</a>	 
@@ -95,3 +96,25 @@
     
 </div>
 </form>
+
+<script language="Javascript">
+   window.onload = function(){  
+       console.log( "ready!" );
+    
+   
+ $('div#checkboxs.form-group div.col-sm-offset-1.checkbox input').on('click',function(){
+     cochee = $(this).is(':checked');
+     action='unjoin';
+    if(cochee){
+         action='join';
+     }
+        $.ajax({
+            url: 'index.php?:nav=membres::ajaxJoinEventMembre&action='+action+'&idMembre='+<?php echo $this->oMembres->idMembre; ?>+'&idEvent='+this.value,
+            
+        });
+      
+      
+    });
+        
+   };   
+  </script>

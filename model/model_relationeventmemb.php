@@ -1,50 +1,75 @@
 <?php
-class model_events extends abstract_model{
+class model_relationeventmemb extends abstract_model{
 	
-	protected $sClassRow='row_events';
+	protected $sClassRow='row_relationeventmemb';
 	
-	protected $sTable='events';
+	protected $sTable='relationeventmemb';
 	protected $sConfig='benevoleOmss';
 	
-	protected $tId=array('idEvent');
+	protected $tId=array('idRelationEM');
 
 	public static function getInstance(){
 		return self::_getInstance(__CLASS__);
 	}
 
 	public function findById($uId){
-		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idEvent=?',$uId );
-	}
-	public function findAllActif(){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE active=1');
+		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idRelationEM=?',$uId );
 	}
         
-        public function findAllArchive(){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE active=0' );
+        public function findIdMembreByIdEvent($uId){
+		return $this->findMany('SELECT idMembre FROM '.$this->sTable.' WHERE idEvent=?',$uId );
+	}
+        
+        public function findIdEventByIdMembre($uId){
+		return $this->findMany('SELECT idEvent FROM '.$this->sTable.' WHERE idMembre=?',$uId );
+	}
+        
+	public function findAll(){
+		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
 	
-//        public function findAllEventsMember($uId){
-//            return $this->findMany('SELECT distinct e.nomEvent, e.idEvent FROM relationeventmemb as r, '.$this->sTable.' as e, membres as m where r.idMembre = ? and r.idEvent = e.idEvent and e.active=1',$uId );
-//        }
 	
-	public function getSelect(){
-		$tab=$this->findAllActif();
+	public function getSelectIdMembre($uId){
+		$tab=$this->findIdMembreByIdEvent($uId);
 		$tSelect=array();
 		if($tab){
-		foreach($tab as $oRow){
-			$tSelect[ $oRow->idEvent ]=$oRow->nomEvent;
-		}
+                    foreach($tab as $oRow){
+                            $tSelect[ ]=$oRow->idMembre;
+                    }
 		}
 		return $tSelect;
 	}
-	
-
-	
+        
+        public function getSelectIdEvent($uId){
+		$tab=$this->findIdEventByIdMembre($uId);
+		$tSelect=array();
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[]=$oRow->idEvent;
+                    }
+		}
+		return $tSelect;
+	}
+        
+        public function joinMemberEvent($idMembre,$idEvent){
+        $this->unJoinMemberEvent($idMembre,$idEvent);
+        
+        $rowRelationeventmemb=new row_relationeventmemb;
+        $rowRelationeventmemb->idMembre=$idMembre;
+        $rowRelationeventmemb->idEvent=$idEvent;
+        $rowRelationeventmemb->save();
+        
+        }
+        
+        public function unJoinMemberEvent($idMembre,$idEvent){
+            $this->execute('DELETE FROM '.$this->sTable.' WHERE idMembre=? AND idEvent=?',$idMembre,$idEvent);
+        }
+        
 }
 
-class row_events extends abstract_row{
+class row_relationeventmemb extends abstract_row{
 	
-	protected $sClassModel='model_events';
+	protected $sClassModel='model_relationeventmemb';
 	
 	/*exemple jointure 
 	public function findAuteur(){
@@ -52,20 +77,6 @@ class row_events extends abstract_row{
 	}
 	*/
 	/*exemple test validation*/
-        
-        public function __construct($tRow=null){
-            
-            parent::__construct($tRow);
-            
-            //on modifie le champ date avant d'initialiser l'objet
-            if (isset($tRow['date'])){
-                if (is_null($tRow['date'])){
-                    $tRow['date'] = date('Y-m-d',  time ());
-                }
-                $oDate = new plugin_date($tRow['date'],'Y-m-d');
-                $this->date = $oDate->toString('d/m/Y');
-            }
-        }
         
         
 	private function getCheck(){
@@ -99,12 +110,6 @@ class row_events extends abstract_row{
 		if(!$this->isValid()){
 			return false;
 		}
-                
-                //on formate à la volée la date
-                
-                $oDate = new plugin_date($this->date,'d/m/Y');
-                $this->date = $oDate->toString('Y-m-d');
-               
 		parent::save();
 		return true;
 	}

@@ -16,7 +16,14 @@ class module_events extends abstract_module{
 	
 	public function _list(){
 		
-		$oEvents=model_events::getInstance()->findAll();
+            switch (_root::getParam('action')){
+                case 'archiv':
+                    $oEvents=model_events::getInstance()->findAllArchive();
+                    break;
+                default :
+                    $oEvents=model_events::getInstance()->findAllActif();
+            }
+		
 		
 		$oView=new _view('events::list');
 		$oView->oEvents=$oEvents;
@@ -109,9 +116,14 @@ class module_events extends abstract_module{
 	
 		$iId=_root::getParam('id',null);
 		if($iId==null){                        
-			$oEvents=new row_events;	
+			$oEvents=new row_events;
+                        $oEvents->creer=date('Y-m-d H:i:s',time());
+                        $oEvents->owner=_root::getAuth()->getAccount()->idAccount;
+                        $oEvents->active=1;
 		}else{
 			$oEvents=model_events::getInstance()->findById( _root::getParam('id',null) );
+                        $oEvents->modifier=date('Y-m-d H:i:s',time());
+                        $oEvents->owner=_root::getAuth()->getAccount()->idAccount;
 		}
 		
 		$tColumn=array('nomEvent','date','lieux','description');
@@ -142,8 +154,10 @@ class module_events extends abstract_module{
 		}
 	
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id',null) );
-				
-		$oEvents->delete();
+                $oEvents->active=0;
+                $oEvents->supprimer=date('Y-m-d H:i:s',time());
+                $oEvents->owner=_root::getAuth()->getAccount()->idAccount;
+		$oEvents->save();
 		//une fois enregistre on redirige (vers la page liste)
 		_root::redirect('events::list');
 		
