@@ -29,7 +29,7 @@
 	<?php endif;?>
 </table>
 
-<p><a class="btn btn-primary" href="<?php echo $this->getLink('events::new') ?>">Ajouter un évènement</a>
+<p><a class="btn btn-primary" href="<?php echo $this->getLink('events::new') ?>">Ajouter un nouvel évènement</a>
 <?php if (_root::getParam('action')=='archiv'):?>
 <a class="btn btn-info" href="<?php echo $this->getLink('events::list') ?>">Afficher les évènements</a></p>
 <?php else :?>
