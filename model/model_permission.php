@@ -16,7 +16,7 @@ class model_permission extends abstract_model{
 		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idPermission=?',$uId );
 	}
 	public function findAll(){
-		return $this->findMany('SELECT * FROM '.$this->sTable);
+		return $this->findMany('SELECT * FROM '.$this->sTable.' order by groupe_id');
 	}
 	
 	public function findByGroup($group){

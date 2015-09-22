@@ -58,9 +58,16 @@
                         
                         <INPUT type="checkbox" name="<?php echo 'Event_'.$key;?>" value="<?php echo $key;?>" 
                                <?php if(in_array($key, $this->tJoinIdEvents)) :?> checked="checked" <?php endif;?>
+                               <?php if ( !_root::getACL()->can('ACCESS','events::list')):?> disabled="disabled" <?php endif;?>
                              >                  
                  
-                           <a  href="<?php echo $this->getLink('events::show',array('id'=>$key))?>"><?php echo $sNameEvent ?></a>
+                           <a  href="
+                               <?php 
+                               if ( _root::getACL()->can('ACCESS','events::list')){
+                                    echo $this->getLink('events::show',array('id'=>$key));                               
+                               }?>
+                               
+                               "><?php echo $sNameEvent ?></a>
   
                     </div>
 
