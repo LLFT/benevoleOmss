@@ -12,16 +12,13 @@ class model_relationeventmemb extends abstract_model{
 		return self::_getInstance(__CLASS__);
 	}
 
-	public function findById($uId){
-		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idRelationEM=?',$uId );
-	}
         
         public function findIdMembreByIdEvent($uId){
-		return $this->findMany('SELECT idMembre FROM '.$this->sTable.' WHERE idEvent=?',$uId );
+		return $this->findMany('SELECT membre_id FROM '.$this->sTable.' WHERE event_id=?',$uId );
 	}
         
         public function findIdEventByIdMembre($uId){
-		return $this->findMany('SELECT idEvent FROM '.$this->sTable.' WHERE idMembre=?',$uId );
+		return $this->findMany('SELECT event_id FROM '.$this->sTable.' WHERE membre_id=?',$uId );
 	}
         
 	public function findAll(){
@@ -34,7 +31,7 @@ class model_relationeventmemb extends abstract_model{
 		$tSelect=array();
 		if($tab){
                     foreach($tab as $oRow){
-                            $tSelect[ ]=$oRow->idMembre;
+                            $tSelect[ ]=$oRow->membre_id;
                     }
 		}
 		return $tSelect;
@@ -45,7 +42,7 @@ class model_relationeventmemb extends abstract_model{
 		$tSelect=array();
 		if($tab){
                     foreach($tab as $oRow){
-                            $tSelect[]=$oRow->idEvent;
+                            $tSelect[]=$oRow->event_id;
                     }
 		}
 		return $tSelect;
@@ -55,14 +52,14 @@ class model_relationeventmemb extends abstract_model{
         $this->unJoinMemberEvent($idMembre,$idEvent);
         
         $rowRelationeventmemb=new row_relationeventmemb;
-        $rowRelationeventmemb->idMembre=$idMembre;
-        $rowRelationeventmemb->idEvent=$idEvent;
+        $rowRelationeventmemb->membre_id=$idMembre;
+        $rowRelationeventmemb->event_id=$idEvent;
         $rowRelationeventmemb->save();
         
         }
         
         public function unJoinMemberEvent($idMembre,$idEvent){
-            $this->execute('DELETE FROM '.$this->sTable.' WHERE idMembre=? AND idEvent=?',$idMembre,$idEvent);
+            $this->execute('DELETE FROM '.$this->sTable.' WHERE membre_id=? AND event_id=?',$idMembre,$idEvent);
         }
         
 }

@@ -33,7 +33,7 @@ Class module_menu extends abstract_moduleembedded{
      
             
 		);
-
+            if(_root::getConfigVar('auth.enabled')===1){;
                 foreach($tLink as $sLabelPrim => $sLink){                  
                     
                     if (is_array($sLink)){
@@ -53,6 +53,7 @@ Class module_menu extends abstract_moduleembedded{
                     }
                     
                 }
+            }
                 $tLink2=array();
                 $tLink2['Accueil'] = 'default::index';
                 $tLink2['Deconnexion'] = 'auth::logout';

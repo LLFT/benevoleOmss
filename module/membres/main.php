@@ -6,8 +6,12 @@ class module_membres extends abstract_module{
 		
 		$this->oLayout->addModule('menu','menu::index');
                 
-                if(!_root::getACL()->can('ACCESS','membres::list')){
-                    _root::redirect('default::index');
+                //Vérifions que l'authentification est active
+                if(_root::getConfigVar('auth.enabled')===1){;
+                    //Vérifions que le compte peut accèder à ce module
+                    if(!_root::getACL()->can('ACCESS','membres::list')){
+                        _root::redirect('default::index');
+                    }
                 }
                 
 //                if(!_root::getACL()->can('ACCESS','membres::listEmptyAdress')){
@@ -244,38 +248,7 @@ class module_membres extends abstract_module{
         
             
         }
-        
-        /*
-         * Déclare le membre comme étant un signaleur.
-         */        
-        public function _ajaxSignaleur() {
-            $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
-            $oMembres->modifier=date('Y-m-d H:i:s',time());
-            $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
-            
-            if($oMembres->chkSignaleur!=0){
-                $oMembres->chkSignaleur=0;            
-            }else{
-                $oMembres->chkSignaleur=1;
-            }
-            
-            $oMembres->saveF();
-            return true;
-        }
-        /*
-         * Inscrit au Désincrit un membre d'un évènement
-         */
-        public function _ajaxJoinEventMembre() {
-            if(_root::getParam('action')=='join'){
-                model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
-                return True;
-            }elseif(_root::getParam('action')=='unjoin'){
-                model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
-                return True;
-            }  else {
-                return False;
-            }
-        }   
+   
         
 	public function _delete(){
 		$tMessage=$this->processDelete();
@@ -359,8 +332,6 @@ class module_membres extends abstract_module{
 		}
 		
 		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur');
-		var_dump($_POST);
-                die();
                 foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':
@@ -370,7 +341,7 @@ class module_membres extends abstract_module{
                                 $oMembres->$sColumn= strtoupper(_root::getParam($sColumn,null))[0].substr(_root::getParam($sColumn,null),1);
                                 break;
                             default :    
-                                $oMembres->$sColumn=_root::getParam($sColumn,null) ;
+                                $oMembres->$sColumn=_root::getParam($sColumn,0) ;
                         }
 			
 		}
@@ -415,7 +386,46 @@ class module_membres extends abstract_module{
 	public function after(){
 		$this->oLayout->show();
 	}
-	
+//Les appels AJAX         
+        /*
+         * Déclare le membre comme étant un signaleur.
+         */        
+        public function _ajaxSignaleur() {
+            $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
+            $oMembres->modifier=date('Y-m-d H:i:s',time());
+            $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
+            
+            if($oMembres->chkSignaleur!=0){
+                $oMembres->chkSignaleur=0;            
+            }else{
+                $oMembres->chkSignaleur=1;
+            }
+            
+            $oMembres->saveF();
+            return true;
+        }
+        /*
+         * Inscrit au Désincrit un membre d'un évènement
+         */
+        public function _ajaxJoinEventMembre() {
+            if(_root::getParam('action')=='join'){
+                model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+                return True;
+            }elseif(_root::getParam('action')=='unjoin'){
+                model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+                return True;
+            }  else {
+                return False;
+            }
+        }
+        /*
+         * Obtenir les coordonées de tous les membres participant à un evenement.
+         */
+        public function _ajaxGetEventMembre() {
+            $oMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+            return json_encode($oMembresCoord);
+        }
+        
 	
 }
 

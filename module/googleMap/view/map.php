@@ -1,12 +1,25 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
-<script>var map;
+<script>
+    var map;
+    var poly;
 var initialize;
 var geocoder;
 
 
 function initialize(){
 	geocoder=new google.maps.Geocoder();
+        
+        var myStyles =[
+            {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [
+                      { visibility: "off" }
+                ]
+            }
+        ];
+
  
 	var latLng = new google.maps.LatLng(45.4333,4.4)//Correspond au coordonnées de Saint-Etienne (48.87151859999999, 2.3422328000000334); // Correspond au coordonnées de Lille
 	var myOptions = {
@@ -22,7 +35,8 @@ function initialize(){
         panControl : <?php echo $this->sEnablePanControl?>, // Panneau de déplacement
         zoomControl : <?php echo $this->sEnableZoomControl?>,             // supprime l'icône de contrôle du zoom  
         scrollwheel : <?php echo $this->sEnableScrollwheel?>,             // désactive le zoom avec la molette de la souris 
-        disableDoubleClickZoom : <?php echo $this->sDisableDoubleClickZoom?>    // désactive le zoom sur le double-clic
+        disableDoubleClickZoom : <?php echo $this->sDisableDoubleClickZoom?>,
+        styles: myStyles    // désactive le zoom sur le double-clic
 	};
 
         
@@ -106,12 +120,13 @@ function showGpxOnMap(){
        });
        
        //Initialise le Polygone qui va représenter la trace sur la map
-       var poly = new google.maps.Polyline({
+       poly = new google.maps.Polyline({
          // use your own style here
          path: points,
          strokeColor: "#FF00AA",
          strokeOpacity: .7,
-         strokeWeight: 4
+         strokeWeight: 4,
+         clickable: false
        });
 //       Rend cette forme sur la carte spécifiée.
        poly.setMap(map);
@@ -122,10 +137,65 @@ function showGpxOnMap(){
     });
 }
 
-function test(message){
-    alert('toto');
-    alert(message);
+function test(){
+    
+    //--> Configuration de l'icône personnalisée
+    var image = {
+        // Adresse de l'icône personnalisée
+        url: '../css/images/chasuble-J-36x47.png',
+        // Taille de l'icône personnalisée
+        size: new google.maps.Size(36, 47),
+        // Origine de l'image, souvent (0, 0)
+        origin: new google.maps.Point(0,0),
+        // L'ancre de l'image. Correspond au point de l'image que l'on raccroche à la carte. Par exemple, si votre îcone est un drapeau, cela correspond à son mâts
+        anchor: new google.maps.Point(0, 20)
+    };
+    
+    if(poly.get('clickable')){
+        poly.setOptions({clickable: false});
+        alert("Un clic droit supprime l’événement click de l’objet map.");
+        google.maps.event.clearListeners(poly, 'click');
+    }else{
+        poly.setOptions({clickable: true});
+        alert(poly.get('clickable'));
+        google.maps.event.addListener(poly, 'click', function(event){
+            var Lat=event.latLng.lat();
+            var Lng=event.latLng.lng();
+            $("input#Lat").val(Lat);
+            $("input#Lng").val(Lng);        
+            var signaleur = new google.maps.LatLng(Lat, Lng);
+            var marker = new google.maps.Marker({
+                position: signaleur,
+                map: map,
+                flat: false,
+                draggable:true,
+                icon: image
+            });
+
+        });
+    }
+    
+
 }
+
+    function Volontaires(idEvent){
+        $.ajax({
+            type: 'GET',
+            url: 'index.php?:nav=membres::ajaxGetEventMembre&idEvent='+idEvent+'',
+            timeout: 3000,
+            success: function(data) {
+              var JSONObject = $.parseJSON(data);
+              console.log(JSONObject);
+              for (var key in JSONObject) {
+                if (JSONObject.hasOwnProperty(key)) {
+                    console.log(JSONObject[key]["idMembre"] + ", " + JSONObject[key]["nom"]);
+                }
+              }
+          },
+            error: function() {
+              alert('La requête n\'a pas abouti'); }
+        });
+    }
 
 </script>
 

@@ -55,23 +55,44 @@ class module_parcours extends abstract_module{
 	
 	public function _show(){
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
-		
+                $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+
 		$oView=new _view('parcours::show');
-		$oView->oParcours=$oParcours;
+                $oView->oParcours=$oParcours;
                 
-                $oModuleGoogleMap=new module_googleMap();
-                $oModuleGoogleMap->setWidth(800);
-                $oModuleGoogleMap->setHeight(500);
-                $oModuleGoogleMap->setZoom(15);
-                $oModuleGoogleMap->setMinZoom(12); //Zoom Arriere
-                $oModuleGoogleMap->setEnableZoomControl('true');
-                $oModuleGoogleMap->setEnableScrollwheel('true');
-                $oModuleGoogleMap->setDisableDoubleClickZoom('false');
-                $oModuleGoogleMap->setTraceGPX(true);
-                $oModuleGoogleMap->setUrlTraceGPX($oParcours->url);
-                $oView->oModuleGoogleMap=$oModuleGoogleMap->getMap(); 	          
-		
-		
+                $gmap = new my_GoogleMapAPI();                
+                //Charge le contenu du GPX dans la class geoPHP
+                $polygon = geoPHP::load(file_get_contents($oParcours->url),'gpx');
+                //Mesure l'aire couverte par la trace GPX
+                $area = $polygon->getArea();
+                //Calcule le centre de l'aire
+                $centroid = $polygon->getCentroid();
+                // Coordonées du centre
+                $centLng = $centroid->getX();
+                $centLat = $centroid->getY();
+                $tGpx = $polygon->asArray(); 
+                
+                
+                $gmap->setDivId('containerMap');
+                $gmap->setDirectionDivId('route');
+//                $gmap->setCenterLatLng($centLat,$centLng);
+                $gmap->setEnableWindowZoom(true);
+                $gmap->setDefaultLat($centLat);
+                $gmap->setDefaultLng($centLng);                
+                $gmap->setSize('800px','500px');
+                $gmap->setZoom(15);
+                $gmap->setMaxZoom(20);
+                $gmap->setMinZoom(12);
+                $gmap->setLang('fr');
+                $gmap->setDefaultHideMarker(false);
+                $gmap->setShowImmediatParcours(true);
+                $gmap->addPolyligne($tGpx);
+                $gmap->addParticipants($tMembresCoord,'volontaires');
+                //$gmap->setStreetViewControl(FALSE);                
+                $gmap->setClusterer(true,100,15,'./js/markerclusterer_compiled.js'); //Désactivé sinon les Markers sont réaffiché à chaque zoom
+            
+                $gmap->generate();
+                $oView->oModuleGoogleMap=$gmap;
 		$this->oLayout->add('main',$oView);
 	}
 
@@ -127,6 +148,12 @@ class module_parcours extends abstract_module{
                         $oPluginUpload=new plugin_upload($sColumnUpload);
                         //On vérifier que l'upload est bien réel
                         if($oPluginUpload->isValid()){
+                            
+                            try{ 
+                                simplexml_load_file($oPluginUpload->getTmpPath());                                
+                            } catch(Exception $e){
+                                return array('url' => array('Fichier n\'est pas un fichier GPX conforme aux attentes.'));                           
+                            } 
                             //calculer le checksum du fichier
                             $checksum=md5_file($oPluginUpload->getTmpPath());
                             //Comparer le checksum avec ceux déjà connu. retour une somme 
