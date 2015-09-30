@@ -112,8 +112,7 @@ class module_parcours extends abstract_module{
 
 		$oPluginXsrf=new plugin_xsrf();
 		$oView->token=$oPluginXsrf->getToken();
-		$oView->tMessage=$tMessage;
-		
+		$oView->tMessage=$tMessage;		
 		$this->oLayout->add('main',$oView);
 	}
 
@@ -214,6 +213,25 @@ class module_parcours extends abstract_module{
 		$this->oLayout->show();
 	}
 	
-	
+//Les appels AJAX         
+        /*
+         * Enregistre la position du nouveau point créé
+         */        
+        public function _ajaxAjoutPoints() {
+            $this->oLayout->setLayout('xml');
+            $iId=_root::getParam('idPoint',null);
+		if($iIdPoint==null){
+			$oParcours=new row_points;	
+		}
+            $LatVal=_root::getParam('lat');
+            $LngVal=_root::getParam('lng');
+            $Parcours_id=_root::getParam('parcours_id');
+            $Typeofpoint_id=_root::getParam('typeofpoint_id');
+            
+            
+            
+            $this->oLayout->show();
+            
+        }	
 }
 

@@ -391,32 +391,55 @@ class module_membres extends abstract_module{
          * Déclare le membre comme étant un signaleur.
          */        
         public function _ajaxSignaleur() {
+            $retour=array();
+            $sortie=array();
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
+            $sortie['reponse']='NOK';
+            
             $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
             $oMembres->modifier=date('Y-m-d H:i:s',time());
             $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
             
             if($oMembres->chkSignaleur!=0){
-                $oMembres->chkSignaleur=0;            
+                $oMembres->chkSignaleur=0;
+                $sortie['reponse']='OK';
             }else{
                 $oMembres->chkSignaleur=1;
+                $sortie['reponse']='OK';
             }
             
             $oMembres->saveF();
-            return true;
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);
+
         }
         /*
          * Inscrit au Désincrit un membre d'un évènement
          */
         public function _ajaxJoinEventMembre() {
+            $retour=array();
+            $sortie=array();
+            
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
+            
             if(_root::getParam('action')=='join'){
                 model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
-                return True;
+                $sortie['reponse']='OK';
+                
+                 
             }elseif(_root::getParam('action')=='unjoin'){
                 model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
-                return True;
+                $sortie['reponse']='OK';
             }  else {
-                return False;
+                $sortie['reponse']='NOK';
             }
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);
+           
         }
         /*
          * Obtenir les coordonées de tous les membres participant à un evenement.

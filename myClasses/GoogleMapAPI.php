@@ -964,6 +964,17 @@ class My_GoogleMapAPI {
         $this->content .= "\t\t " . '}' . "\n";
         $this->content .= "\t " . '}' . "\n";
         
+//        function btnSignalFnt(paramId){
+//        console.log( "click" );
+//        $.ajax({
+//            url: 'index.php?:nav=parcours::ajaxAjoutPoints&iIdPoint='+paramId+'&LatVal='+paramId+'&LngVal='+paramId+'&Parcours_id='+paramId+'&Typeofpoint_id='+paramId+'',
+//            success: function() {
+//            // call function
+//            showGlyphSignal(paramId);
+//            }
+//        });
+    }
+        
     }
 
     /**
