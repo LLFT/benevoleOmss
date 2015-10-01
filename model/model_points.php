@@ -6,32 +6,45 @@ class model_points extends abstract_model{
 	protected $sTable='points';
 	protected $sConfig='benevoleOmss';
 	
-	protected $tId=array('idpoint');
+	protected $tId=array('idPoint');
 
 	public static function getInstance(){
 		return self::_getInstance(__CLASS__);
 	}
 
 	public function findById($uId){
-		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idpoint=?',$uId );
+		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idPoint=?',$uId );
 	}
 	public function findAll(){
 		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
 	
-	
-	public function getSelect(){
+	public function findByParcoursId($iParcoursId){
+		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE parcours_id=?',$iParcoursId );
+	}
+        
+        public function getSelect(){
 		$tab=$this->findAll();
 		$tSelect=array();
 		if($tab){
 		foreach($tab as $oRow){
-			$tSelect[ $oRow->idpoint ]=$oRow->idparcours;
+			$tSelect[ $oRow->idpoint ]=$oRow->parcours_id;
 		}
 		}
 		return $tSelect;
 	}
-	
+        
+        public function getSelectPoints($iParcoursId){
+            $tab=$this->findByParcoursId($iParcoursId);
 
+            $tSelect=array();
+            if($tab){
+                foreach($tab as $oRow){
+                    $tSelect[]=array('idPoint'=>$oRow->idPoint,'name'=>$oRow->name,'lat'=>$oRow->lat,'lng'=>$oRow->lng,'typeofpoint_id'=>$oRow->typeofpoint_id);
+                }
+            }                
+            return $tSelect;
+	}
 	
 }
 

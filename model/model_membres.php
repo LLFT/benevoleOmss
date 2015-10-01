@@ -85,7 +85,7 @@ class model_membres extends abstract_model{
         }
         
         public function findAllLocalisable(){
-            return $this->findMany('SELECT `idMembre`,`rue`,`ville`,`codePostal` FROM '.$this->sTable.' WHERE `coord` IS NULL  and `rue` != "" and `ville` != "" ');
+            return $this->findMany('SELECT `idMembre`,`rue`,`ville`,`codePostal` FROM '.$this->sTable.' WHERE `coord` IS NULL or `coord`=0 and `rue` != "" and `ville` != "" ');
         }
         
         public function findCoordParticipantOfEvent($idEvent) {

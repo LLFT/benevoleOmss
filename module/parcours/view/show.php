@@ -6,23 +6,18 @@
         <?php echo $this->oModuleGoogleMap->getGoogleMap();;?>
         </div>
     </div>
-    <div class="col-sm-offset-1 ">
-        <label>Latitude</label>
-        <input id="Lat" type="text">
-        <label>Longitude</label>
-        <input id="Lng" type="text">        
-    </div>
 </div>
 <div class="form-group">
     
     <div class="col-sm-offset-1 col-sm-6">    
-        <button id="btnVolon" onclick="clickVolon();">Masquer les volontaires</button>          
+        <button id="btnVolon" onclick="clickVolon();">Afficher les volontaires</button>          
         <button id="btnParcours" onclick="clickParcours();">Masquer le parcours</button>             
         <button id="ajoutSign" onclick="addSpot();">Ajouter un signaleur</button>        
-        <button id="btnSignaleur" onclick="clickSignaleur();">Masquer les signaleurs</button>
+        <button id="btnSignaleur" onclick="clickSignaleur();">Afficher les signaleurs</button>
         
         <button id="ajoutRelais" onclick="addRelais()">Ajouter un Relais</button>
-        <button id="btnRelais" onclick="clickRelais()">Masquer les relais</button>
+        <button id="btnRelais" onclick="clickRelais()">Afficher les relais</button>
+        <button id="btnRelais" onclick="hideAll()">Masquer</button>
     </div>
 </div>     
  

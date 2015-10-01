@@ -56,6 +56,7 @@ class module_parcours extends abstract_module{
 	public function _show(){
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
                 $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+                $tPointsOfChasuble=  model_points::getInstance()->getSelectPoints(_root::getParam('id'));
 
 		$oView=new _view('parcours::show');
                 $oView->oParcours=$oParcours;
@@ -79,17 +80,19 @@ class module_parcours extends abstract_module{
                 $gmap->setEnableWindowZoom(true);
                 $gmap->setDefaultLat($centLat);
                 $gmap->setDefaultLng($centLng);                
-                $gmap->setSize('800px','500px');
+                $gmap->setSize('800px','800px');
                 $gmap->setZoom(15);
                 $gmap->setMaxZoom(20);
                 $gmap->setMinZoom(12);
                 $gmap->setLang('fr');
                 $gmap->setDefaultHideMarker(false);
                 $gmap->setShowImmediatParcours(true);
+                $gmap->setParcours_id(_root::getParam('id'));
                 $gmap->addPolyligne($tGpx);
                 $gmap->addParticipants($tMembresCoord,'volontaires');
+                $gmap->addPoints($tPointsOfChasuble);
                 //$gmap->setStreetViewControl(FALSE);                
-                $gmap->setClusterer(true,100,15,'./js/markerclusterer_compiled.js'); //Désactivé sinon les Markers sont réaffiché à chaque zoom
+                //$gmap->setClusterer(true,100,15,'./js/markerclusterer_compiled.js'); //Désactivé sinon les Markers sont réaffiché à chaque zoom
             
                 $gmap->generate();
                 $oView->oModuleGoogleMap=$gmap;
@@ -216,22 +219,49 @@ class module_parcours extends abstract_module{
 //Les appels AJAX         
         /*
          * Enregistre la position du nouveau point créé
+         * index.php?:nav=parcours::ajaxAjoutPoints&sLatVal=45.431542895847286&sLngVal=4.3821185628411286&iParcours_id=1&iTypeofpoint_id=1
          */        
-        public function _ajaxAjoutPoints() {
-            $this->oLayout->setLayout('xml');
-            $iId=_root::getParam('idPoint',null);
-		if($iIdPoint==null){
-			$oParcours=new row_points;	
-		}
-            $LatVal=_root::getParam('lat');
-            $LngVal=_root::getParam('lng');
-            $Parcours_id=_root::getParam('parcours_id');
-            $Typeofpoint_id=_root::getParam('typeofpoint_id');
+        public function _ajaxAddPoints() {
+            $retour=array();
+           
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $LatVal=_root::getParam('sLatVal');
+            $LngVal=_root::getParam('sLngVal');
+            $Parcours_id=_root::getParam('iParcours_id');
+            $Typeofpoint_id=_root::getParam('iTypeofpoint_id');            
+            $oPoints=new row_points;
+            $oPoints->lat=$LatVal;
+            $oPoints->lng=$LngVal;
+            $oPoints->parcours_id=$Parcours_id;
+            $oPoints->typeofpoint_id=$Typeofpoint_id;            
+            if($oPoints->save()){
+                $retour['etat']='OK';
+                $retour['idPoint']=$oPoints->getId();
+            }else{
+                $retour['etat']='NOK';
+            }            
+            $oView->sSortie=  json_encode($retour);            
+        }
+        //index.php?:nav=parcours::ajaxDelPoints&iIdPoint=point_7
+        public function _ajaxDelPoints() {
+            $retour=array();
+            $sortie=array();            
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $iIdPoint=substr(_root::getParam('iIdPoint'),(strrpos( _root::getParam('iIdPoint'),'_')+1));
             
-            
-            
-            $this->oLayout->show();
-            
-        }	
+            $oPoints=model_points::getInstance()->findById( $iIdPoint );
+            $oPoints->delete();
+            if(true){
+                $sortie['reponse']='OK';
+            }else{
+                $sortie['reponse']='NOK';
+            }            
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);            
+        }
 }
 
