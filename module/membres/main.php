@@ -331,7 +331,7 @@ class module_membres extends abstract_module{
                         $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
 		}
 		
-		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur');
+		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','chkFormulaire');
                 foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':
@@ -343,7 +343,7 @@ class module_membres extends abstract_module{
                             default :    
                                 $oMembres->$sColumn=_root::getParam($sColumn,0) ;
                         }
-			
+			plugin_debug::addSpy('toto', _root::getParam('chkFormulaire'));
 		}
 
 		if($oMembres->save()){

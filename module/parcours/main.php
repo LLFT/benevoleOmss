@@ -80,7 +80,7 @@ class module_parcours extends abstract_module{
                 $gmap->setEnableWindowZoom(true);
                 $gmap->setDefaultLat($centLat);
                 $gmap->setDefaultLng($centLng);                
-                $gmap->setSize('800px','800px');
+                $gmap->setSize('800px','600px');
                 $gmap->setZoom(15);
                 $gmap->setMaxZoom(20);
                 $gmap->setMinZoom(12);

@@ -23,6 +23,10 @@ $oForm->setMessage($this->tMessage);
                 <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
                 <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Coordonnées validées ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkFormulaire',1, array('class'=>'form-control'))?></div>
+        </div>
 	
         <div class="form-group">
 		<label class="col-sm-2 control-label">Adresse Mail *</label>
@@ -102,6 +106,8 @@ function happycode(){
     $.fn.bootstrapSwitch.defaults.offColor = "danger";
    $('input[name="chkPermis"]').bootstrapSwitch();
    $('input[name="chkMail"]').bootstrapSwitch();
+   $('input[name="chkFormulaire"]').bootstrapSwitch();
+   $('input[name="chkSignaleur"]').bootstrapSwitch();
    
    $('input[name="chkMail"]').on('switchChange.bootstrapSwitch', function(event, state) {
        // console.log(this); // DOM element
@@ -114,7 +120,7 @@ function happycode(){
    });
    
    
-   $('input[name="chkSignaleur"]').bootstrapSwitch();
+   
    
 }
 
