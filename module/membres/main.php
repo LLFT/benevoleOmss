@@ -6,8 +6,12 @@ class module_membres extends abstract_module{
 		
 		$this->oLayout->addModule('menu','menu::index');
                 
-                if(!_root::getACL()->can('ACCESS','membres::list')){
-                    _root::redirect('default::index');
+                //Vérifions que l'authentification est active
+                if(_root::getConfigVar('auth.enabled')===1){;
+                    //Vérifions que le compte peut accèder à ce module
+                    if(!_root::getACL()->can('ACCESS','membres::list')){
+                        _root::redirect('default::index');
+                    }
                 }
                 
 //                if(!_root::getACL()->can('ACCESS','membres::listEmptyAdress')){
@@ -244,38 +248,7 @@ class module_membres extends abstract_module{
         
             
         }
-        
-        /*
-         * Déclare le membre comme étant un signaleur.
-         */        
-        public function _ajaxSignaleur() {
-            $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
-            $oMembres->modifier=date('Y-m-d H:i:s',time());
-            $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
-            
-            if($oMembres->chkSignaleur!=0){
-                $oMembres->chkSignaleur=0;            
-            }else{
-                $oMembres->chkSignaleur=1;
-            }
-            
-            $oMembres->saveF();
-            return true;
-        }
-        /*
-         * Inscrit au Désincrit un membre d'un évènement
-         */
-        public function _ajaxJoinEventMembre() {
-            if(_root::getParam('action')=='join'){
-                model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
-                return True;
-            }elseif(_root::getParam('action')=='unjoin'){
-                model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
-                return True;
-            }  else {
-                return False;
-            }
-        }   
+   
         
 	public function _delete(){
 		$tMessage=$this->processDelete();
@@ -358,8 +331,8 @@ class module_membres extends abstract_module{
                         $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
 		}
 		
-		$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','comment');
-		foreach($tColumn as $sColumn){
+$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','chkFormulaire','comment');
+                foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':
                                 $oMembres->$sColumn= strtoupper(_root::getParam($sColumn,null));
@@ -368,9 +341,9 @@ class module_membres extends abstract_module{
                                 $oMembres->$sColumn= strtoupper(_root::getParam($sColumn,null))[0].substr(_root::getParam($sColumn,null),1);
                                 break;
                             default :    
-                                $oMembres->$sColumn=_root::getParam($sColumn,null) ;
+                                $oMembres->$sColumn=_root::getParam($sColumn,0) ;
                         }
-			
+			plugin_debug::addSpy('toto', _root::getParam('chkFormulaire'));
 		}
 
 		if($oMembres->save()){
@@ -413,7 +386,69 @@ class module_membres extends abstract_module{
 	public function after(){
 		$this->oLayout->show();
 	}
-	
+//Les appels AJAX         
+        /*
+         * Déclare le membre comme étant un signaleur.
+         */        
+        public function _ajaxSignaleur() {
+            $retour=array();
+            $sortie=array();
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
+            $sortie['reponse']='NOK';
+            
+            $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
+            $oMembres->modifier=date('Y-m-d H:i:s',time());
+            $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
+            
+            if($oMembres->chkSignaleur!=0){
+                $oMembres->chkSignaleur=0;
+                $sortie['reponse']='OK';
+            }else{
+                $oMembres->chkSignaleur=1;
+                $sortie['reponse']='OK';
+            }
+            
+            $oMembres->saveF();
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);
+
+        }
+        /*
+         * Inscrit au Désincrit un membre d'un évènement
+         */
+        public function _ajaxJoinEventMembre() {
+            $retour=array();
+            $sortie=array();
+            
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
+            
+            if(_root::getParam('action')=='join'){
+                model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+                $sortie['reponse']='OK';
+                
+                 
+            }elseif(_root::getParam('action')=='unjoin'){
+                model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+                $sortie['reponse']='OK';
+            }  else {
+                $sortie['reponse']='NOK';
+            }
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);
+           
+        }
+        /*
+         * Obtenir les coordonées de tous les membres participant à un evenement.
+         */
+        public function _ajaxGetEventMembre() {
+            $oMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+            return json_encode($oMembresCoord);
+        }
+        
 	
 }
 

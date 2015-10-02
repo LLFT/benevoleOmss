@@ -20,7 +20,9 @@
 		<?php foreach($this->tMembres as $oMembres):?>
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
                     
-                <td> <img TITLE="Signaleur" id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15"><?php echo ' '.$oMembres->indexMembre .' : '?></td>    
+                <td> <img TITLE="Signaleur" id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15">
+                    <img TITLE="chkFormulaire" id="validForm_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15">
+                    <?php echo ' '.$oMembres->indexMembre .' : '?></td>    
 		<td><?php echo $oMembres->nom ?></td>
 
 		<td><?php echo $oMembres->prenom ?></td>

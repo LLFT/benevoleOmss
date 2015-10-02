@@ -85,7 +85,11 @@ class model_membres extends abstract_model{
         }
         
         public function findAllLocalisable(){
-            return $this->findMany('SELECT `idMembre`,`rue`,`ville`,`codePostal` FROM '.$this->sTable.' WHERE `coord` IS NULL  and `rue` != "" and `ville` != "" ');
+            return $this->findMany('SELECT `idMembre`,`rue`,`ville`,`codePostal` FROM '.$this->sTable.' WHERE `coord` IS NULL or `coord`=0 and `rue` != "" and `ville` != "" ');
+        }
+        
+        public function findCoordParticipantOfEvent($idEvent) {
+            return $this->findMany('SELECT m.idMembre, nom, prenom, lat, lng FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=?',$idEvent);
         }
 
 
@@ -141,6 +145,20 @@ class model_membres extends abstract_model{
             $requete =  "SELECT `indexMembre` From omss.membres Where `indexMembre` IS NOT NULL ORDER BY `indexMembre` DESC LIMIT 1";
             return $this->findOne($requete);
         }
+        
+        public function getCoordOfParticipantOfEvent($idEvent) {
+            $tab=$this->findCoordParticipantOfEvent($idEvent);
+		$tSelect=array();
+                
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[]=array("idMembre"=>"$oRow->idMembre" ,"nom"=>"$oRow->nom","prenom"=>"$oRow->prenom","lat"=>"$oRow->lat","lng"=>"$oRow->lng");
+                    }
+		}
+		return $tSelect;
+            
+        }
+        
 }
 
 class row_membres extends abstract_row{

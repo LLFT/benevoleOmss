@@ -22,7 +22,7 @@
                 	
         <div class="form-group">
                 		<label class="col-sm-2 control-label">Parcours <?php echo $i; $i++; ?> :</label>
-                		<div class="col-sm-10"><a class="btn btn-primary btn-x" href="<?php echo $this->getLink('parcours::show',array( 'id'=>$oParcour->getId(), 'idEvent'=>_root::getParam('id')))?>"><?php echo $oParcour->label ?></a></div>
+                		<div class="col-sm-10"><a class="btn btn-primary btn-x" href="<?php echo $this->getLink('parcours::show',array( 'id'=>$oParcour->idParcours, 'idEvent'=>_root::getParam('id')))?>"><?php echo $oParcour->label ?></a></div>
                         </div>	
         
 		<?php endforeach;?>

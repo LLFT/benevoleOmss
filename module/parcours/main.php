@@ -55,23 +55,47 @@ class module_parcours extends abstract_module{
 	
 	public function _show(){
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
-		
+                $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+                $tPointsOfChasuble=  model_points::getInstance()->getSelectPoints(_root::getParam('id'));
+
 		$oView=new _view('parcours::show');
-		$oView->oParcours=$oParcours;
+                $oView->oParcours=$oParcours;
                 
-                $oModuleGoogleMap=new module_googleMap();
-                $oModuleGoogleMap->setWidth(800);
-                $oModuleGoogleMap->setHeight(500);
-                $oModuleGoogleMap->setZoom(15);
-                $oModuleGoogleMap->setMinZoom(12); //Zoom Arriere
-                $oModuleGoogleMap->setEnableZoomControl('true');
-                $oModuleGoogleMap->setEnableScrollwheel('true');
-                $oModuleGoogleMap->setDisableDoubleClickZoom('false');
-                $oModuleGoogleMap->setTraceGPX(true);
-                $oModuleGoogleMap->setUrlTraceGPX($oParcours->url);
-                $oView->oModuleGoogleMap=$oModuleGoogleMap->getMap(); 	          
-		
-		
+                $gmap = new my_GoogleMapAPI();                
+                //Charge le contenu du GPX dans la class geoPHP
+                $polygon = geoPHP::load(file_get_contents($oParcours->url),'gpx');
+                //Mesure l'aire couverte par la trace GPX
+                $area = $polygon->getArea();
+                //Calcule le centre de l'aire
+                $centroid = $polygon->getCentroid();
+                // Coordonées du centre
+                $centLng = $centroid->getX();
+                $centLat = $centroid->getY();
+                $tGpx = $polygon->asArray(); 
+                
+                
+                $gmap->setDivId('containerMap');
+                $gmap->setDirectionDivId('route');
+//                $gmap->setCenterLatLng($centLat,$centLng);
+                $gmap->setEnableWindowZoom(true);
+                $gmap->setDefaultLat($centLat);
+                $gmap->setDefaultLng($centLng);                
+                $gmap->setSize('800px','600px');
+                $gmap->setZoom(15);
+                $gmap->setMaxZoom(20);
+                $gmap->setMinZoom(12);
+                $gmap->setLang('fr');
+                $gmap->setDefaultHideMarker(false);
+                $gmap->setShowImmediatParcours(true);
+                $gmap->setParcours_id(_root::getParam('id'));
+                $gmap->addPolyligne($tGpx);
+                $gmap->addParticipants($tMembresCoord,'volontaires');
+                $gmap->addPoints($tPointsOfChasuble);
+                //$gmap->setStreetViewControl(FALSE);                
+                //$gmap->setClusterer(true,100,15,'./js/markerclusterer_compiled.js'); //Désactivé sinon les Markers sont réaffiché à chaque zoom
+            
+                $gmap->generate();
+                $oView->oModuleGoogleMap=$gmap;
 		$this->oLayout->add('main',$oView);
 	}
 
@@ -91,8 +115,7 @@ class module_parcours extends abstract_module{
 
 		$oPluginXsrf=new plugin_xsrf();
 		$oView->token=$oPluginXsrf->getToken();
-		$oView->tMessage=$tMessage;
-		
+		$oView->tMessage=$tMessage;		
 		$this->oLayout->add('main',$oView);
 	}
 
@@ -127,6 +150,12 @@ class module_parcours extends abstract_module{
                         $oPluginUpload=new plugin_upload($sColumnUpload);
                         //On vérifier que l'upload est bien réel
                         if($oPluginUpload->isValid()){
+                            
+                            try{ 
+                                simplexml_load_file($oPluginUpload->getTmpPath());                                
+                            } catch(Exception $e){
+                                return array('url' => array('Fichier n\'est pas un fichier GPX conforme aux attentes.'));                           
+                            } 
                             //calculer le checksum du fichier
                             $checksum=md5_file($oPluginUpload->getTmpPath());
                             //Comparer le checksum avec ceux déjà connu. retour une somme 
@@ -187,6 +216,52 @@ class module_parcours extends abstract_module{
 		$this->oLayout->show();
 	}
 	
-	
+//Les appels AJAX         
+        /*
+         * Enregistre la position du nouveau point créé
+         * index.php?:nav=parcours::ajaxAjoutPoints&sLatVal=45.431542895847286&sLngVal=4.3821185628411286&iParcours_id=1&iTypeofpoint_id=1
+         */        
+        public function _ajaxAddPoints() {
+            $retour=array();
+           
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $LatVal=_root::getParam('sLatVal');
+            $LngVal=_root::getParam('sLngVal');
+            $Parcours_id=_root::getParam('iParcours_id');
+            $Typeofpoint_id=_root::getParam('iTypeofpoint_id');            
+            $oPoints=new row_points;
+            $oPoints->lat=$LatVal;
+            $oPoints->lng=$LngVal;
+            $oPoints->parcours_id=$Parcours_id;
+            $oPoints->typeofpoint_id=$Typeofpoint_id;            
+            if($oPoints->save()){
+                $retour['etat']='OK';
+                $retour['idPoint']=$oPoints->getId();
+            }else{
+                $retour['etat']='NOK';
+            }            
+            $oView->sSortie=  json_encode($retour);            
+        }
+        //index.php?:nav=parcours::ajaxDelPoints&iIdPoint=point_7
+        public function _ajaxDelPoints() {
+            $retour=array();
+            $sortie=array();            
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $iIdPoint=substr(_root::getParam('iIdPoint'),(strrpos( _root::getParam('iIdPoint'),'_')+1));
+            
+            $oPoints=model_points::getInstance()->findById( $iIdPoint );
+            $oPoints->delete();
+            if(true){
+                $sortie['reponse']='OK';
+            }else{
+                $sortie['reponse']='NOK';
+            }            
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);            
+        }
 }
 

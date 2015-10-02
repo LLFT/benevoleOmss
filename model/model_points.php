@@ -1,37 +1,56 @@
 <?php
-class model_parcours extends abstract_model{
+class model_points extends abstract_model{
 	
-	protected $sClassRow='row_parcours';
+	protected $sClassRow='row_points';
 	
-	protected $sTable='parcours';
+	protected $sTable='points';
 	protected $sConfig='benevoleOmss';
 	
-	protected $tId=array('id');
+	protected $tId=array('idPoint');
 
 	public static function getInstance(){
 		return self::_getInstance(__CLASS__);
 	}
 
 	public function findById($uId){
-		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idParcours=?',$uId );
+		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idPoint=?',$uId );
 	}
 	public function findAll(){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE event_id is not null');
-	}
-        
-        public function findOneParcour($iIdEvent){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE event_id=?',$iIdEvent);
+		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
 	
-	public function findByCheckSum($checksum){
-		return $this->findOne('SELECT count(*) AS NbCheckSum, label FROM '.$this->sTable.' WHERE checksum=?',$checksum );
+	public function findByParcoursId($iParcoursId){
+		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE parcours_id=?',$iParcoursId );
+	}
+        
+        public function getSelect(){
+		$tab=$this->findAll();
+		$tSelect=array();
+		if($tab){
+		foreach($tab as $oRow){
+			$tSelect[ $oRow->idpoint ]=$oRow->parcours_id;
+		}
+		}
+		return $tSelect;
+	}
+        
+        public function getSelectPoints($iParcoursId){
+            $tab=$this->findByParcoursId($iParcoursId);
+
+            $tSelect=array();
+            if($tab){
+                foreach($tab as $oRow){
+                    $tSelect[]=array('idPoint'=>$oRow->idPoint,'name'=>$oRow->name,'lat'=>$oRow->lat,'lng'=>$oRow->lng,'typeofpoint_id'=>$oRow->typeofpoint_id);
+                }
+            }                
+            return $tSelect;
 	}
 	
 }
 
-class row_parcours extends abstract_row{
+class row_points extends abstract_row{
 	
-	protected $sClassModel='model_parcours';
+	protected $sClassModel='model_points';
 	
 	/*exemple jointure 
 	public function findAuteur(){
@@ -41,9 +60,8 @@ class row_parcours extends abstract_row{
 	/*exemple test validation*/
 	private function getCheck(){
 		$oPluginValid=new plugin_valid($this->getTab());
-		$oPluginValid->isNotEmpty('label','Le champ ne doit pas &ecirc;tre vide');
-		$oPluginValid->isNotEmpty('url','Un fichier GPX doit être joint');
-                
+		
+		
 		/* renseigner vos check ici
 		$oPluginValid->isEqual('champ','valeurB','Le champ n\est pas &eacute;gal &agrave; '.$valeurB);
 		$oPluginValid->isNotEqual('champ','valeurB','Le champ est &eacute;gal &agrave; '.$valeurB);
@@ -71,7 +89,6 @@ class row_parcours extends abstract_row{
 		if(!$this->isValid()){
 			return false;
 		}
-                $this->label = strtoupper($this->label);
 		parent::save();
 		return true;
 	}

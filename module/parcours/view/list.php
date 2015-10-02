@@ -8,7 +8,7 @@
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
 			
 		<td><a  href="<?php echo $this->getLink('parcours::show',array(
-										'id'=>$oParcours->getId(),'idEvent'=>$oParcours->event_id
+										'id'=>$oParcours->idParcours,'idEvent'=>$oParcours->event_id
 									) 
                         )?>"><?php echo $oParcours->label ?></a></td>
 

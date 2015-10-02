@@ -15,6 +15,11 @@ $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->setFallbackAutoloader(false);
 */
 
+set_include_path(get_include_path() . PATH_SEPARATOR .'../myClasses/lib/');
+require_once '../myClasses/geoPHP.inc';
+//$autoloader = Zend_Loader_Autoloader::getInstance();
+//$autoloader->setFallbackAutoloader(false);
+
 $iMicrotime=microtime();
 
 //on parse le fichier ini pour trouver l'adresse de la librairie
