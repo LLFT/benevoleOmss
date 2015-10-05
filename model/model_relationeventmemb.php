@@ -48,6 +48,17 @@ class model_relationeventmemb extends abstract_model{
 		return $tSelect;
 	}
         
+        public function getListOfMembresByIdEvent($uId){
+		$tab =  $this->findMany('SELECT nom, prenom, idMembre FROM omss.membres as M,'.$this->sTable.' as E WHERE E.event_id=? and M.idMembre = E.membre_id order by nom',$uId );                
+                $tSelect=array();
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[]=$oRow->nom .' '. $oRow->prenom;
+                    }
+		}
+		return $tSelect;
+	}
+        
         public function joinMemberEvent($idMembre,$idEvent){
         $this->unJoinMemberEvent($idMembre,$idEvent);
         

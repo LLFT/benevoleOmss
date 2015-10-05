@@ -36,6 +36,24 @@
     <p><a class="btn btn-success" href="<?php echo $this->getLink('parcours::new',array('idEvent'=>_root::getParam('id'))) ?>">Ajouter parcours</a></p>
     <?php endif;?>
     </fieldset>
+    
+    <?php if ($this->tListeDesParticipants) :?>
+    <fieldset>
+        <legend>Signaleurs </legend>
+        <div class="table-responsive">
+            <table class="table">
+            <?php foreach($this->tListeDesParticipants as $key => $sParticipant):?>
+                <?php if($key %4===0) :?> <tr><?php endif; ?>
+                
+                    <td> <?php echo $key+1 .' : '.$sParticipant; ?> </td>
+                
+                <?php if($key %4===3) :?> </tr><?php endif; ?>
+            <?php endforeach;?>
+            </table>
+        </div>
+    </fieldset>
+    <?php endif;?>
+    
     <fieldset>
         <legend>Actions </legend>  
         <div class="form-group">

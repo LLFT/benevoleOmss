@@ -3,9 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/module/menu/main.php</file>
-            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/lib/framework/class_root.php</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/module/parcours/view/show.php</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/module/membres/view/show.php</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/module/membres/view/list.php</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/module/parcours/main.php</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/public/maintenance.enable</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/public/.htaccess</file>
             <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/module/membres/main.php</file>
+            <file>file:/C:/xampp/htdocs/mkframework_v4/data/genere/benevoleOmss/public/maintenance.html</file>
         </group>
     </open-files>
 </project-private>
