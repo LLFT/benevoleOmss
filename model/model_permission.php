@@ -9,18 +9,22 @@ class model_permission extends abstract_model{
 	protected $tId=array('idPermission');
 
 	public static function getInstance(){
-		return self::_getInstance(__CLASS__);
+            return self::_getInstance(__CLASS__);
 	}
 
 	public function findById($uId){
-		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idPermission=?',$uId );
+            return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE idPermission=?',$uId );
 	}
 	public function findAll(){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' order by groupe_id');
+            return $this->findMany('SELECT * FROM '.$this->sTable.' order by groupe_id');
 	}
 	
-	public function findByGroup($group){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE groupe_id=?',(int)$group);
+        public function findDistinctElement(){
+            return $this->findMany('SELECT distinct(element) FROM '.$this->sTable.' order by element');
+        }
+
+        public function findByGroup($group){
+            return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE groupe_id=?',(int)$group);
 	}
 	
 }

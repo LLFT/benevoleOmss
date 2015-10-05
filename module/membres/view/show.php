@@ -2,7 +2,12 @@
 <form class="form-horizontal" action="" method="POST" >
 	
 	<fieldset class="col-sm-12">
-            <legend><img <?php if($this->oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15"><?php echo ' '.$this->oMembres->indexMembre .' : '.$this->oMembres->nom .' '. $this->oMembres->prenom ?></legend>
+            <legend>
+                <img <?php if($this->oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15" TITLE="Signaleur Volontaire">
+                
+                <?php echo ' '.$this->oMembres->indexMembre .' : '.$this->oMembres->nom .' '. $this->oMembres->prenom.' '; ?>
+                <img <?php if($this->oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15" TITLE="Coord. Validées">
+            </legend>
 
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Adresse Mail : </label>

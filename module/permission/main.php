@@ -17,9 +17,71 @@ class module_permission extends abstract_module{
 	    $this->_list();
 	}
 	
+        public function _test(){
+            
+            
+            $tPermission=model_permission::getInstance()->findAll();
+            $tPermissionDistinct=model_permission::getInstance()->findDistinctElement();
+            $tJoinmodel_groupe=model_groupe::getInstance()->getSelect();
+            $tModule=array();
+            
+            $oDir=new _dir('../module');
+            //recuperation liste objet repertoires
+            $tDir=$oDir->getListDir();
+            foreach($tDir as $oDirModule){
+                    $tMethodes=array();
+                    //on deduit le nom du module
+                    $sModuleName= 'module_'.$oDirModule->getName();
+
+                    //on exclue le/les modules que l'on veut ignorer
+                    if(in_array($sModuleName,array('module_pagination'))){
+                            continue;
+                    }                    
+                    if(in_array($sModuleName,array('module_googleMap'))){
+                            continue;
+                    }                    
+                    if(in_array($sModuleName,array('module_menu'))){
+                            continue;
+                    }
+                    if(in_array($sModuleName,array('module_default'))){
+                            continue;
+                    }
+                    if(in_array($sModuleName,array('module_auth'))){
+                            continue;
+                    }
+                    $sNameModule = substr($sModuleName,7);
+                    //on instancie
+                    $oModule=new $sModuleName();
+                    //on demande la liste des methodes public			
+                    $tMethods=get_class_methods($oModule);                    
+                    foreach($tMethods as $sMethod){
+                            //on exclue les methodes __get, __set
+                            if(substr($sMethod,0,2)=='__'){ continue ; }
+
+                            //on garde que les methodes commencant par _ (signe des actions) 
+                            if(substr($sMethod,0,1)!='_'){ continue ; }
+                        
+                            $tMethodes[]=$sNameModule.'::'.substr($sMethod,1);
+                    }
+                    $tModule[$sModuleName]=$tMethodes;                    
+            }
+
+
+            
+            
+            $oView=new _view('permission::test');
+            $oView->tModule=$tModule;
+            $oView->tPermission=$tPermission;
+            $oView->tPermissionDistinct=$tPermissionDistinct;
+            $oView->tJoinmodel_groupe=$tJoinmodel_groupe;
+                        plugin_debug::addSpy('list', $tPermission);
+            $this->oLayout->add('main',$oView);
+            
+        }
 	
 	public function _list(){
-		
+            
+            
 		$tPermission=model_permission::getInstance()->findAll();
 		
 		$oView=new _view('permission::list');
@@ -29,6 +91,10 @@ class module_permission extends abstract_module{
                 
 		
 		$this->oLayout->add('main',$oView);
+                
+                
+                
+                
 		 
 	}
 

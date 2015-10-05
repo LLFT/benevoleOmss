@@ -7,7 +7,7 @@ class module_membres extends abstract_module{
 		$this->oLayout->addModule('menu','menu::index');
                 
                 //Vérifions que l'authentification est active
-                if(_root::getConfigVar('auth.enabled')===1){;
+                if(_root::getConfigVar('auth.enabled')==='1'){;                
                     //Vérifions que le compte peut accèder à ce module
                     if(!_root::getACL()->can('ACCESS','membres::list')){
                         _root::redirect('default::index');

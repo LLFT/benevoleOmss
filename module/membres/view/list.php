@@ -20,10 +20,16 @@
 		<?php foreach($this->tMembres as $oMembres):?>
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
                     
-                <td> <img TITLE="Signaleur" id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15">
-                    <img TITLE="chkFormulaire" id="validForm_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15">
-                    <?php echo ' '.$oMembres->indexMembre .' : '?></td>    
-		<td><?php echo $oMembres->nom ?></td>
+                <td> 
+                    
+                    <?php echo ' '.$oMembres->indexMembre .' : '?>
+                    <img TITLE="Coord. Validées" id="validForm_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15">
+                </td>    
+		
+                <td><?php echo $oMembres->nom ?>
+                    
+                    <img TITLE="Signaleur Volontaire" id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15">
+                </td>
 
 		<td><?php echo $oMembres->prenom ?></td>
 
@@ -42,7 +48,8 @@
 				
 
 <div class="btn-group">
-  <a class="btn btn-primary btn-xs" href="<?php echo $this->getLink('membres::show',array( 'id'=>$oMembres->getId()))?>">Consulter Fiche</a>  
+  <a class="btn btn-primary btn-xs" href="<?php echo $this->getLink('membres::show',array( 'id'=>$oMembres->getId()))?>">Consulter Fiche</a>
+  <?php if ( _root::getACL()->can('ACCESS','membres::edit')):?>
   <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class="caret"></span>
     <span class="sr-only">Toggle Dropdown</span>
@@ -52,6 +59,7 @@
     <li role="separator" class="divider"></li>
     <li><a onclick="btnSignalFnt(<?php echo $oMembres->getId().','.$oMembres->chkSignaleur ?>)" id="btnSignal" class="btn btn-large btn-block" href="#"> Signaleur <span id="glyphSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?>class="add-on glyphicon glyphicon-ok"></span></a></li>
   </ul>
+  <?php endif;?>
 </div>
 
 

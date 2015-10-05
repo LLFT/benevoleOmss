@@ -6,18 +6,19 @@
         <?php echo $this->oModuleGoogleMap->getGoogleMap();;?>
         </div>
     </div>
-</div>
+
 <div class="form-group">
     
     <div class="col-sm-offset-1 col-sm-6">    
         <button id="btnVolon" onclick="clickVolon();">Afficher les volontaires</button>          
-        <button id="btnParcours" onclick="clickParcours();">Masquer le parcours</button>             
-        <button id="ajoutSign" onclick="addSpot();">Ajouter un signaleur</button>        
+        <button id="btnParcours" onclick="clickParcours();">Masquer le parcours</button>
         <button id="btnSignaleur" onclick="clickSignaleur();">Afficher les signaleurs</button>
-        
-        <button id="ajoutRelais" onclick="addRelais()">Ajouter un Relais</button>
         <button id="btnRelais" onclick="clickRelais()">Afficher les relais</button>
+        <?php if ( _root::getACL()->can('ACCESS','parcours::ajaxAddPoints')):?>  
+        <button id="ajoutSign" onclick="addSpot();">Ajouter un signaleur</button>        
+        <button id="ajoutRelais" onclick="addRelais()">Ajouter un Relais</button>  
         <button id="btnRelais" onclick="hideAll()">Masquer</button>
+        <?php endif; ?>
     </div>
 </div>     
  

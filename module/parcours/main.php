@@ -5,6 +5,14 @@ class module_parcours extends abstract_module{
 		$this->oLayout=new _layout('bootstrap');
 		
 		$this->oLayout->addModule('menu','menu::index');
+                
+                //Vérifions que l'authentification est active
+                if(_root::getConfigVar('auth.enabled')==='1'){;                
+                    //Vérifions que le compte peut accèder à ce module
+                    if(!_root::getACL()->can('ACCESS','parcours::list')){
+                        _root::redirect('membres::list');
+                    }
+                }
 	}
 	
 	
