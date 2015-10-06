@@ -3,8 +3,8 @@
         <th>Label du parcours  </th>
         <th>Evènement associé </th>
     </tr>
-	<?php if($this->tParcours):?>
-		<?php foreach($this->tParcours as $oParcours):?>
+	<?php if($this->oParcours):?>
+		<?php foreach($this->oParcours as $oParcours):?>
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
 			
 		<td><a  href="<?php echo $this->getLink('parcours::show',array(

@@ -24,12 +24,12 @@ class module_parcours extends abstract_module{
 	
 	public function _list(){
 		
-		$tParcours=model_parcours::getInstance()->findAll();
+		$oParcours=model_parcours::getInstance()->findAll();
                 $oEvents=model_events::getInstance()->getSelect();
                 
 		
 		$oView=new _view('parcours::list');
-		$oView->tParcours=$tParcours;
+		$oView->oParcours=$oParcours;
                 $oView->tJoinmodelEvents=$oEvents;
 		
 		
