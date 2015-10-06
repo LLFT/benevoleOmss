@@ -77,8 +77,6 @@ class module_events extends abstract_module{
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
                 $oParcours=model_parcours::getInstance()->findOneParcour(_root::getParam('id'));
                 $tListeDesParticipants=  model_relationeventmemb::getInstance()->getListOfMembresByIdEvent(_root::getParam('id'));
-		
-                plugin_debug::addSpy('Membre', $tListeDesParticipants);
 		$oView=new _view('events::show');
 		$oView->oEvents=$oEvents;
 		$oView->oParcours=$oParcours;

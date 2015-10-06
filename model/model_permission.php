@@ -26,6 +26,17 @@ class model_permission extends abstract_model{
         public function findByGroup($group){
             return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE groupe_id=?',(int)$group);
 	}
+        
+        public function getSelectDistinctElement() {
+            $tab=$this->findDistinctElement();
+            $tSelect=array();                
+            if($tab){
+                foreach($tab as $oRow){
+                        $tSelect[]=$oRow->element;
+                }
+            }
+            return $tSelect;            
+        }
 	
 }
 

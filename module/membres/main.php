@@ -343,7 +343,6 @@ $tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','r
                             default :    
                                 $oMembres->$sColumn=_root::getParam($sColumn,0) ;
                         }
-			plugin_debug::addSpy('toto', _root::getParam('chkFormulaire'));
 		}
 
 		if($oMembres->save()){
