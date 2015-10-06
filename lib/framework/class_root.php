@@ -671,6 +671,46 @@ class _root{
 		}
 		return $uDefaut;
 	}
+        
+        /**
+         * Retourne toutes les actions public de chaqu'un des modules
+         * @param array $tExclusion nom des modules à exclure de la liste
+         * @return array
+         */
+       public static function getModuleList($tExclusion=  array()) {
+           $tModule=array();
+            
+            $oDir=new _dir('../module');
+            //recuperation liste objet repertoires
+            $tDir=$oDir->getListDir();
+            foreach($tDir as $oDirModule){
+                    $tMethodes=array();
+                    //on deduit le nom du module
+                    $sModuleName= 'module_'.$oDirModule->getName();                 
+                    
+                    //on exclue le/les modules que l'on veut ignorer
+                    if(in_array($sModuleName,$tExclusion)){
+                            continue;
+                    }
+                    $sNameModule = substr($sModuleName,7);
+                    //on instancie
+                    $oModule=new $sModuleName();
+                    //on demande la liste des methodes public			
+                    $tMethods=get_class_methods($oModule);                    
+                    foreach($tMethods as $sMethod){
+                            //on exclue les methodes __get, __set
+                            if(substr($sMethod,0,2)=='__'){ continue ; }
+
+                            //on garde que les methodes commencant par _ (signe des actions) 
+                            if(substr($sMethod,0,1)!='_'){ continue ; }
+                        
+                            $tMethodes[]=$sNameModule.'::'.substr($sMethod,1);
+                    }
+                    $tModule[$sModuleName]=$tMethodes;                    
+            }
+           return $tModule;
+       }
+        
 	
 	/** 
 	* defini une variable "global a l'application"

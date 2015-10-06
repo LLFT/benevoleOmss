@@ -1,57 +1,56 @@
-<table class="table table-striped">
-	<tr>
-		
-		<th>Action</th>
+<?php 
 
-		<th>Element</th>
+    $sThead="";
+    $sTbody="";
+    foreach($this->tJoinmodel_groupe as $keyGroupe => $sGroupe){
+            $sThead .= '<th>'.$sGroupe.'</th>';        
+    } 
 
-		<th>Allow / Deny</th>
-
-                <th>Groupe</th>
-
-		<th></th>
-	</tr>
-	<?php if($this->tPermission):?>
-		<?php foreach($this->tPermission as $oPermission):?>
-		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
-			
-		<td><?php echo $oPermission->action ?></td>
-
-		<td><?php echo $oPermission->element ?></td>
-
-		<td><?php echo $oPermission->allowdeny ?></td>
-                
-                <td><?php if(isset($this->tJoinmodel_groupe[$oPermission->groupe_id])){ echo $this->tJoinmodel_groupe[$oPermission->groupe_id];}else{ echo $oPermission->groupe_id ;}?></td>
-
-			<td>
-				
-				
-<a class="btn btn-success" href="<?php echo $this->getLink('permission::edit',array(
-										'id'=>$oPermission->getId()
-									) 
-							)?>">Edit</a>
-
-<a class="btn btn-danger" href="<?php echo $this->getLink('permission::delete',array(
-										'id'=>$oPermission->getId()
-									) 
-							)?>">Delete</a>
-
-<a class="btn btn-default" href="<?php echo $this->getLink('permission::show',array(
-										'id'=>$oPermission->getId()
-									) 
-							)?>">Show</a>
-
-				
-				
-			</td>
-		</tr>	
-		<?php endforeach;?>
-	<?php else:?>
-		<tr>
-			<td colspan="4">Aucune ligne</td>
-		</tr>
-	<?php endif;?>
+    foreach($this->oPermissionDistinct as $uRows => $sRow){
+        $sTbody.='<tr><th>'.$sRow->element.'</th>';       
+        foreach($this->tJoinmodel_groupe as $uIdGroupe => $sGroupe){
+            $sTbody.='<td><SELECT name="'.$uIdGroupe.'_'.$sRow->element.'">
+<OPTION>DENY
+<OPTION ';
+            foreach ($this->oPermission as $key => $sPermission) {
+                if(($sPermission->element != $sRow->element )||($sPermission->groupe_id != $uIdGroupe )){continue;}                
+                $sTbody.='selected';
+            }
+            $sTbody.='>ALLOW</SELECT></td>';    
+        }
+        $sTbody.='</tr>';
+    }
+?>
+        
+        
+<form  class="form-horizontal" action="" method="POST" >
+<select name="permissions" id="permissions">
+<?php foreach($this->tModule as $key => $oModule):?>
+    <optgroup label="<?php echo $key; ?>">
+        <?php foreach($oModule as $sModule):?>
+            <?php if (in_array($sModule, $this->tPermissionDistinct)){continue;} ?>
+            <option value="<?php echo $sModule; ?>"><?php echo $sModule; ?></option>
+        <?php endforeach; ?>
+    </optgroup>
+<?php endforeach; ?>
+</select>
+    <button value="Ajouter">Ajouter</button>
+</form>
+<table class="table">
+    <thead><tr><th>Modules</th><?php echo $sThead ; ?></tr></thead>
+    <tbody>
+        <?php echo $sTbody ; ?>
+    </tbody>
+    <tfoot></tfoot>    
 </table>
 
-<p><a class="btn btn-primary" href="<?php echo $this->getLink('permission::new') ?>">New</a></p>
 
+<script language="Javascript">
+    window.onload = function(){  
+        console.log( "ready!" );
+        $( "select" )
+          .change(function (e) {
+              console.log( "change ! "+this.name+' '+this.value ); 
+        });
+    };   
+</script>
