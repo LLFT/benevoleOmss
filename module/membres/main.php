@@ -13,148 +13,98 @@ class module_membres extends abstract_module{
                         _root::redirect('default::index');
                     }
                 }
-                
-//                if(!_root::getACL()->can('ACCESS','membres::listEmptyAdress')){
-//                    _root::redirect('default::index');
-//                }
-//                
-//                if(!_root::getACL()->can('ACCESS','membres::listEmptyPermis')){
-//                    _root::redirect('default::index');
-//                }
-                
-	}
-	
-	
-	public function _index(){
-	    //on considere que la page par defaut est la page de listage
-	    $this->_list();
-	}
-	
+        }	
         
         public function _list(){
             
+            $sAction=  _root::getParam('action');
             
-            //Liste de tous les Membres
-            $tAllMembres=model_membres::getInstance()->findAll();
-            
-            $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
-            if (null !==_root::getParam('letter')){
-                //Une lettre à été choisie dans la pagination
-               $sCurrentLetter = _root::getParam('letter');
-            }else{
-                // Aucun lettre de choisie. Donc on prends la première.
-               $sCurrentLetter = $tDistinctLetters[0]; 
+            switch ($sAction) {
+                case 'EmptyAdress':
+                    $tAllMembres=model_membres::getInstance()->findAllEmptyAdress();
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                        //Une lettre à été choisie dans la pagination
+                        $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                        // Aucun lettre de choisie. Donc on prends la première.
+                        $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    //Liste des Membres en focntion de la lettre choisie
+                    $tMembres=model_membres::getInstance()->findAllEmptyAdress($sCurrentLetter);
+                    
+                    break;
+                case 'EmptyMail':
+                    $tAllMembres=model_membres::getInstance()->findAllEmptyMail();
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                       $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                       $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    $tMembres=model_membres::getInstance()->findAllEmptyMail($sCurrentLetter);
+                    
+                    break;
+                case 'EmptyPermis':
+                    $tAllMembres=model_membres::getInstance()->findAllEmptyPermis();
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                       $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                       $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    $tMembres=model_membres::getInstance()->findAllEmptyPermis($sCurrentLetter);
+                    
+                    break;
+                case 'FullInfo':
+                    $tAllMembres=model_membres::getInstance()->findAllUpdate();
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                       $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                       $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    $tMembres=model_membres::getInstance()->findAllUpdate($sCurrentLetter);
+                    break;
+                case 'EmptyInfo':
+                    $tAllMembres=model_membres::getInstance()->findAllNotUpdate();
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                       $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                       $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    $tMembres=model_membres::getInstance()->findAllNotUpdate($sCurrentLetter);
+                    break;
+                default:
+                    $tAllMembres=model_membres::getInstance()->findAll();            
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                        $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                        $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    $tMembres=model_membres::getInstance()->findAll($sCurrentLetter);
+                    
+                    break;
             }
-            
-            //Liste des Membres en focntion de la lettre choisie
-            $tMembres=model_membres::getInstance()->findAll($sCurrentLetter);
             //Préparation de la Pagination Alphabétique
             $oModulePagination=new module_pagination;
             $oModulePagination->setModuleAction('membres::list');
             $oModulePagination->setParamPage('letter');
+            $oModulePagination->setParam(array('action'=>$sAction));
             $oModulePagination->setDistinctLetters($tDistinctLetters);            
             $oModulePagination->setCurrentLetter($sCurrentLetter);
             
             //Préparation de la vue
-           
             $oView=new _view('membres::list');
-            $oView->sAction="Full";
+            $oView->sAction=$sAction;
             $oView->oModulePagination=$oModulePagination->buildAlpha();
             $oView->tMembres=$tMembres; 
             $this->oLayout->add('main',$oView);
          
-        }
-                
-        public function _listEmptyAdress(){
-		
-            $tAllMembres=model_membres::getInstance()->findAllEmptyAdress();
-            $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
-            if (null !==_root::getParam('letter')){
-               $sCurrentLetter = _root::getParam('letter');
-            }else{
-               $sCurrentLetter = $tDistinctLetters[0]; 
-            }
-            //Liste des Membres en focntion de la lettre choisie
-            $tMembres=model_membres::getInstance()->findAllEmptyAdress($sCurrentLetter);
-            //Préparation de la Pagination Alphabétique
-            $oModulePagination=new module_pagination;
-            $oModulePagination->setModuleAction('membres::listEmptyAdress');
-            $oModulePagination->setParamPage('letter');
-            $oModulePagination->setDistinctLetters($tDistinctLetters);            
-            $oModulePagination->setCurrentLetter($sCurrentLetter);
-            
-            //Préparation de la vue
-  
-            $oView=new _view('membres::list');
-            $oView->sAction="EmptyAdress";
-            $oView->oModulePagination=$oModulePagination->buildAlpha();
-            $oView->tMembres=$tMembres;		
-            $this->oLayout->add('main',$oView);
-		 
-	}
+        }        
 
-        public function _listEmptyMail(){
-            
-            $tAllMembres=model_membres::getInstance()->findAllEmptyMail();
-            $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
-            if (null !==_root::getParam('letter')){
-               $sCurrentLetter = _root::getParam('letter');
-            }else{
-               $sCurrentLetter = $tDistinctLetters[0]; 
-            }
-		
-            $tMembres=model_membres::getInstance()->findAllEmptyMail($sCurrentLetter);
-            //Préparation de la Pagination Alphabétique
-            $oModulePagination=new module_pagination;
-            $oModulePagination->setModuleAction('membres::listEmptyMail');
-            $oModulePagination->setParamPage('letter');
-            $oModulePagination->setDistinctLetters($tDistinctLetters);            
-            $oModulePagination->setCurrentLetter($sCurrentLetter);
-            
-            //Préparation de la vue
-  
-            $oView=new _view('membres::list');
-            $oView->sAction="EmptyMail";
-            $oView->oModulePagination=$oModulePagination->buildAlpha();
-            $oView->tMembres=$tMembres;
-            $this->oLayout->add('main',$oView);
-		 
-	}	
-        
-        public function _listEmptyPermis(){
-	    $tAllMembres=model_membres::getInstance()->findAllEmptyPermis();
-            $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
-            if (null !==_root::getParam('letter')){
-               $sCurrentLetter = _root::getParam('letter');
-            }else{
-               $sCurrentLetter = $tDistinctLetters[0]; 
-            }
-            $tMembres=model_membres::getInstance()->findAllEmptyPermis($sCurrentLetter);
-            //Préparation de la Pagination Alphabétique
-            $oModulePagination=new module_pagination;
-            $oModulePagination->setModuleAction('membres::listEmptyPermis');
-            $oModulePagination->setParamPage('letter');
-            $oModulePagination->setDistinctLetters($tDistinctLetters);            
-            $oModulePagination->setCurrentLetter($sCurrentLetter);
-            
-            //Préparation de la vue
-  
-            $oView=new _view('membres::list');
-            $oView->sAction="EmptyPermis";
-            $oView->oModulePagination=$oModulePagination->buildAlpha();
-		$oView->tMembres=$tMembres;
-		
-		
-		
-		$this->oLayout->add('main',$oView);
-		 
-	}
-        
-//        public function _listPagination(){
-//            $tDistinctLetter=model_membres::getInstance()->findDistinctAlpha();
-//            
-//        }
-        
 	public function _new(){
 		$tMessage=$this->processSave();
 	
@@ -203,24 +153,7 @@ class module_membres extends abstract_module{
             //On liste toutes les relations connus entre le participant et les évènements
             $tJoinIdEvents=model_relationeventmemb::getInstance()->getSelectIdEvent(_root::getParam('id'));
             $oView->tJoinEvents=$tJoinEvents;
-            $oView->tJoinIdEvents=$tJoinIdEvents;
-//            if($oMembre->coord==1){
-//                $oModuleGoogleMap=new module_googleMap();
-//                $oModuleGoogleMap->setWidth(500);
-//                $oModuleGoogleMap->setHeight(500);
-//                $oModuleGoogleMap->setZoom(15);
-//                $oModuleGoogleMap->setMinZoom(13); //Zoom Arriere
-//                $oModuleGoogleMap->setMaxZoom(18); //Zoom Avant
-//                //$oModuleGoogleMap->setEnableZoomControl('false');
-//                $oModuleGoogleMap->setEnableScrollwheel('true');
-//                $oModuleGoogleMap->setDisableDoubleClickZoom('true');
-//                $sPositionGPS=$oMembre->lat.','.$oMembre->lng;
-//                $sTitreGM=$oMembre->indexMembre. ' : ';
-//                $tContentGM= array('<b>'.$oMembre->nom.' '.$oMembre->prenom.'</b>');
-//                $oModuleGoogleMap->addPositionWithContent($sPositionGPS,$sTitreGM,$tContentGM);
-//                $oView->oModuleGoogleMap=$oModuleGoogleMap->getMap(); 	
-//            }
-            
+            $oView->tJoinIdEvents=$tJoinIdEvents;            
             $oView->oMembres=$oMembre;                           
             $this->oLayout->add('main',$oView);
 	}
@@ -273,19 +206,27 @@ class module_membres extends abstract_module{
             
             switch (_root::getParam('action')){
                 case 'EmptyPermis':
-                    $tMembres=model_membres::getInstance()->findExportCSVEmptyPermis();
+                    $tMembres=model_membres::getInstance()->findAllEmptyPermis();
                     $sFileName = 'ExportBenevoleOMSSEmptyPermis_'.$sDate.'.csv';
                     break;
                 case 'EmptyMail':
-                    $tMembres=model_membres::getInstance()->findExportCSVEmptyMail();
+                    $tMembres=model_membres::getInstance()->findAllEmptyMail();
                     $sFileName = 'ExportBenevoleOMSSEmptyMail_'.$sDate.'.csv';
                     break;
                 case 'EmptyAdress':
-                    $tMembres=model_membres::getInstance()->findExportCSVEmptyAdress();
+                    $tMembres=model_membres::getInstance()->findAllEmptyAdress();
                     $sFileName = 'ExportBenevoleOMSSEmptyAdress_'.$sDate.'.csv';
                     break;
-                case 'Full':
-                    $tMembres=model_membres::getInstance()->findExportCSVFull();
+                case 'FullInfo' :
+                    $tMembres=model_membres::getInstance()->findAllUpdate();
+                    $sFileName = 'ExportBenevoleOMSSFullInfo_'.$sDate.'.csv';
+                    break;
+                case 'EmptyInfo':
+                    $tMembres=model_membres::getInstance()->findAllNotUpdate();
+                    $sFileName = 'ExportBenevoleOMSSEmptyInfo_'.$sDate.'.csv';
+                    break;
+                default :
+                    $tMembres=model_membres::getInstance()->findAll();
                     $sFileName = 'ExportBenevoleOMSSFull_'.$sDate.'.csv';
                     break;
             }
@@ -331,7 +272,7 @@ class module_membres extends abstract_module{
                         $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
 		}
 		
-$tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','chkFormulaire','comment');
+                $tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','chkFormulaire','comment');
                 foreach($tColumn as $sColumn){
                     switch ($sColumn) {
                             case 'nom':
@@ -340,14 +281,20 @@ $tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','r
                             case 'prenom':
                                 $oMembres->$sColumn= strtoupper(_root::getParam($sColumn,null))[0].substr(_root::getParam($sColumn,null),1);
                                 break;
-                            default :    
-                                $oMembres->$sColumn=_root::getParam($sColumn,0) ;
+                            default :
+                                if(substr($sColumn, 0, 3)==='chk'){ //Si ce sont des CheckBox la valeur par défaut est 0
+                                    $oMembres->$sColumn=_root::getParam($sColumn,0) ;
+                                }else{
+                                    $oMembres->$sColumn=_root::getParam($sColumn,null) ;    
+                                }
                         }
 		}
 
 		if($oMembres->save()){
+                    
                     if($iId==null){
-                        _root::redirect('membres::list');
+                        $iId=$oMembres->getId();    
+                        //_root::redirect('membres::list');
                     }
 			//une fois enregistre on redirige vers la page du membre
 			_root::redirect('membres::show',array('id'=>$iId));

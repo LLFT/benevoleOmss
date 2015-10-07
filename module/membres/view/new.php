@@ -17,12 +17,10 @@ $oForm->setMessage($this->tMessage);
         
         <div class="form-group">
                 <label class="col-sm-2 control-label">Possède une adresse Mail ? : </label>
-                <div class="col-sm-10"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>                    
-        </div>
+                <div class="col-sm-1"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>                    
         
-	<div class="form-group">
 		<label class="col-sm-2 control-label">Adresse Mail *</label>
-		<div class="col-sm-10"><?php echo $oForm->getInputText('mail',array('class'=>'form-control','maxlength'=>"40",'disabled'=>""))?></div>
+		<div class="col-sm-7"><?php echo $oForm->getInputText('mail',array('class'=>'form-control','maxlength'=>"40",'disabled'=>""))?></div>
 	</div>
 
 	<div class="form-group">
@@ -59,6 +57,13 @@ $oForm->setMessage($this->tMessage);
 
     <fieldset>
         <legend>Informations Complémentaires</legend>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Coordonnées validées ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkFormulaire',1, array('class'=>'form-control'))?></div>
+            <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
+        
+        </div>
 
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Club / Association </label>
@@ -66,7 +71,7 @@ $oForm->setMessage($this->tMessage);
 	</div>
         <div class="form-group">
                 <label class="col-sm-2 control-label">Possède le Permis ? : </label>
-                <div class="col-sm-10"><?php echo $oForm->getInputCheckbox('chkPermis',1, array('class'=>'form-control'))?></div>                    
+                <div class="col-sm-1"><?php echo $oForm->getInputCheckbox('chkPermis',1, array('class'=>'form-control'))?></div>                    
         </div>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Numéros de Permis</label>
@@ -87,6 +92,8 @@ function happycode(){
     $.fn.bootstrapSwitch.defaults.offColor = "danger";
    $('input[name="chkPermis"]').bootstrapSwitch();
    $('input[name="chkMail"]').bootstrapSwitch();
+   $('input[name="chkFormulaire"]').bootstrapSwitch();
+   $('input[name="chkSignaleur"]').bootstrapSwitch();
    
    $('input[name="chkMail"]').on('switchChange.bootstrapSwitch', function(event, state) {
        activerMail(state);
@@ -117,11 +124,8 @@ window.onload=happycode ;
     
 <?php echo $oForm->getToken('token',$this->token)?>
 
-<div class="form-group">
-    
-    <div class="col-sm-offset-2 col-sm-2">
-		<input type="submit" class="btn btn-success" value="Créer" /> <a class="btn btn-link" href="<?php echo $this->getLink('membres::list')?>">Annuler</a>
-	</div>
+<div class="col-sm-offset-1 btn-group" role="group">
+		<input type="submit" class="btn btn-success" value="Enregistrer" /> <a class="btn btn-default" href="<?php echo $this->getLink('membres::list')?>">Annuler</a>
 </div>
     
     
