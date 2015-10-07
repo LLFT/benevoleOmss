@@ -108,13 +108,9 @@ class module_membres extends abstract_module{
 	public function _new(){
 		$tMessage=$this->processSave();
 	
-		$oMembres=new row_membres;
-		
+		$oMembres=new row_membres;		
 		$oView=new _view('membres::new');
-		$oView->oMembres=$oMembres;
-		
-		
-		
+		$oView->oMembres=$oMembres;		
 		$oPluginXsrf=new plugin_xsrf();
 		$oView->token=$oPluginXsrf->getToken();
 		$oView->tMessage=$tMessage;
@@ -140,8 +136,6 @@ class module_membres extends abstract_module{
 		
 		$this->oLayout->add('main',$oView);
 	}
-
-	
 	
 	public function _show(){
             
@@ -159,27 +153,28 @@ class module_membres extends abstract_module{
 	}
         
         public function _localizeMember() {
-            $oMembre=model_membres::getInstance()->findById( _root::getParam('id'));
-            $oGoogleGeoCode = new my_googleGeocode;
-            $oGoogleGeoCode->findLocalisationForOneMember($oMembre);
+            $oMembre=model_membres::getInstance()->findById( _root::getParam('id'));            
+            $this->findLocalisationForOneMember($oMembre);            
             _root::redirect('membres::show',array('id'=>_root::getParam('id')));
         }
 	
         public function _localizeMembers() {
             $oMembres=model_membres::getInstance()->findAllLocalisable();
-            $oGoogleGeoCode = new my_googleGeocode;
-            $nbOfLocalization = $oGoogleGeoCode->findLocalisationForManyMembers($oMembres);
+            $nbOfLocalization = $this->findLocalisationForManyMembers($oMembres);
             _root::redirect('membres::list',array('nbFound'=>$nbOfLocalization));
         }
 	
-        
+        /**
+         * 
+         */
         public function _reIndexAllMembers() {
-            $oMenbres=  model_membres::getInstance()->orderByName();
-            $oToolsOMSS = new my_toolsOmss;
-            $nbOfReindexion = $oToolsOMSS->reIndexMembers($oMenbres);
-            _root::redirect('membres::list',array('nbFound'=>$nbOfReindexion));
-        
-            
+            $oMenbres=  model_membres::getInstance()->orderByName();            
+            $i=1;
+            foreach ($oMenbres as $oMembre) {
+                $this->saveIndexMembre($oMembre->idMembre, $i);
+                $i++;
+            }
+            _root::redirect('membres::list',array('nbFound'=>$i));            
         }
    
         
@@ -190,10 +185,7 @@ class module_membres extends abstract_module{
 		
 		$oView=new _view('membres::delete');
 		$oView->oMembres=$oMembres;
-		
-		
-
-		$oPluginXsrf=new plugin_xsrf();
+                $oPluginXsrf=new plugin_xsrf();
 		$oView->token=$oPluginXsrf->getToken();
 		$oView->tMessage=$tMessage;
 		
@@ -281,6 +273,18 @@ class module_membres extends abstract_module{
                             case 'prenom':
                                 $oMembres->$sColumn= strtoupper(_root::getParam($sColumn,null))[0].substr(_root::getParam($sColumn,null),1);
                                 break;
+                            case 'rue':
+                                if($oMembres->$sColumn != _root::getParam($sColumn)){
+                                    $oMembres->$sColumn=_root::getParam($sColumn,null);
+                                    $oMembres->coord=0;
+                                }
+                                break;
+                            case 'ville':
+                                if($oMembres->$sColumn != _root::getParam($sColumn)){
+                                    $oMembres->$sColumn=_root::getParam($sColumn,null);
+                                    $oMembres->coord=0;
+                                }
+                                break;
                             default :
                                 if(substr($sColumn, 0, 3)==='chk'){ //Si ce sont des CheckBox la valeur par défaut est 0
                                     $oMembres->$sColumn=_root::getParam($sColumn,0) ;
@@ -332,6 +336,51 @@ class module_membres extends abstract_module{
 	public function after(){
 		$this->oLayout->show();
 	}
+        
+        private function setCoordInTable($oMembreID,$tCoord=NULL){
+            if(!empty($tCoord)){
+                if(count($tCoord)>1){
+                    $oMembreEdit = model_membres::getInstance()->findById($oMembreID);
+                    $oMembreEdit->coord='1';
+                    $oMembreEdit->lat=$tCoord[2];
+                    $oMembreEdit->lng=$tCoord[3];
+                    $oMembreEdit->modifier=date('Y-m-d H:i:s',time());
+                    $oMembreEdit->saveF();
+                }else{
+                    echo 'Problème avec le membre dont l\'ID est '.$oMembreID."\n\r . Le géocoadage multiple est limité par Google 5 requetes/sec.(OVER_QUERY_LIMIT) \n\r Je vous invite à recommencer plus tard.";
+                    var_dump($tCoord);
+                    die();
+                }
+            }
+        }
+
+        private function findLocalisationForOneMember($oMembre){
+            $sAdressPostal = $oMembre->numero.','.$oMembre->rue.','.$oMembre->ville.','.$oMembre->codePostal;
+            $oGoogleGeoCode = new my_GoogleMapAPI();
+            $tCoord = $oGoogleGeoCode->geocoding($sAdressPostal);
+            $this->setCoordInTable($oMembre->idMembre, $tCoord);
+        }
+
+        private function findLocalisationForManyMembers($oMembres){
+            ini_set('max_execution_time', 0);
+            $i=0;
+            foreach ($oMembres as $oMembre) {
+                $this->findLocalisationForOneMember($oMembre);
+                $i++;
+            }
+            ini_restore('max_execution_time');
+            return $i;
+        }
+        
+        Private function saveIndexMembre($iIdMembre, $iIndex) {
+            $oMembreEdit = model_membres::getInstance()->findById($iIdMembre);
+            $oMembreEdit->indexMembre = $iIndex;
+            /*On effectue une sauvegarde sans se soucier des controles de validité*/
+            $oMembreEdit->saveF();           
+
+        }
+        
+        
 //Les appels AJAX         
         /*
          * Déclare le membre comme étant un signaleur.
