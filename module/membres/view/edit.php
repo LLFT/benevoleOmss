@@ -19,23 +19,16 @@ $oForm->setMessage($this->tMessage);
         
         <div class="form-group">
                 <label class="col-sm-3 control-label">Possède-t-il une adresse Mail ? : </label>
-                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>
-                <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
-                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Coordonnées validées ? : </label>
-                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkFormulaire',1, array('class'=>'form-control'))?></div>
-        </div>
-	
-        <div class="form-group">
-		<label class="col-sm-2 control-label">Adresse Mail *</label>
+                <div class="col-sm-1"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>
+                <label class="col-sm-2 control-label">Adresse Mail *</label>
                 <?php $sParamMail=array('class'=>'form-control','maxlength'=>"40");
                     if ($this->oMembres->chkMail!=1){$sParamMail['disabled']='';}
                 ?>                
-		<div class="col-sm-10"><?php echo $oForm->getInputText('mail',$sParamMail)?></div>
-	</div>
+		<div class="col-sm-6"><?php echo $oForm->getInputText('mail',$sParamMail)?></div>
+        </div>
 
+	
+        
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Téléphone Fixe **</label>
 		<div class="col-sm-4"><?php echo $oForm->getInputText('fixe',array('class'=>'form-control','maxlength'=>"20"))?></div>
@@ -75,6 +68,13 @@ $oForm->setMessage($this->tMessage);
 
     <fieldset>
         <legend>Informations Complémentaires</legend>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Coordonnées validées ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkFormulaire',1, array('class'=>'form-control'))?></div>
+            <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
+                <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
+        
+        </div>
 
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Club / Association </label>
@@ -83,11 +83,11 @@ $oForm->setMessage($this->tMessage);
         
         <div class="form-group">
                 <label class="col-sm-2 control-label">Possède le Permis ? : </label>
-                <div class="col-sm-10"><?php echo $oForm->getInputCheckbox('chkPermis',1, array('class'=>'form-control'))?></div>                    
+                <div class="col-sm-1"><?php echo $oForm->getInputCheckbox('chkPermis',1, array('class'=>'form-control'))?></div>                    
         </div>
             
 	<div class="form-group">
-		<label class="col-sm-2 control-label">Numéros de Permis</label>
+		<label class="col-sm-2 control-label">Numéros de Permis : </label>
                 <?php $sParamNumPermis=array('class'=>'form-control','maxlength'=>"20");
                     if ($this->oMembres->chkPermis!=1){$sParamNumPermis['disabled']='';}
                 ?> 
@@ -98,8 +98,10 @@ $oForm->setMessage($this->tMessage);
 		<label class="col-sm-2 control-label">Commentaire : </label>
 		<div class="col-sm-10"><?php echo $oForm->getInputTextarea('comment',array('class'=>'form-control'))?></div>
 	</div>
+    
+            
+        
     </fieldset>
-
     
 <?php echo $oForm->getToken('token',$this->token)?>
     
@@ -148,14 +150,11 @@ function activerNumPermis(state) {
 window.onload=happycode ; 
 </script>
 
-<div class="form-horizontal">
-    <div class="col-sm-offset-2 col-sm-2">
+<div class="col-sm-offset-1 btn-group" role="group">
 		<input type="submit" class="btn btn-success" value="Modifier" /> 
                 <a class="btn btn-default" href="<?php echo $this->getLink('membres::show',array('id'=>$this->oMembres->idMembre))?>">Annuler</a>
-	</div>
-    <div class="col-sm-offset-7 col-sm-1">
-                    <a class="btn btn-danger" href="<?php echo $this->getLink('membres::delete',array('id'=>$this->oMembres->idMembre))?>">Supprimer</a>
-    </div>
+                <a class="btn btn-danger" href="<?php echo $this->getLink('membres::delete',array('id'=>$this->oMembres->idMembre))?>">Supprimer</a>
+
 </div>
     
     

@@ -42,7 +42,7 @@ class model_membres extends abstract_model{
 	}
         
         public function findAllEmptyAdress($sLetter=NULL){
-            $requete = 'SELECT * FROM '.$this->sTable.' where (`rue` = "" or `ville` = "" or `codePostal` = "0" )';
+            $requete = 'SELECT * FROM '.$this->sTable.' where ((`rue` = "" or `rue`is NULL ) or (`ville` = "" or `ville`is NULL) or (`codePostal` = "0" or `codePostal`is NULL) )';
             if (isset($sLetter)){
                 $requete .= ' AND `nom` LIKE "'.$sLetter.'%"';
                 $requete .= ' AND `active`=1';
@@ -55,7 +55,7 @@ class model_membres extends abstract_model{
 	}
 	
         public function findAllEmptyMail($sLetter=NULL){
-            $requete = 'SELECT * FROM '.$this->sTable.' where `mail` = ""';                
+            $requete = 'SELECT * FROM '.$this->sTable.' where (`mail` = "" OR `mail` is NULL)';                
             if (isset($sLetter)){
                 $requete .= ' AND `nom` LIKE "'.$sLetter.'%"';
                 $requete .= ' AND `active`=1';
@@ -67,7 +67,31 @@ class model_membres extends abstract_model{
 	}
         
         public function findAllEmptyPermis($sLetter=NULL){
-            $requete = 'SELECT * FROM '.$this->sTable.' where `numPermis` = ""';
+            $requete = 'SELECT * FROM '.$this->sTable.' where (`numPermis` = "" OR `numPermis` = 0 OR `numPermis` is NULL)';
+            if (isset($sLetter)){
+                $requete .= ' AND `nom` LIKE "'.$sLetter.'%"';
+            $requete .= ' AND `active`=1';
+            }else{
+                $requete .= ' AND `active`=1';
+            }
+            $requete .= ' ORDER BY  `nom` ASC';
+            return $this->findMany($requete);
+	}
+        
+        public function findAllUpdate($sLetter=NULL){
+            $requete = 'SELECT * FROM '.$this->sTable.' where `chkFormulaire` = "1"';
+            if (isset($sLetter)){
+                $requete .= ' AND `nom` LIKE "'.$sLetter.'%"';
+            $requete .= ' AND `active`=1';
+            }else{
+                $requete .= ' AND `active`=1';
+            }
+            $requete .= ' ORDER BY  `nom` ASC';
+            return $this->findMany($requete);
+	}
+        
+        public function findAllNotUpdate($sLetter=NULL){
+            $requete = 'SELECT * FROM '.$this->sTable.' where `chkFormulaire` = "0"';
             if (isset($sLetter)){
                 $requete .= ' AND `nom` LIKE "'.$sLetter.'%"';
             $requete .= ' AND `active`=1';
@@ -113,28 +137,7 @@ class model_membres extends abstract_model{
             }
             
             return array_values($retour);
-        }     
-        
-        public function findExportCSVFull() {
-            $requete =  "SELECT `indexMembre`, `nom`, `prenom`, `mail`, `fixe`, `gsm`, `numero`, `rue`, `complement`, `ville`, `codePostal`, `club`, `numPermis` FROM `membres` WHERE `active`=1";
-            return $this->findMany($requete);
         }
-        
-        public function findExportCSVEmptyAdress() {
-            $requete =  "SELECT `indexMembre`, `nom`, `prenom`, `mail`, `fixe`, `gsm`, `numero`, `rue`, `complement`, `ville`, `codePostal`, `club`, `numPermis` FROM `membres` where (`rue` = '' or `ville` = '' or `codePostal` = '0' ) AND `active`=1";
-            return $this->findMany($requete);
-        }
-        
-        public function findExportCSVEmptyMail() {
-            $requete =  "SELECT `indexMembre`, `nom`, `prenom`, `mail`, `fixe`, `gsm`, `numero`, `rue`, `complement`, `ville`, `codePostal`, `club`, `numPermis` FROM `membres` where `mail` = '' AND `active`=1";
-            return $this->findMany($requete);
-        }
-        
-        public function findExportCSVEmptyPermis() {
-            $requete =  "SELECT `indexMembre`, `nom`, `prenom`, `mail`, `fixe`, `gsm`, `numero`, `rue`, `complement`, `ville`, `codePostal`, `club`, `numPermis` FROM `membres` where `numPermis` = '' AND `active`=1";
-            return $this->findMany($requete);
-        }
-        
         
         public function orderByName() {
             $requete =  "SELECT `idMembre` FROM `membres` WHERE `active`=1 ORDER BY `nom` ASC, `prenom` ASC";

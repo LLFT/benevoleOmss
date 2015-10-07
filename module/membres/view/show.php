@@ -93,26 +93,26 @@
 
     
 </fieldset>
-<div  class="container">
-    <div class="col-sm-offset-1 col-sm-10">
-        <a class="btn btn-primary btnNext" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre-1)))?>">Membre Prec.</a>	 
+<div class="col-sm-offset-1 btn-group" role="group">
+   
+        <a class="btn bg-info" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre-1)))?>">Membre Prec.</a>	 
 	
         <?php if ( _root::getACL()->can('ACCESS','membres::edit')):?>
-            <a class="col-sm-offset-1 btn btn-success" href="<?php echo $this->getLink('membres::edit',array( 'id'=>$this->oMembres->idMembre))?>">Edit</a>	 
+            <a class="col-sm-offset-1 btn btn-success" href="<?php echo $this->getLink('membres::edit',array( 'id'=>$this->oMembres->idMembre))?>">Editer</a>	 
         <?php endif;?>
             
         <?php if ( _root::getACL()->can('ACCESS','membres::localizeMember')):?>   
         <?php if (($this->oMembres->rue !="")&&($this->oMembres->coord !=1)):?>            
-            <a class="btn btn-info" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembres->idMembre))?>">Localiser</a>
+            <a class="btn btn-default" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembres->idMembre))?>">Localiser</a>
         <?php elseif (($this->oMembres->rue !="")&&($this->oMembres->coord == 1)) :?>    
-            <a class="btn btn-info" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembres->idMembre))?>">Re-Localiser</a>
+            <a class="btn btn-default" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembres->idMembre))?>">Re-Localiser</a>
         <?php endif;?> 
         <?php endif;?>
             
                 
-        <a class="btn btn-default" href="<?php echo $this->getLink('membres::list',array( 'letter'=>$this->oMembres->nom[0]))?>">Retour</a>
-        <a class="col-sm-offset-1 btn btn-primary" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre+1)))?>">Membre Suiv.</a>	 
-	</div>
+        <a class="btn btn-danger" href="<?php echo $this->getLink('membres::list',array( 'letter'=>$this->oMembres->nom[0]))?>">Retour</a>
+        <a class="btn bg-info" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre+1)))?>">Membre Suiv.</a>	 
+
     
 </div>
 </form>

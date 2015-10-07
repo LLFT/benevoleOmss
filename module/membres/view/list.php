@@ -79,8 +79,6 @@
 
 <p>
 <div class="btn-group" role="group">
-
-
 	<?php if ( _root::getACL()->can('ACCESS','membres::new')):?>
 		<a  class="btn btn-success" href="<?php echo $this->getLink('membres::new') ?>">Ajouter membre</a>
 	<?php endif;?>
@@ -90,9 +88,11 @@
 			Filtres <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a href="<?php echo $this->getLink('membres::listEmptyAdress') ?>">Adresses Postale Manquantes</a></li>
-			<li><a href="<?php echo $this->getLink('membres::listEmptyMail') ?>">Adresses Mail Manquantes</a></li>
-			<li><a href="<?php echo $this->getLink('membres::listEmptyPermis') ?>">Permis de conduire Manquants</a></li>
+			<li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyAdress')) ?>">Adresses Postale Manquantes</a></li>
+			<li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyMail')) ?>">Adresses Mail Manquantes</a></li>
+			<li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyPermis')) ?>">Permis de conduire Manquants</a></li>
+                        <li><a href="<?php echo $this->getLink('membres::list',array('action'=>'FullInfo')) ?>">Informations à Jours</a></li>
+                        <li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyInfo')) ?>">Informations à Incomplètes</a></li>
 			<!--    <li role="separator" class="divider"></li>
 			<li><a href="#">Exporter</a></li>-->
 		</ul>
@@ -101,6 +101,7 @@
 	<?php if ( _root::getACL()->can('ACCESS','membres::exportCSV')):?>
 		<a class="btn btn-success" href="<?php echo $this->getLink('membres::exportCSV',array('action'=>$this->sAction)) ?>">Exporter</a>
 	<?php endif;?>
+</div>
 <script language="Javascript">
    window.onload = function(){  
        console.log( "ready!" );
@@ -124,5 +125,5 @@
         
    
   </script>
-</div>
+
 
