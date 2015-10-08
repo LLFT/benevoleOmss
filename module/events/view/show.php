@@ -41,7 +41,7 @@
     
     <?php if ($this->tListeDesParticipants) :?>
     <fieldset>
-        <legend>Signaleurs </legend>
+        <legend>Signaleurs Engagés</legend>
         <div class="table-responsive">
             <table class="table">
             <?php foreach($this->tListeDesParticipants as $key => $sParticipant):?>
@@ -56,18 +56,38 @@
     </fieldset>
     <?php endif;?>
     
+    <?php if (($this->tListBenevolesDispo) && ($this->oEvents->active != 0)) :?>
+    <fieldset>
+        <legend>Signaleurs Disponibles</legend>
+        <div class="table-responsive">
+            <table class="table">
+            <?php $inc = 0; ?>
+            <?php foreach($this->tListBenevolesDispo as $key => $sParticipant):?>
+                <?php if($inc %4===0) :?> <tr><?php endif; ?>
+                
+                    <td> <?php echo $inc+1 .' : '.$sParticipant; ?> </td>
+                
+                <?php if($inc %4===3) :?> </tr><?php endif; ?>
+                <?php $inc++; ?>
+            <?php endforeach;?>
+            </table>
+        </div>
+    </fieldset>
+    <?php endif;?>
+    
     <fieldset>
         <legend>Actions </legend>  
         <div class="btn-group" role="group">
             
                 <a class="btn btn-default" href="<?php echo $this->getLink('events::list')?>">Retour</a>
+                <a class="btn btn-info" href="<?php echo $this->getLink('events::exportCSV',array('idEvent'=>$this->oEvents->getId(),'nomEvent'=>$this->oEvents->nomEvent))?>">Exporter la liste des signaleurs</a>
             
-            <?php if ( _root::getACL()->can('ACCESS','events::edit')):?>
+            <?php if ( !_root::getACL()->can('ACCESS','events::edit')):?>
                 <?php if ($this->oEvents->active != 0) :?>
                 
                     <a class="btn btn-success" href="<?php echo $this->getLink('events::edit',array('id'=>$this->oEvents->getId()))?>">Modifier</a>
                 
-                    <a class="btn btn-danger" href="<?php echo $this->getLink('events::delete',array('id'=>$this->oEvents->getId()))?>">Archiver</a>
+                    <a class="btn btn-danger" href="<?php echo $this->getLink('events::archiver',array('id'=>$this->oEvents->getId()))?>">Archiver</a>
                 
                 <?php endif;?>
             <?php endif;?>

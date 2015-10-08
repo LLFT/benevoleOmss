@@ -76,23 +76,43 @@ class module_events extends abstract_module{
 	public function _show(){
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
                 $oParcours=model_parcours::getInstance()->findOneParcour(_root::getParam('id'));
-                $tListeDesParticipants=  model_relationeventmemb::getInstance()->getListOfMembresByIdEvent(_root::getParam('id'));
+                $tListDesParticipants=  model_relationeventmemb::getInstance()->getListOfMembresByIdEvent(_root::getParam('id'));
+                $tListBenevolesDispo= model_relationeventmemb::getInstance()->getListOfMembresDispo();
 		$oView=new _view('events::show');
 		$oView->oEvents=$oEvents;
 		$oView->oParcours=$oParcours;
-                $oView->tListeDesParticipants=$tListeDesParticipants;
-		
+                $oView->tListeDesParticipants=$tListDesParticipants;
+		$oView->tListBenevolesDispo = $tListBenevolesDispo;
 		$this->oLayout->add('main',$oView);
 	}
 
-	
-	
-	public function _delete(){
-		$tMessage=$this->processDelete();
+	public function _exportCSV() {            
+            $sDate=  date('dmy');
+            $sFileName ="";
+            $idEvent = _root::getParam('idEvent');
+            $nomEvent = _root::getParam('nomEvent');
+            $tMembres=model_membres::getInstance()->findParticipantOfEvent($idEvent);
+            $sFileName = 'ExportSignaleurs_'.$nomEvent.'_'.$sDate.'.csv';
+            
+            $oView=new _view('membres::exportCSV');
+            $oView->tMembres=$tMembres;
+            
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('export');
+            $this->oLayout->sFileName=$sFileName;
+            $this->oLayout->sExtension='csv';
+
+            $this->oLayout->show();
+            exit;
+        }
+        
+        
+	public function _archiver(){
+		$tMessage=$this->processArchivage();
 
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
 		
-		$oView=new _view('events::delete');
+		$oView=new _view('events::archiver');
 		$oView->oEvents=$oEvents;
 		
 		
@@ -144,7 +164,7 @@ class module_events extends abstract_module{
 	}
 	
 	
-	public function processDelete(){
+	public function processArchivage(){
 		if(!_root::getRequest()->isPost() ){ //si ce n'est pas une requete POST on ne soumet pas
 			return null;
 		}
