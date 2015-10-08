@@ -15,6 +15,11 @@ class module_membres extends abstract_module{
                 }
         }	
         
+        public function _index(){
+	    //on considere que la page par defaut est la page de listage
+	    $this->_list();
+	}
+        
         public function _list(){
             
             $sAction=  _root::getParam('action');
