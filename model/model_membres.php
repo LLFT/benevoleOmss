@@ -112,9 +112,9 @@ class model_membres extends abstract_model{
             return $this->findMany('SELECT `idMembre`,`rue`,`ville`,`codePostal` FROM '.$this->sTable.' WHERE (`coord` IS NULL or `coord`=0) and `rue` != "" and `ville` != "" ');
         }
         
-        public function findCoordParticipantOfEvent($idEvent) {
-            return $this->findMany('SELECT m.idMembre, nom, prenom, lat, lng FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=?',$idEvent);
-        }
+        public function findParticipantOfEvent($idEvent) {
+            return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `indexMembre` ASC',$idEvent);
+        }      
 
 
 //        public function findDistinctAlpha() {
@@ -150,7 +150,7 @@ class model_membres extends abstract_model{
         }
         
         public function getCoordOfParticipantOfEvent($idEvent) {
-            $tab=$this->findCoordParticipantOfEvent($idEvent);
+            $tab=$this->findParticipantOfEvent($idEvent);
 		$tSelect=array();
                 
 		if($tab){

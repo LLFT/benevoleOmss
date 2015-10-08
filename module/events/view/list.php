@@ -29,7 +29,10 @@
 	<?php endif;?>
 </table>
 
-<p><a class="btn btn-primary" href="<?php echo $this->getLink('events::new') ?>">Ajouter un nouvel évènement</a>
+<p>
+    <?php if ( _root::getACL()->can('ACCESS','membres::new')):?>
+        <a class="btn btn-primary" href="<?php echo $this->getLink('events::new') ?>">Ajouter un nouvel évènement</a>
+    <?php endif;?>
 <?php if (_root::getParam('action')=='archiv'):?>
 <a class="btn btn-info" href="<?php echo $this->getLink('events::list') ?>">Afficher les évènements</a></p>
 <?php else :?>

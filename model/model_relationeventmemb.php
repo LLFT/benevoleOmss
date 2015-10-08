@@ -59,6 +59,21 @@ class model_relationeventmemb extends abstract_model{
 		return $tSelect;
 	}
         
+        /**
+         * Retourne un tableau contenant les personnes étant déclaré comme signaleur mais qui ne sont pas affecté à un évènement.
+         * @return array
+         */
+        public function getListOfMembresDispo() {
+            $tab = $this->findMany('SELECT * FROM omss.membres as M where NOT exists (select membre_id from '.$this->sTable.' where idmembre = membre_id) AND chkSignaleur = 1');
+            $tSelect=array();
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[$oRow->idmembre]=$oRow->nom .' '. $oRow->prenom;
+                    }
+		}
+		return $tSelect;
+        }
+        
         public function joinMemberEvent($idMembre,$idEvent){
         $this->unJoinMemberEvent($idMembre,$idEvent);
         
