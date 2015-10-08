@@ -68,7 +68,7 @@ class model_relationeventmemb extends abstract_model{
             $tSelect=array();
 		if($tab){
                     foreach($tab as $oRow){
-                            $tSelect[$oRow->idmembre]=$oRow->nom .' '. $oRow->prenom;
+                            $tSelect[]=array('nom'=>$oRow->nom,'prenom'=>$oRow->prenom,'idMembre'=>$oRow->idMembre);
                     }
 		}
 		return $tSelect;

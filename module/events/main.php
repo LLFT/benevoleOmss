@@ -77,12 +77,13 @@ class module_events extends abstract_module{
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
                 $oParcours=model_parcours::getInstance()->findOneParcour(_root::getParam('id'));
                 $tListDesParticipants=  model_relationeventmemb::getInstance()->getListOfMembresByIdEvent(_root::getParam('id'));
-                $tListBenevolesDispo= model_relationeventmemb::getInstance()->getListOfMembresDispo();
+                $oListBenevolesDispo= model_relationeventmemb::getInstance()->getListOfMembresDispo();
+                
 		$oView=new _view('events::show');
 		$oView->oEvents=$oEvents;
 		$oView->oParcours=$oParcours;
                 $oView->tListeDesParticipants=$tListDesParticipants;
-		$oView->tListBenevolesDispo = $tListBenevolesDispo;
+		$oView->oListBenevolesDispo = $oListBenevolesDispo;
 		$this->oLayout->add('main',$oView);
 	}
 

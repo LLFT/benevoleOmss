@@ -56,16 +56,16 @@
     </fieldset>
     <?php endif;?>
     
-    <?php if (($this->tListBenevolesDispo) && ($this->oEvents->active != 0)) :?>
+    <?php if (($this->oListBenevolesDispo) && ($this->oEvents->active != 0)) :?>
     <fieldset>
         <legend>Signaleurs Disponibles</legend>
         <div class="table-responsive">
             <table class="table">
             <?php $inc = 0; ?>
-            <?php foreach($this->tListBenevolesDispo as $key => $sParticipant):?>
+            <?php foreach($this->oListBenevolesDispo as $tListBenevolesDispo):?>
                 <?php if($inc %4===0) :?> <tr><?php endif; ?>
                 
-                    <td> <?php echo $inc+1 .' : '.$sParticipant; ?> </td>
+                    <td> <?php echo $inc+1 .' : '.$tListBenevolesDispo['nom'].' '.$tListBenevolesDispo['prenom'] ; ?> </td>
                 
                 <?php if($inc %4===3) :?> </tr><?php endif; ?>
                 <?php $inc++; ?>
