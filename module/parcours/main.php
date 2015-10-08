@@ -9,7 +9,7 @@ class module_parcours extends abstract_module{
                 //Vérifions que l'authentification est active
                 if(_root::getConfigVar('auth.enabled')==='1'){;                
                     //Vérifions que le compte peut accèder à ce module
-                    if(!_root::getACL()->can('ACCESS','parcours::list')){
+                    if(!_root::getACL()->can('ACCESS','parcours::show')){
                         _root::redirect('membres::list');
                     }
                 }
