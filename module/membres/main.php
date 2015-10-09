@@ -149,11 +149,13 @@ class module_membres extends abstract_module{
             $oMembre=model_membres::getInstance()->findById( _root::getParam('id') );
             //On liste tous les évènements connus et actifs 
             $tJoinEvents=model_events::getInstance()->getSelect();
+            $oOwner=  model_account::getInstance()->findById($oMembre->owner);
             //On liste toutes les relations connus entre le participant et les évènements
             $tJoinIdEvents=model_relationeventmemb::getInstance()->getSelectIdEvent(_root::getParam('id'));
             $oView->tJoinEvents=$tJoinEvents;
             $oView->tJoinIdEvents=$tJoinIdEvents;            
-            $oView->oMembres=$oMembre;                           
+            $oView->oMembres=$oMembre;
+            $oView->oOwner=$oOwner;
             $this->oLayout->add('main',$oView);
 	}
         

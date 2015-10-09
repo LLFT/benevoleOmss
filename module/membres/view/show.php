@@ -7,8 +7,11 @@
                 
                 <?php echo ' '.$this->oMembres->indexMembre .' : '.$this->oMembres->nom .' '. $this->oMembres->prenom.' '; ?>
                 <img <?php if($this->oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15" TITLE="Coord. Validées">
+                
             </legend>
-
+            <?php if(_root::getACL()->can('ACCESS','permission::list')): ?>
+            <div class="legend2"><?php  echo $this->oOwner->login.' ('.$this->oMembres->modifier.')'; ?></div>
+            <?php endif;?>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Adresse Mail : </label>
 		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->mail ?></p></div>
