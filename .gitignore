@@ -8,3 +8,4 @@ data/upload/GPX
 UrlDeReference.txt
 .gitignore
 nbproject/*
+nbproject/private/private.xml
