@@ -2,28 +2,38 @@
 
     $sThead="";
     $sTbody="";
+    $Selected=False;
     foreach($this->tJoinmodel_groupe as $keyGroupe => $sGroupe){
             $sThead .= '<th>'.$sGroupe.'</th>';        
     } 
 
     foreach($this->oPermissionDistinct as $uRows => $sRow){
-        $sTbody.='<tr><th>'.$sRow->element.'</th>';       
+        $sTbody.='<tr><form   action="'.$this->getLink('permission::editPermission').'" method="POST" ><th>'.$sRow->element.'</th>';       
         foreach($this->tJoinmodel_groupe as $uIdGroupe => $sGroupe){
-            $sTbody.='<td><SELECT name="'.$uIdGroupe.'_'.$sRow->element.'">
-<OPTION>DENY
-<OPTION ';
             foreach ($this->oPermission as $key => $sPermission) {
                 if(($sPermission->element != $sRow->element )||($sPermission->groupe_id != $uIdGroupe )){continue;}                
-                $sTbody.='selected';
+                $Selected='selected';
             }
-            $sTbody.='>ALLOW</SELECT></td>';    
+            
+            
+            $sTbody.='<td><SELECT name="'.$uIdGroupe.'_'.$sRow->element.'" ';
+            if($Selected){
+                $sTbody.='class="list1" >';
+            }else{
+                $sTbody.=' class="list2" >';
+            }
+            $sTbody.='<OPTION class="option1">DENY
+                      <OPTION class="option2"  ';
+            
+            $sTbody.=$Selected.'>ALLOW</SELECT></td>';
+            $Selected=False;
         }
-        $sTbody.='</tr>';
+        $sTbody.='<td><button value="Modifier">Modifier les Permissions</button></td></form></tr>';
     }
 ?>
         
         
-<form  class="form-horizontal" action="" method="POST" >
+<form  class="form-horizontal" action="<?php echo $this->getLink('permission::addElement'); ?>" method="POST" >
 <select name="permissions" id="permissions">
 <?php foreach($this->tModule as $key => $oModule):?>
     <optgroup label="<?php echo $key; ?>">
@@ -37,11 +47,13 @@
     <button value="Ajouter">Ajouter</button>
 </form>
 <table class="table">
-    <thead><tr><th>Modules</th><?php echo $sThead ; ?></tr></thead>
-    <tbody>
-        <?php echo $sTbody ; ?>
-    </tbody>
-    <tfoot></tfoot>    
+    
+        <thead><tr><th>Modules</th><?php echo $sThead ; ?></tr></thead>
+            <tbody>
+                <?php echo $sTbody ; ?>
+            </tbody>
+            <tfoot><tr></tr></tfoot>    
+    
 </table>
 
 
@@ -50,7 +62,15 @@
         console.log( "ready!" );
         $( "select" )
           .change(function (e) {
-              console.log( "change ! "+this.name+' '+this.value ); 
+            var colorR = "#FF4000";
+            var colorG = "#64FE2E";
+              console.log( "change ! "+this.value );
+            if(this.value === "ALLOW"){
+              $(this).css('background-color',colorG);
+            }else{
+              $(this).css('background-color',colorR);
+            }
+              
         });
     };   
 </script>

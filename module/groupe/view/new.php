@@ -6,7 +6,7 @@ $oForm->setMessage($this->tMessage);
 
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label">name</label>
+		<label class="col-sm-2 control-label">Nom du Groupe</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('name',array('class'=>'form-control'))?></div>
 	</div>
 
@@ -16,7 +16,7 @@ $oForm->setMessage($this->tMessage);
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-		<input type="submit" class="btn btn-success" value="Modifier" /> <a class="btn btn-link" href="<?php echo $this->getLink('groupe::list')?>">Annuler</a>
+		<input type="submit" class="btn btn-success" value="Créer" /> <a class="btn btn-link" href="<?php echo $this->getLink('groupe::list')?>">Annuler</a>
 	</div>
 </div>
 </form>

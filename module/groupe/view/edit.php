@@ -6,7 +6,7 @@ $oForm->setMessage($this->tMessage);
 
 	
 	<div class="form-group">
-		<label class="col-sm-2 control-label">name</label>
+		<label class="col-sm-2 control-label">Nom du Groupe</label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('name',array('class'=>'form-control'))?></div>
 	</div>
 

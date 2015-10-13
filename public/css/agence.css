@@ -8,9 +8,28 @@ and open the template in the editor.
     Author     : bikar_000
 */
 
-
-.legend2{
+/*CSS pour le Div permettant d'indiquer le dernier owner d'un membre dans membres::show*/
+div.legend2{
     position:absolute;
     top:-40px;
     right:20px;    
 }
+
+
+/*CSS pour les select de la vue permission::list*/
+select.list1 {
+    background: #64FE2E;    
+}
+
+select.list2 {
+    background: #FF4000;
+}
+
+option.option1{
+    background-color: #FF4000;
+}
+
+option.option2{
+    background-color: #64FE2E;
+}
+

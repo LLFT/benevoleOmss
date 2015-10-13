@@ -685,7 +685,8 @@ class _root{
             $tDir=$oDir->getListDir();
             foreach($tDir as $oDirModule){
                     $tMethodes=array();
-                    //on deduit le nom du module
+                    //Si l'un des modules termine par Trash on l'ignore
+                    if(substr($oDirModule->getName(),-5)=='Trash'){ continue ; }
                     $sModuleName= 'module_'.$oDirModule->getName();                 
                     
                     //on exclue le/les modules que l'on veut ignorer

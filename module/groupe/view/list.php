@@ -1,7 +1,7 @@
 <table class="table table-striped">
 	<tr>
 		
-		<th>name</th>
+		<th>Nom du Groupe</th>
 
 		<th></th>
 	</tr>
@@ -17,17 +17,11 @@
 <a class="btn btn-success" href="<?php echo $this->getLink('groupe::edit',array(
 										'id'=>$oGroupe->getId()
 									) 
-							)?>">Edit</a>
+							)?>">Editer</a>
 
-<a class="btn btn-danger" href="<?php echo $this->getLink('groupe::delete',array(
-										'id'=>$oGroupe->getId()
-									) 
-							)?>">Delete</a>
+<!--<a class="btn btn-danger" href="<?php // echo $this->getLink('groupe::delete',array('id'=>$oGroupe->getId()))?>">Delete</a>-->
 
-<a class="btn btn-default" href="<?php echo $this->getLink('groupe::show',array(
-										'id'=>$oGroupe->getId()
-									) 
-							)?>">Show</a>
+<!--<a class="btn btn-default" href="<?php // echo $this->getLink('groupe::show',array('id'=>$oGroupe->getId()))?>">Show</a>-->
 
 				
 				
@@ -41,5 +35,5 @@
 	<?php endif;?>
 </table>
 
-<p><a class="btn btn-primary" href="<?php echo $this->getLink('groupe::new') ?>">New</a></p>
+<p><a class="btn btn-primary" href="<?php echo $this->getLink('groupe::new') ?>">Nouveau groupe</a></p>
 

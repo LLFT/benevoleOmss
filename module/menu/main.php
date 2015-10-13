@@ -6,12 +6,6 @@ Class module_menu extends abstract_moduleembedded{
             $tLink=array(
                
                         'Liste des Membres' => 'membres::list',
-// 
-//			'Informations Manquantes' => array(
-//                            'Adresse Postale' => 'membres::listEmptyAdress',
-//                            'Mail' => 'membres::listEmptyMail',
-//                            'Permis de conduire' => 'membres::listEmptyPermis',
-//			),
                 
                         'Activité' => array(              
                         'Liste des Evènements' =>'events::list',
@@ -26,8 +20,7 @@ Class module_menu extends abstract_moduleembedded{
                         'Administration' => array(
                             'Gestion des Comptes'=>'account::list',
                             'Gestion des Groupes'=>'groupe::list',
-                            'Gestion des Permissions'=>'permission::list',
-                            'Gestion des Eléments' => 'element::list',
+                            'Gestion des Permissions'=>'permission::list',                            
                         ),
                         
      
