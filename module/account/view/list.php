@@ -2,8 +2,8 @@
 	<tr>	
             <th>Session</th>
             <th>Nom</th>                
-            <th>Prenom</th>
-            <th>Etat</th>
+            <th>Prénom</th>
+            <th>État</th>
             <th>Groupe</th>
             <th>Actions</th>
 	</tr>

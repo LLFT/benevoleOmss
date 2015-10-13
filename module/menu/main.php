@@ -14,7 +14,7 @@ Class module_menu extends abstract_moduleembedded{
  
 			'Outils' => array(
 				'Localisation Global' => 'membres::localizeMembers',
-                                'Rapprochement' => 'membres::reIndexAllMembers',    
+//                                'Rapprochement' => 'membres::reIndexAllMembers',    
 			),
         
                         'Administration' => array(

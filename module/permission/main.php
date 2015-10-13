@@ -6,12 +6,13 @@ class module_permission extends abstract_module{
 		
 		$this->oLayout->addModule('menu','menu::index');
                 
-                if(!_root::getACL()->can('ACCESS','permission::list')){
-                    _root::redirect('default::index');
-                }
+                
 	}
 	
 	public function _list(){
+            if(!_root::getACL()->can('ACCESS','permission::list')){
+                    _root::redirect('default::index');
+                }
             $oPermission=model_permission::getInstance()->findAll();
             $oPermissionDistinct=model_permission::getInstance()->findDistinctElement();
             $tJoinmodel_groupe=model_groupe::getInstance()->getSelect();
@@ -32,6 +33,9 @@ class module_permission extends abstract_module{
         
         
         public function _addElement(){
+            if(!_root::getACL()->can('ACCESS','permission::addElement')){
+                    _root::redirect('default::index');
+                }
             $element = _root::getParam('permissions');
             
             $oPermission=new row_permission;
@@ -48,6 +52,9 @@ class module_permission extends abstract_module{
         }
         
         public function _editPermission(){
+            if(!_root::getACL()->can('ACCESS','permission::editPermission')){
+                    _root::redirect('default::index');
+                }
             
             foreach ($_POST as $sGrpElement => $sAllowDeny) {
                 $idGrp = strstr($sGrpElement, '_', true);            
@@ -57,8 +64,7 @@ class module_permission extends abstract_module{
                 //Si J'ai une coorepondance en base
                 if($oPermission){
                     if($oPermission->allowdeny != $sAllowDeny){ //Les autorisations sont-elles différentes ?
-                       $oPermission->delete();
-                       _root::redirect('permission::list');
+                       $oPermission->delete();                       
                     }
                 }elseif($sAllowDeny!='DENY'){// Je n'ai pas de correspondance mais la valeur du formulaire n'est pas DENY
                     $oPermission=new row_permission;
@@ -66,18 +72,17 @@ class module_permission extends abstract_module{
                     $oPermission->allowdeny = 'ALLOW';
                     $oPermission->element = $sElement;
                     $oPermission->groupe_id = $idGrp;
-                    if($oPermission->save()){
+                    $oPermission->save();
                         //une fois enregistre on redirige (vers la page liste)
-                        _root::redirect('permission::list');
-                    }else{
-                        return $oPermission->getListError();
-                    }
+                   
                 }
                     
             
                 
             }
-            exit();
+            
+                _root::redirect('permission::list');           
+           
         }
 
 

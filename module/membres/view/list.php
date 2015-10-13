@@ -1,5 +1,5 @@
 <?php if(isset($this->oModulePagination))echo $this->oModulePagination->show();?>
-<table class="table table-striped">
+<table class="table table-condensed">
 	<tr>
             <th></th>
 		<th>Nom</th>

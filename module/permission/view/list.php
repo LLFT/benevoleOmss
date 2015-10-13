@@ -28,7 +28,7 @@
             $sTbody.=$Selected.'>ALLOW</SELECT></td>';
             $Selected=False;
         }
-        $sTbody.='<td><button value="Modifier">Modifier les Permissions</button></td></form></tr>';
+        $sTbody.='<td><noscript><button value="Modifier">Modifier les Permissions</button></noscript></td></form></tr>';
     }
 ?>
         
@@ -46,7 +46,7 @@
 </select>
     <button value="Ajouter">Ajouter</button>
 </form>
-<table class="table">
+<table class="table" id="tablePerm">
     
         <thead><tr><th>Modules</th><?php echo $sThead ; ?></tr></thead>
             <tbody>
@@ -60,7 +60,7 @@
 <script language="Javascript">
     window.onload = function(){  
         console.log( "ready!" );
-        $( "select" )
+        $( "#tablePerm select" )
           .change(function (e) {
             var colorR = "#FF4000";
             var colorG = "#64FE2E";
@@ -70,7 +70,7 @@
             }else{
               $(this).css('background-color',colorR);
             }
-              
+            this.form.submit();  
         });
     };   
 </script>

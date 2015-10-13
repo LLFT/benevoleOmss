@@ -12,5 +12,9 @@
 
     
     <?php endforeach;?>
+        <li >
+        <?php $tParam[$this->sParamPage]='#'?>    
+        <a  <?php if($this->sCurrentLetter==''):?>class="btn btn-info btn-xs"<?php else:?>class="btn btn-default btn-xs"<?php endif;?> href="<?php echo _root::getLink($this->sModuleAction,$tParam) ?>">#</a>
+        </li>
     </ul>
 </div>

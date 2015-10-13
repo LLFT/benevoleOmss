@@ -5,19 +5,20 @@ class module_groupe extends abstract_module{
 		$this->oLayout=new _layout('bootstrap');
 		
 		$this->oLayout->addModule('menu','menu::index');
-                if(!_root::getACL()->can('ACCESS','groupe::list')){
-                    _root::redirect('default::index');
-                }
 	}
 	
 	
-	public function _index(){
-	    //on considere que la page par defaut est la page de listage
-	    $this->_list();
-	}
+//	public function _index(){
+//	    //on considere que la page par defaut est la page de listage
+//	    $this->_list();
+//	}
 	
 	
 	public function _list(){
+            
+            if(!_root::getACL()->can('ACCESS','groupe::list')){
+                    _root::redirect('default::index');
+                }
 		
 		$tGroupe=model_groupe::getInstance()->findAll();
 		
@@ -33,6 +34,11 @@ class module_groupe extends abstract_module{
 	
 	
 	public function _new(){
+            
+            if(!_root::getACL()->can('ACCESS','groupe::new')){
+                    _root::redirect('default::index');
+                }
+		
 		$tMessage=$this->processSave();
 	
 		$oGroupe=new row_groupe;
@@ -52,6 +58,10 @@ class module_groupe extends abstract_module{
 	
 	
 	public function _edit(){
+            if(!_root::getACL()->can('ACCESS','groupe::edit')){
+                    _root::redirect('default::index');
+                }
+		
 		$tMessage=$this->processSave();
 		
 		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id') );
@@ -71,34 +81,42 @@ class module_groupe extends abstract_module{
 
 	
 	
-	public function _show(){
-		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id') );
-		
-		$oView=new _view('groupe::show');
-		$oView->oGroupe=$oGroupe;
-		
-		
-		$this->oLayout->add('main',$oView);
-	}
+//	public function _show(){
+//            if(!_root::getACL()->can('ACCESS','groupe::show')){
+//                    _root::redirect('default::index');
+//                }
+//		
+//		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id') );
+//		
+//		$oView=new _view('groupe::show');
+//		$oView->oGroupe=$oGroupe;
+//		
+//		
+//		$this->oLayout->add('main',$oView);
+//	}
 
 	
-	
-	public function _delete(){
-		$tMessage=$this->processDelete();
-
-		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id') );
-		
-		$oView=new _view('groupe::delete');
-		$oView->oGroupe=$oGroupe;
-		
-		
-
-		$oPluginXsrf=new plugin_xsrf();
-		$oView->token=$oPluginXsrf->getToken();
-		$oView->tMessage=$tMessage;
-		
-		$this->oLayout->add('main',$oView);
-	}
+//	
+//	public function _delete(){
+//            if(!_root::getACL()->can('ACCESS','groupe::delete')){
+//                    _root::redirect('default::index');
+//                }
+//		
+//		$tMessage=$this->processDelete();
+//
+//		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id') );
+//		
+//		$oView=new _view('groupe::delete');
+//		$oView->oGroupe=$oGroupe;
+//		
+//		
+//
+//		$oPluginXsrf=new plugin_xsrf();
+//		$oView->token=$oPluginXsrf->getToken();
+//		$oView->tMessage=$tMessage;
+//		
+//		$this->oLayout->add('main',$oView);
+//	}
 
 
 	private function processSave(){
@@ -133,24 +151,24 @@ class module_groupe extends abstract_module{
 		
 	}
 	
-	
-	public function processDelete(){
-		if(!_root::getRequest()->isPost() ){ //si ce n'est pas une requete POST on ne soumet pas
-			return null;
-		}
-		
-		$oPluginXsrf=new plugin_xsrf();
-		if(!$oPluginXsrf->checkToken( _root::getParam('token') ) ){ //on verifie que le token est valide
-			return array('token'=>$oPluginXsrf->getMessage() );
-		}
-	
-		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id',null) );
-				
-		$oGroupe->delete();
-		//une fois enregistre on redirige (vers la page liste)
-		_root::redirect('groupe::list');
-		
-	}
+//	
+//	public function processDelete(){
+//		if(!_root::getRequest()->isPost() ){ //si ce n'est pas une requete POST on ne soumet pas
+//			return null;
+//		}
+//		
+//		$oPluginXsrf=new plugin_xsrf();
+//		if(!$oPluginXsrf->checkToken( _root::getParam('token') ) ){ //on verifie que le token est valide
+//			return array('token'=>$oPluginXsrf->getMessage() );
+//		}
+//	
+//		$oGroupe=model_groupe::getInstance()->findById( _root::getParam('id',null) );
+//				
+//		$oGroupe->delete();
+//		//une fois enregistre on redirige (vers la page liste)
+//		_root::redirect('groupe::list');
+//		
+//	}
 
 
 	

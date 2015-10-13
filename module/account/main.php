@@ -6,19 +6,20 @@ class module_account extends abstract_module{
 		
 		$this->oLayout->addModule('menu','menu::index');
                 
-                if(!_root::getACL()->can('ACCESS','account::list')){
-                    _root::redirect('default::index');
-                }
+                
 	}
 	
-	
-	public function _index(){
-	    //on considere que la page par defaut est la page de listage
-	    $this->_list();
-	}
+//	
+//	public function _index(){
+//	    //on considere que la page par defaut est la page de listage
+//	    $this->_list();
+//	}
 	
 	
 	public function _list(){
+                if(!_root::getACL()->can('ACCESS','account::list')){
+                    _root::redirect('default::index');
+                }
 		
 		$tAccount=model_account::getInstance()->findAllActive();
 		
@@ -48,6 +49,9 @@ class module_account extends abstract_module{
 	
 	
 	public function _new(){
+                if(!_root::getACL()->can('ACCESS','account::new')){
+                    _root::redirect('default::index');
+                }
 		$tMessage=$this->processSave();
 	
 		$oAccount=new row_account;
@@ -67,6 +71,9 @@ class module_account extends abstract_module{
 	
 	
 	public function _edit(){
+                if(!_root::getACL()->can('ACCESS','account::edit')){
+                    _root::redirect('default::index');
+                }
 		$tMessage=$this->processSave();
 		
 		$oAccount=model_account::getInstance()->findById( _root::getParam('id') );
@@ -87,6 +94,9 @@ class module_account extends abstract_module{
 	
 	
 	public function _show(){
+                if(!_root::getACL()->can('ACCESS','account::show')){
+                    _root::redirect('default::index');
+                }
 		$oAccount=model_account::getInstance()->findById( _root::getParam('id') );
 		
 		$oView=new _view('account::show');
@@ -99,6 +109,9 @@ class module_account extends abstract_module{
 	
 	
 	public function _delete(){
+                if(!_root::getACL()->can('ACCESS','account::delete')){
+                    _root::redirect('default::index');
+                }
 		$tMessage=$this->processDelete();
 
 		$oAccount=model_account::getInstance()->findById( _root::getParam('id') );

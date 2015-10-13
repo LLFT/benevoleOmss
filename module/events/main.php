@@ -8,13 +8,17 @@ class module_events extends abstract_module{
 	}
 	
 	
-	public function _index(){
-	    //on considere que la page par defaut est la page de listage
-	    $this->_list();
-	}
-	
+//	public function _index(){
+//	    //on considere que la page par defaut est la page de listage
+//	    $this->_list();
+//	}
+//	
 	
 	public function _list(){
+            
+            if(!_root::getACL()->can('ACCESS','events::list')){
+                    _root::redirect('default::index');
+                }
 		
             switch (_root::getParam('action')){
                 case 'archiv':
@@ -37,6 +41,9 @@ class module_events extends abstract_module{
 	
 	
 	public function _new(){
+            if(!_root::getACL()->can('ACCESS','events::new')){
+                    _root::redirect('default::index');
+                }
 		$tMessage=$this->processSave();
 	
 		$oEvents=new row_events;
@@ -56,6 +63,9 @@ class module_events extends abstract_module{
 	
 	
 	public function _edit(){
+            if(!_root::getACL()->can('ACCESS','events::edit')){
+                    _root::redirect('default::index');
+                }
 		$tMessage=$this->processSave();
 		
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
@@ -74,6 +84,9 @@ class module_events extends abstract_module{
 	
 	
 	public function _show(){
+            if(!_root::getACL()->can('ACCESS','events::show')){
+                    _root::redirect('default::index');
+                }
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );
                 $oParcours=model_parcours::getInstance()->findOneParcour(_root::getParam('id'));
                 $tListDesParticipants=  model_relationeventmemb::getInstance()->getListOfMembresByIdEvent(_root::getParam('id'));
@@ -87,7 +100,10 @@ class module_events extends abstract_module{
 		$this->oLayout->add('main',$oView);
 	}
 
-	public function _exportCSV() {            
+	public function _exportCSV() {
+            if(!_root::getACL()->can('ACCESS','events::exportCSV')){
+                    _root::redirect('default::index');
+                }
             $sDate=  date('dmy');
             $sFileName ="";
             $idEvent = _root::getParam('idEvent');
@@ -109,6 +125,9 @@ class module_events extends abstract_module{
         
         
 	public function _archiver(){
+            if(!_root::getACL()->can('ACCESS','events::archiver')){
+                    _root::redirect('default::index');
+                }
 		$tMessage=$this->processArchivage();
 
 		$oEvents=model_events::getInstance()->findById( _root::getParam('id') );

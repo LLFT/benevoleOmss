@@ -11,7 +11,7 @@
             </div>
 
             <div class="form-group">
-		<label class="col-sm-2 control-label">Prenom : </label>
+		<label class="col-sm-2 control-label">Prénom : </label>
 		<div class="col-sm-10"><?php echo $this->oAccount->prenomUser ?></div>
             </div>
     </fieldset>

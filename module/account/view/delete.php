@@ -9,7 +9,7 @@
             </div>
 
             <div class="form-group">
-		<label class="col-sm-2 control-label">Prenom : </label>
+		<label class="col-sm-2 control-label">Prénom : </label>
 		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oAccount->prenomUser ?></p></div>
             </div>
     </fieldset>

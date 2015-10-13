@@ -1,7 +1,7 @@
 
-<form class="form-horizontal" action="" method="POST" >
+
 	
-	<fieldset class="col-sm-12">
+	<fieldset>
             <legend>
                 <img <?php if($this->oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15" TITLE="Signaleur Volontaire">
                 
@@ -10,54 +10,34 @@
                 
             </legend>
             <?php if(_root::getACL()->can('ACCESS','permission::list')): ?>
-            <div class="legend2"><?php  echo $this->oOwner->login.' ('.$this->oMembres->modifier.')'; ?></div>
+            <div class="legend2"><?php if($this->oMembres->owner){ echo $this->oOwner->login.' ('.$this->oMembres->modifier.')';} ?></div>
             <?php endif;?>
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Adresse Mail : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->mail ?></p></div>
+	<div class="col-sm-offset-1">
+            <b>Adresse Mail : </b> <?php echo $this->oMembres->mail ?><br/>
+            <b>Téléphone Fixe : </b> <?php echo $this->oMembres->fixe ?><br/>
+            <b>Téléphone GSM : </b> <?php echo $this->oMembres->gsm ?><br/>
+            <?php if($this->oMembres->anneeNaissance!=0) :?>
+            <b>Année de Naissance :</b>  <?php echo $this->oMembres->anneeNaissance ?><br/>
+            <?php endif;?>
 	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Téléphone Fixe : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->fixe ?></p></div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">Téléphone GSM : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->gsm ?></p></div>
-	</div>
-            
-        <div class="form-group">
-		<label class="col-sm-2 control-label">Année de Naissance : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->anneeNaissance ?></p></div>
-	</div>
+        </fieldset>
 
 
 
 	<fieldset>
         <legend>Adresse Postale : </legend>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Adresse : </label>
-                <div class="col-sm-10"><p class="form-control-static"><?php if (strlen(trim($this->oMembres->rue))>=1){  if ($this->oMembres->numero >0){echo $this->oMembres->numero;} echo ' '.  $this->oMembres->rue.' '. $this->oMembres->complement; } ?></p></div>
-                    <div class="col-sm-offset-2 col-sm-10"><p class="form-control-static"><?php if (strlen(trim($this->oMembres->ville))>=1){ if ($this->oMembres->codePostal >0){echo $this->oMembres->codePostal;} echo ' '.$this->oMembres->ville; } ?></p></div>
-            </div>
-        </fieldset>
+                <div class="col-sm-offset-1">
+                    <?php if (strlen(trim($this->oMembres->rue))>=1){  if ($this->oMembres->numero >0){echo $this->oMembres->numero;} echo ' '.  $this->oMembres->rue.' '. $this->oMembres->complement; } ?><br/>
+                    <?php if (strlen(trim($this->oMembres->ville))>=1){ if ($this->oMembres->codePostal >0){echo $this->oMembres->codePostal;} echo ' '.$this->oMembres->ville; } ?><br/>
+                </div>
+                    </fieldset>
             
         <fieldset>
         <legend>Infos complémentaire : </legend>
-            	<div class="form-group">
-		<label class="col-sm-2 control-label">Club / Association : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->club ?></p></div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label">N° de Permis : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->numPermis ?></p></div>
-	</div>
-        
-        <div class="form-group">
-		<label class="col-sm-2 control-label">Commentaire : </label>
-		<div class="col-sm-10"><p class="form-control-static"><?php echo $this->oMembres->comment ?></p></div>
+            	<div class="col-sm-offset-1">
+                    <b>Club / Association : </b>  <?php echo $this->oMembres->club ?><br>
+                    <b>N° de Permis : </b> <?php echo $this->oMembres->numPermis ?><br>
+                    <b>Commentaire : </b> <?php echo $this->oMembres->comment ?></p></div>
 	</div>
         
         </fieldset>
@@ -65,24 +45,29 @@
       <div class="container">
         <fieldset>
             <legend>Participe aux évènements : </legend>
-            <div id="checkboxs" class=" form-group">
+            <div id="checkboxs" class=" ">
    
                    <?php foreach ($this->tJoinEvents as $key => $sNameEvent) :?> 
                     <div class="col-sm-offset-1 checkbox">
-                        
-                        <INPUT type="checkbox" name="<?php echo 'Event_'.$key;?>" value="<?php echo $key;?>" 
+                        <form  action="<?php echo $this->getLink('membres::ajaxJoinEventMembre'); ?>" method="POST" >
+                        <INPUT id="chk_Ev_<?php echo $key;?>" type="checkbox" name="action" value="<?php echo $key;?>" 
                                <?php if(in_array($key, $this->tJoinIdEvents)) :?> checked="checked" <?php endif;?>
-                               <?php if ( !_root::getACL()->can('ACCESS','events::list')):?> disabled="disabled" <?php endif;?>
+                               <?php if ( !_root::getACL()->can('ACCESS','membres::ajaxJoinEventMembre')):?> disabled="disabled" <?php endif;?>
                              >                  
                  
                            <a  href="
                                <?php 
-                               if ( _root::getACL()->can('ACCESS','events::list')){
+                               if ( _root::getACL()->can('ACCESS','events::show')){
                                     echo $this->getLink('events::show',array('id'=>$key));                               
                                }?>
                                
                                "><?php echo $sNameEvent ?></a>
-  
+                        <noscript>
+                        <input id='EventHidden' type='hidden' value='<?php echo $key;?>' name='EventHidden'>
+                        <input type='hidden' value='<?php echo $key;?>' name='idEventHidden'>
+                        <input type='hidden' value='<?php echo $this->oMembres->idMembre ?>' name='idMembreHidden'>
+                        <button value="Ajouter">Ajouter ce membre à cet évènement</button></noscript>
+                        </form>  
                     </div>
 
                    <?php endforeach;?>
@@ -95,7 +80,7 @@
     <?php endif;?>
 
     
-</fieldset>
+
 <div class="col-sm-offset-1 btn-group" role="group">
    
         <a class="btn bg-info" href="<?php echo $this->getLink('membres::show',array( 'id'=>($this->oMembres->idMembre-1)))?>">Membre Prec.</a>	 
@@ -118,14 +103,13 @@
 
     
 </div>
-</form>
 
 <script language="Javascript">
    window.onload = function(){  
        console.log( "ready!" );
     
    
- $('div#checkboxs.form-group div.col-sm-offset-1.checkbox input').on('click',function(){
+ $('div#checkboxs div.col-sm-offset-1.checkbox input').on('click',function(){
      cochee = $(this).is(':checked');
      action='unjoin';
     if(cochee){

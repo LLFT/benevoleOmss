@@ -16,7 +16,7 @@ $oForm->setMessage($this->tMessage);
             </div>
 
             <div class="form-group">
-		<label class="col-sm-2 control-label">Prenom : </label>
+		<label class="col-sm-2 control-label">Prénom : </label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('prenomUser',array('class'=>'form-control'))?></div>
             </div>
     

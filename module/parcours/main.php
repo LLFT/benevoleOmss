@@ -23,6 +23,9 @@ class module_parcours extends abstract_module{
 	
 	
 	public function _list(){
+            if(!_root::getACL()->can('ACCESS','parcours::list')){
+                        _root::redirect('membres::list');
+                    }
 		
 		$oParcours=model_parcours::getInstance()->findAll();
                 $oEvents=model_events::getInstance()->getSelect();
@@ -41,6 +44,9 @@ class module_parcours extends abstract_module{
 	
 	
 	public function _new(){
+            if(!_root::getACL()->can('ACCESS','parcours::new')){
+                        _root::redirect('membres::list');
+                    }
 		$tMessage=$this->processSave();
 	
 		$oParcours=new row_parcours;
@@ -62,6 +68,9 @@ class module_parcours extends abstract_module{
 	
 	
 	public function _show(){
+            if(!_root::getACL()->can('ACCESS','parcours::show')){
+                        _root::redirect('membres::list');
+                    }
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
                 $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
                 $tPointsOfChasuble=  model_points::getInstance()->getSelectPoints(_root::getParam('id'));
@@ -110,6 +119,9 @@ class module_parcours extends abstract_module{
 	
 	
 	public function _delete(){
+            if(!_root::getACL()->can('ACCESS','parcours::delete')){
+                        _root::redirect('membres::list');
+                    }
 		$tMessage=$this->processDelete();
 
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
@@ -230,6 +242,9 @@ class module_parcours extends abstract_module{
          * index.php?:nav=parcours::ajaxAjoutPoints&sLatVal=45.431542895847286&sLngVal=4.3821185628411286&iParcours_id=1&iTypeofpoint_id=1
          */        
         public function _ajaxAddPoints() {
+            if(!_root::getACL()->can('ACCESS','parcours::ajaxAddPoints')){
+                        _root::redirect('membres::list');
+                    }
             $retour=array();
            
             $oView=new _view('membres::ajaxOut');
@@ -254,6 +269,9 @@ class module_parcours extends abstract_module{
         }
         //index.php?:nav=parcours::ajaxDelPoints&iIdPoint=point_7
         public function _ajaxDelPoints() {
+            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+                        _root::redirect('membres::list');
+                    }
             $retour=array();
             $sortie=array();            
             $oView=new _view('membres::ajaxOut');

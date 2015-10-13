@@ -82,7 +82,7 @@
                 <a class="btn btn-default" href="<?php echo $this->getLink('events::list')?>">Retour</a>
                 <a class="btn btn-info" href="<?php echo $this->getLink('events::exportCSV',array('idEvent'=>$this->oEvents->getId(),'nomEvent'=>$this->oEvents->nomEvent))?>">Exporter la liste des signaleurs</a>
             
-            <?php if ( !_root::getACL()->can('ACCESS','events::edit')):?>
+            <?php if ( _root::getACL()->can('ACCESS','events::edit')):?>
                 <?php if ($this->oEvents->active != 0) :?>
                 
                     <a class="btn btn-success" href="<?php echo $this->getLink('events::edit',array('id'=>$this->oEvents->getId()))?>">Modifier</a>

@@ -21,6 +21,9 @@ class module_membres extends abstract_module{
 	}
         
         public function _list(){
+            if(!_root::getACL()->can('ACCESS','membres::list')){
+                        _root::redirect('default::index');
+                    }
             
             $sAction=  _root::getParam('action');
             
@@ -111,6 +114,9 @@ class module_membres extends abstract_module{
         }        
 
 	public function _new(){
+            if(!_root::getACL()->can('ACCESS','membres::new')){
+                        _root::redirect('default::index');
+                    }
 		$tMessage=$this->processSave();
 	
 		$oMembres=new row_membres;		
@@ -126,6 +132,9 @@ class module_membres extends abstract_module{
 	
 	
 	public function _edit(){
+            if(!_root::getACL()->can('ACCESS','membres::edit')){
+                        _root::redirect('default::index');
+                    }
 		$tMessage=$this->processSave();
                 //On liste les informations propres au participant
 		$oMembres=model_membres::getInstance()->findById( _root::getParam('id') );
@@ -143,6 +152,9 @@ class module_membres extends abstract_module{
 	}
 	
 	public function _show(){
+            if(!_root::getACL()->can('ACCESS','membres::show')){
+                        _root::redirect('default::index');
+                    }
             
             $oView=new _view('membres::show');
             //On liste les informations propres au participant
@@ -160,12 +172,18 @@ class module_membres extends abstract_module{
 	}
         
         public function _localizeMember() {
+            if(!_root::getACL()->can('ACCESS','membres::localizeMember')){
+                        _root::redirect('default::index');
+                    }
             $oMembre=model_membres::getInstance()->findById( _root::getParam('id'));            
             $this->findLocalisationForOneMember($oMembre);            
             _root::redirect('membres::show',array('id'=>_root::getParam('id')));
         }
 	
         public function _localizeMembers() {
+            if(!_root::getACL()->can('ACCESS','membres::localizeMembers')){
+                        _root::redirect('default::index');
+                    }
             $oMembres=model_membres::getInstance()->findAllLocalisable();
             $nbOfLocalization = $this->findLocalisationForManyMembers($oMembres);
             _root::redirect('membres::list',array('nbFound'=>$nbOfLocalization));
@@ -175,6 +193,9 @@ class module_membres extends abstract_module{
          * 
          */
         public function _reIndexAllMembers() {
+            if(!_root::getACL()->can('ACCESS','membres::reIndexAllMembers')){
+                        _root::redirect('default::index');
+                    }
             $oMenbres=  model_membres::getInstance()->orderByName();            
             $i=1;
             foreach ($oMenbres as $oMembre) {
@@ -186,6 +207,9 @@ class module_membres extends abstract_module{
    
         
 	public function _delete(){
+            if(!_root::getACL()->can('ACCESS','membres::delete')){
+                        _root::redirect('default::index');
+                    }
 		$tMessage=$this->processDelete();
 
 		$oMembres=model_membres::getInstance()->findById( _root::getParam('id') );
@@ -199,7 +223,10 @@ class module_membres extends abstract_module{
 		$this->oLayout->add('main',$oView);
 	}
         
-        public function _exportCSV() {            
+        public function _exportCSV() {
+            if(!_root::getACL()->can('ACCESS','membres::exportCSV')){
+                        _root::redirect('default::index');
+                    }
             $sDate=  date('dmy');
             $sFileName ="";
             
@@ -379,7 +406,7 @@ class module_membres extends abstract_module{
             return $i;
         }
         
-        Private function saveIndexMembre($iIdMembre, $iIndex) {
+        private function saveIndexMembre($iIdMembre, $iIndex) {
             $oMembreEdit = model_membres::getInstance()->findById($iIdMembre);
             $oMembreEdit->indexMembre = $iIndex;
             /*On effectue une sauvegarde sans se soucier des controles de validité*/
@@ -393,6 +420,9 @@ class module_membres extends abstract_module{
          * Déclare le membre comme étant un signaleur.
          */        
         public function _ajaxSignaleur() {
+            if(!_root::getACL()->can('ACCESS','membres::ajaxSignaleur')){
+                        _root::redirect('default::index');
+                    }
             $retour=array();
             $sortie=array();
             $oView=new _view('membres::ajaxOut');
@@ -421,36 +451,52 @@ class module_membres extends abstract_module{
          * Inscrit au Désincrit un membre d'un évènement
          */
         public function _ajaxJoinEventMembre() {
+            if(!_root::getACL()->can('ACCESS','membres::ajaxJoinEventMembre')){
+                        _root::redirect('default::index');
+                    }
             $retour=array();
             $sortie=array();
+            $action = 'unjoin';
             
-            $oView=new _view('membres::ajaxOut');
-            $this->oLayout->add('main',$oView);
-            $this->oLayout->setLayout('ajax');
+            if(_root::getParam('EventHidden')){
+                if(_root::getParam('action')){
+                   $action = 'join' ;
+                }
+                $idMembre = _root::getParam('idMembreHidden');
+                $idEvent =_root::getParam('idEventHidden');
+            }else{                
+                $action=_root::getParam('action');
+                $idMembre = _root::getParam('idMembre');
+                $idEvent =_root::getParam('idEvent');
+            }
             
-            if(_root::getParam('action')=='join'){
-                model_relationeventmemb::getInstance()->joinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+            
+            
+            
+            if($action === 'join'){
+                model_relationeventmemb::getInstance()->joinMemberEvent($idMembre,$idEvent);
                 $sortie['reponse']='OK';
                 
                  
-            }elseif(_root::getParam('action')=='unjoin'){
-                model_relationeventmemb::getInstance()->unJoinMemberEvent(_root::getParam('idMembre'),_root::getParam('idEvent'));
+            }elseif($action === 'unjoin'){
+                model_relationeventmemb::getInstance()->unJoinMemberEvent($idMembre,$idEvent);
                 $sortie['reponse']='OK';
             }  else {
                 $sortie['reponse']='NOK';
             }
             $retour['reponse']=$sortie;
+            
+            if(_root::getParam('EventHidden')){
+                _root::redirect('membres::show',array('id'=>$idMembre));
+            }
+            
+            
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
             $oView->sSortie=  json_encode($retour);
            
-        }
-        /*
-         * Obtenir les coordonées de tous les membres participant à un evenement.
-         */
-        public function _ajaxGetEventMembre() {
-            $oMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
-            return json_encode($oMembresCoord);
-        }
-        
+        }        
 	
 }
 
