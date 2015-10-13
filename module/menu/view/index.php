@@ -10,26 +10,27 @@ function openMenu(id){
 	}
 }
 </script>
-
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="navbar-header">
-<!--			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
 			<span class="sr-only">Toggle navigation</span>
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
-			</button>-->
+			</button>
                     <a class="navbar-brand" href="<?php echo $this->getLink($this->tLink2['Accueil']) ?>">benevoleOmss</a>
 		</div>
-		<div class="collapse navbar-collapse">
+            
+		<div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
 
 			<ul class="nav navbar-nav">
                         <?php $i=0;?>
 			<?php foreach($this->tLink as $sLibelle => $sLink): ?>
                             <?php if(is_array($sLink)):?>
-                                <li class="dropdown"><a href="#" onclick="openMenu(<?php echo $i?>);return false"><?php echo $sLibelle?>
-                                <ul class="dropdown-menu" style="display:none" id="cat<?php echo $i?>">
+                                <li class="dropdown">                                    
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $sLibelle?><span class="caret"></span></a>
+                                <ul class="dropdown-menu">
                                     <?php foreach($sLink as $sLibelle2 => $uLink):?>
 					<?php if(_root::getParamNav()==$uLink):?>
 						<li class="active"><a href="<?php echo $this->getLink($uLink) ?>"><?php echo $sLibelle2 ?></a></li>
@@ -42,7 +43,7 @@ function openMenu(id){
                                 <?php $i++;?>
                             <?php else:?>
 				<?php if(_root::getParamNav()==$sLink):?>
-					<li class="active"><a href="<?php echo $this->getLink($sLink) ?>"><?php echo $sLibelle ?></a></li>
+					<li class="active"><a href="<?php echo $this->getLink($sLink) ?>"><?php echo $sLibelle ?><span class="sr-only">(current)</span></a></li>
 				<?php else:?>
 					<li><a href="<?php echo $this->getLink($sLink) ?>"><?php echo $sLibelle ?></a></li>
 				<?php endif;?>
