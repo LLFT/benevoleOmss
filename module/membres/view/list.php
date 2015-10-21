@@ -1,12 +1,11 @@
 <?php if(isset($this->oModulePagination))echo $this->oModulePagination->show();?>
+<div class="table-responsive">
 <table class="table table-condensed">
 	<tr>
             <th></th>
-		<th>Nom</th>
-
-		<th>Prénom</th>
-
-		<th>Téléphone Fixe</th>
+		<th>Nom Prénom</th>
+                
+                <th>Téléphone Fixe</th>
 
 		<th>Téléphone GSM</th>
 
@@ -24,14 +23,13 @@
                     
                     <?php echo ' '.$oMembres->indexMembre .' : '?>
                     <img TITLE="Coord. Validées" id="validForm_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15">
-                </td>    
-		
-                <td><?php echo $oMembres->nom ?>
-                    
-                    <img TITLE="Signaleur Volontaire" id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15">
                 </td>
-
-		<td><?php echo $oMembres->prenom ?></td>
+                <td>
+		<?php if ($oMembres->active != 1) :?> <s> <?php endif; ?>
+                <?php echo $oMembres->nom .' '.$oMembres->prenom ?>        
+                <?php if ($oMembres->active != 1) :?> </s> <?php endif; ?>
+                <img TITLE="Signaleur Volontaire" id="chasubleSignal_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15">
+                </td>
 
 		<td><?php echo $oMembres->fixe ?></td>
 
@@ -74,7 +72,7 @@
 		</tr>
 	<?php endif;?>
 </table>
-
+</div>
 <?php if(isset($this->oModulePagination))echo $this->oModulePagination->show();?>
 
 <p>
@@ -92,7 +90,10 @@
 			<li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyMail')) ?>">Adresses Mail Manquantes</a></li>
 			<li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyPermis')) ?>">Permis de conduire Manquants</a></li>
                         <li><a href="<?php echo $this->getLink('membres::list',array('action'=>'FullInfo')) ?>">Informations à Jours</a></li>
-                        <li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyInfo')) ?>">Informations à Incomplètes</a></li>
+                        <li><a href="<?php echo $this->getLink('membres::list',array('action'=>'EmptyInfo')) ?>">Informations à Compléter</a></li>
+                        <?php if(_root::getACL()->can('ACCESS','permission::list')) :?>
+                        <li><a href="<?php echo $this->getLink('membres::list',array('action'=>'AllDelete')) ?>">Membres Supprimés</a></li>
+                        <?php endif; ?>
 			<!--    <li role="separator" class="divider"></li>
 			<li><a href="#">Exporter</a></li>-->
 		</ul>

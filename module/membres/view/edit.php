@@ -1,5 +1,5 @@
 <?php 
-$oForm=new plugin_form($this->oMembres);
+$oForm=new plugin_form($this->oMembre);
 $oForm->setMessage($this->tMessage);
 ?>
 
@@ -22,7 +22,7 @@ $oForm->setMessage($this->tMessage);
                 <div class="col-sm-1"><?php echo $oForm->getInputCheckbox('chkMail',1, array('class'=>'form-control'))?></div>
                 <label class="col-sm-2 control-label">Adresse Mail *</label>
                 <?php $sParamMail=array('class'=>'form-control','maxlength'=>"40");
-                    if ($this->oMembres->chkMail!=1){$sParamMail['disabled']='';}
+                    if ($this->oMembre->chkMail!=1){$sParamMail['disabled']='';}
                 ?>                
 		<div class="col-sm-6"><?php echo $oForm->getInputText('mail',$sParamMail)?></div>
         </div>
@@ -89,7 +89,7 @@ $oForm->setMessage($this->tMessage);
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Numéros de Permis : </label>
                 <?php $sParamNumPermis=array('class'=>'form-control','maxlength'=>"20");
-                    if ($this->oMembres->chkPermis!=1){$sParamNumPermis['disabled']='';}
+                    if ($this->oMembre->chkPermis!=1){$sParamNumPermis['disabled']='';}
                 ?> 
 		<div class="col-sm-10"><?php echo $oForm->getInputText('numPermis',$sParamNumPermis)?></div>
 	</div>
@@ -152,9 +152,10 @@ window.onload=happycode ;
 
 <div class="col-sm-offset-1 btn-group" role="group">
 		<input type="submit" class="btn btn-success" value="Modifier" /> 
-                <a class="btn btn-default" href="<?php echo $this->getLink('membres::show',array('id'=>$this->oMembres->idMembre))?>">Annuler</a>
-                <a class="btn btn-danger" href="<?php echo $this->getLink('membres::delete',array('id'=>$this->oMembres->idMembre))?>">Supprimer</a>
-
+                <a class="btn btn-default" href="<?php echo $this->getLink('membres::show',array('id'=>$this->oMembre->idMembre))?>">Annuler</a>
+                <?php if($this->oMembre->active != 0) :?>
+                    <a class="btn btn-danger" href="<?php echo $this->getLink('membres::delete',array('id'=>$this->oMembre->idMembre))?>">Supprimer</a>
+                <?php endif; ?>
 </div>
     
     

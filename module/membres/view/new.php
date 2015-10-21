@@ -1,5 +1,5 @@
 <?php 
-$oForm=new plugin_form($this->oMembres);
+$oForm=new plugin_form($this->oMembre);
 $oForm->setMessage($this->tMessage);
 ?>
 <form class="form-horizontal" action="" method="POST" >

@@ -84,6 +84,16 @@ class module_membres extends abstract_module{
                     }
                     $tMembres=model_membres::getInstance()->findAllNotUpdate($sCurrentLetter);
                     break;
+                case 'AllDelete':
+                    $tAllMembres=model_membres::getInstance()->findAllDelete();
+                    $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
+                    if (null !==_root::getParam('letter')){
+                       $sCurrentLetter = _root::getParam('letter');
+                    }else{
+                       $sCurrentLetter = $tDistinctLetters[0]; 
+                    }
+                    $tMembres=model_membres::getInstance()->findAllDelete($sCurrentLetter);
+                    break;
                 default:
                     $tAllMembres=model_membres::getInstance()->findAll();            
                     $tDistinctLetters=model_membres::getInstance()->findDistinctLetters($tAllMembres);
@@ -119,9 +129,9 @@ class module_membres extends abstract_module{
                     }
 		$tMessage=$this->processSave();
 	
-		$oMembres=new row_membres;		
+		$oMembre=new row_membres;		
 		$oView=new _view('membres::new');
-		$oView->oMembres=$oMembres;		
+		$oView->oMembre=$oMembre;		
 		$oPluginXsrf=new plugin_xsrf();
 		$oView->token=$oPluginXsrf->getToken();
 		$oView->tMessage=$tMessage;
@@ -137,9 +147,9 @@ class module_membres extends abstract_module{
                     }
 		$tMessage=$this->processSave();
                 //On liste les informations propres au participant
-		$oMembres=model_membres::getInstance()->findById( _root::getParam('id') );
+		$oMembre=model_membres::getInstance()->findById( _root::getParam('id') );
                 $oView=new _view('membres::edit');
-		$oView->oMembres=$oMembres;
+		$oView->oMembre=$oMembre;
 		$oView->tId=model_membres::getInstance()->getIdTab();
 		
 		
@@ -161,13 +171,21 @@ class module_membres extends abstract_module{
             $oMembre=model_membres::getInstance()->findById( _root::getParam('id') );
             //On liste tous les évènements connus et actifs 
             $tJoinEvents=model_events::getInstance()->getSelect();
-            $oOwner=  model_account::getInstance()->findById($oMembre->owner);
+            //On Vérifie que l'ID fournie offre bien un résultat
+            if($oMembre){
+                $oOwner =  model_account::getInstance()->findById($oMembre->owner);
+                $oUpdater =  model_account::getInstance()->findById($oMembre->updater);
+                $oDeleter =  model_account::getInstance()->findById($oMembre->deleter);
+                $oView->oOwner=$oOwner;
+                $oView->oUpdater=$oUpdater;
+                $oView->oDeleter=$oDeleter;
+            }
             //On liste toutes les relations connus entre le participant et les évènements
             $tJoinIdEvents=model_relationeventmemb::getInstance()->getSelectIdEvent(_root::getParam('id'));
             $oView->tJoinEvents=$tJoinEvents;
             $oView->tJoinIdEvents=$tJoinIdEvents;            
-            $oView->oMembres=$oMembre;
-            $oView->oOwner=$oOwner;
+            $oView->oMembre=$oMembre;
+            
             $this->oLayout->add('main',$oView);
 	}
         
@@ -203,6 +221,14 @@ class module_membres extends abstract_module{
                 $i++;
             }
             _root::redirect('membres::list',array('nbFound'=>$i));            
+        }
+        
+        public function _undelete() {
+            $iId= _root::getParam('id');
+            $oMembre=model_membres::getInstance()->findById($iId );
+            $oMembre->active=1;
+            $oMembre->saveF();
+            _root::redirect('membres::show',array('id'=>$iId));
         }
    
         
@@ -295,7 +321,7 @@ class module_membres extends abstract_module{
 		}else{
 			$oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
                         $oMembres->modifier=date('Y-m-d H:i:s',time());
-                        $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
+                        $oMembres->updater=_root::getAuth()->getAccount()->idAccount;
 		}
 		
                 $tColumn=array('nom','prenom','mail','fixe','gsm','club','numPermis','numero','rue','complement','ville','codePostal','anneeNaissance','chkMail','chkPermis','chkSignaleur','chkFormulaire','comment');
@@ -357,11 +383,12 @@ class module_membres extends abstract_module{
 
                 $oMembres->active=0;
                 $oMembres->supprimer=date('Y-m-d H:i:s',time());
-                $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
-                $oMembres->save();
-
+                $oMembres->deleter=_root::getAuth()->getAccount()->idAccount;
+                
+                $oMembres->saveF();
 		//une fois la suppression enregistrée on reindex tous les membres
-		_root::redirect('membres::reIndexAllMembers');
+                $this->_reIndexAllMembers();
+		
 		
 	}
 

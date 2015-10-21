@@ -11,7 +11,7 @@ and open the template in the editor.
 /*CSS pour le Div permettant d'indiquer le dernier owner d'un membre dans membres::show*/
 div.legend2{
     position:absolute;
-    top:-40px;
+    bottom: 0;
     right:20px;    
 }
 

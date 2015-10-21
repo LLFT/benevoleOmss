@@ -1,37 +1,31 @@
--- phpMyAdmin SQL Dump
--- version 4.2.11
--- http://www.phpmyadmin.net
+CREATE DATABASE  IF NOT EXISTS `omss` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `omss`;
+-- MySQL dump 10.13  Distrib 5.6.21, for Win32 (x86)
 --
--- Client :  127.0.0.1
--- Généré le :  Mer 09 Septembre 2015 à 22:25
--- Version du serveur :  5.6.21
--- Version de PHP :  5.6.3
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: omss
+-- ------------------------------------------------------
+-- Server version	5.6.21
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Base de données :  `omss`
---
-DROP DATABASE `omss`;
-CREATE DATABASE IF NOT EXISTS `omss` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `omss`;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `account`
+-- Table structure for table `account`
 --
 
 DROP TABLE IF EXISTS `account`;
-CREATE TABLE IF NOT EXISTS `account` (
-`idAccount` int(11) NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `account` (
+  `idAccount` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(50) NOT NULL,
   `pass` varchar(50) NOT NULL,
   `nomUser` varchar(40) DEFAULT NULL,
@@ -45,58 +39,67 @@ CREATE TABLE IF NOT EXISTS `account` (
   `active` int(2) NOT NULL DEFAULT '0',
   `creer` timestamp NULL DEFAULT NULL,
   `modifier` timestamp NULL DEFAULT NULL,
-  `supprimer` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `element`
---
-
-DROP TABLE IF EXISTS `element`;
-CREATE TABLE IF NOT EXISTS `element` (
-`idElement` int(11) NOT NULL,
-  `element` varchar(45) DEFAULT NULL,
-  `descElement` varchar(90) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+  `supprimer` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`idAccount`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Structure de la table `events`
+-- Table structure for table `events`
 --
 
 DROP TABLE IF EXISTS `events`;
-CREATE TABLE IF NOT EXISTS `events` (
-`idEvent` int(11) NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `events` (
+  `idEvent` int(11) NOT NULL AUTO_INCREMENT,
   `nomEvent` varchar(45) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `lieux` varchar(45) DEFAULT NULL,
-  `description` blob
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `description` blob,
+  `active` int(2) DEFAULT '1',
+  `creer` timestamp NULL DEFAULT NULL,
+  `modifier` timestamp NULL DEFAULT NULL,
+  `supprimer` timestamp NULL DEFAULT NULL,
+  `owner` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idEvent`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
 
 --
--- Structure de la table `groupe`
+-- Table structure for table `groupe`
 --
 
 DROP TABLE IF EXISTS `groupe`;
-CREATE TABLE IF NOT EXISTS `groupe` (
-`idGroupe` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `groupe` (
+  `idGroupe` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`idGroupe`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Structure de la table `membres`
+-- Dumping data for table `groupe`
+--
+
+LOCK TABLES `groupe` WRITE;
+/*!40000 ALTER TABLE `groupe` DISABLE KEYS */;
+INSERT INTO `groupe` VALUES (1,'Lecteur'),(2,'Redacteur'),(3,'Administrateur'),(4,'Concepteur');
+/*!40000 ALTER TABLE `groupe` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `membres`
 --
 
 DROP TABLE IF EXISTS `membres`;
-CREATE TABLE IF NOT EXISTS `membres` (
-`idMembre` int(11) NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `membres` (
+  `idMembre` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `prenom` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `anneeNaissance` int(6) DEFAULT NULL,
@@ -104,8 +107,10 @@ CREATE TABLE IF NOT EXISTS `membres` (
   `fixe` varchar(15) DEFAULT NULL,
   `gsm` varchar(15) DEFAULT NULL,
   `club` varchar(50) DEFAULT NULL,
-  `chkMail` int(2) DEFAULT '0',
-  `chkPermis` int(2) DEFAULT '0',
+  `chkMail` int(2) NOT NULL DEFAULT '0',
+  `chkPermis` int(2) NOT NULL DEFAULT '0',
+  `chkSignaleur` int(2) NOT NULL DEFAULT '0',
+  `chkFormulaire` int(2) NOT NULL DEFAULT '0',
   `numPermis` varchar(50) DEFAULT NULL,
   `numero` int(5) DEFAULT NULL,
   `rue` varchar(50) DEFAULT NULL,
@@ -113,198 +118,133 @@ CREATE TABLE IF NOT EXISTS `membres` (
   `ville` varchar(60) DEFAULT NULL,
   `codePostal` int(6) DEFAULT NULL,
   `coord` int(2) DEFAULT NULL,
-  `lat` float(10,7) DEFAULT NULL,
-  `lng` float(10,7) DEFAULT NULL,
+  `lat` varchar(20) DEFAULT NULL,
+  `lng` varchar(20) DEFAULT NULL,
   `indexMembre` int(11) DEFAULT NULL,
+  `comment` blob,
   `active` int(2) NOT NULL DEFAULT '1',
   `creer` timestamp NULL DEFAULT NULL,
   `modifier` timestamp NULL DEFAULT NULL,
   `supprimer` timestamp NULL DEFAULT NULL,
-  `owner` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+  `owner` int(11) DEFAULT NULL,
+  `updater` int(11) DEFAULT NULL,
+  `deleter` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idMembre`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Structure de la table `parcours`
+-- Table structure for table `parcours`
 --
 
 DROP TABLE IF EXISTS `parcours`;
-CREATE TABLE IF NOT EXISTS `parcours` (
-`id` int(11) NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parcours` (
+  `idParcours` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(60) DEFAULT NULL,
   `url` varchar(120) DEFAULT NULL,
   `checksum` varchar(33) DEFAULT NULL,
-  `event_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+  `event_id` int(11) NOT NULL,
+  PRIMARY KEY (`idParcours`),
+  UNIQUE KEY `checksum` (`checksum`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Structure de la table `permission`
+-- Table structure for table `permission`
 --
 
 DROP TABLE IF EXISTS `permission`;
-CREATE TABLE IF NOT EXISTS `permission` (
-`idPermission` int(11) NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permission` (
+  `idPermission` int(11) NOT NULL AUTO_INCREMENT,
   `action` varchar(50) NOT NULL,
   `element` varchar(50) NOT NULL,
   `allowdeny` varchar(50) NOT NULL,
-  `groupe_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+  `groupe_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idPermission`)
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Structure de la table `relationeventmemb`
+-- Dumping data for table `permission`
+--
+
+LOCK TABLES `permission` WRITE;
+/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
+INSERT INTO `permission` VALUES (3,'ACCESS','membres::list','ALLOW',4),(4,'ACCESS','membres::listEmptyAdress','ALLOW',4),(5,'ACCESS','membres::listEmptyMail','ALLOW',4),(6,'ACCESS','membres::listEmptyPermis','ALLOW',4),(7,'ACCESS','membres::localizeMembers','ALLOW',4),(8,'ACCESS','membres::exportCSV','ALLOW',4),(9,'ACCESS','parcours::list','ALLOW',4),(10,'ACCESS','account::list','ALLOW',4),(11,'ACCESS','groupe::list','ALLOW',4),(12,'ACCESS','permission::list','ALLOW',4),(15,'ACCESS','membres::list','ALLOW',1),(20,'ACCESS','membres::reIndexAllMembers','ALLOW',4),(21,'ACCESS','membres::new','ALLOW',2),(22,'ACCESS','membres::new','ALLOW',3),(23,'ACCESS','membres::new','ALLOW',4),(24,'ACCESS','membres::exportCSV','ALLOW',2),(25,'ACCESS','membres::exportCSV','ALLOW',3),(27,'ACCESS','membres::edit','ALLOW',2),(28,'ACCESS','membres::edit','ALLOW',3),(29,'ACCESS','membres::edit','ALLOW',4),(30,'ACCESS','membres::localizeMember','ALLOW',3),(31,'ACCESS','membres::localizeMember','ALLOW',4),(32,'ACCESS','membres::list','ALLOW',3),(33,'ACCESS','membres::listEmptyAdress','ALLOW',3),(34,'ACCESS','membres::listEmptyMail','ALLOW',3),(35,'ACCESS','membres::listEmptyPermis','ALLOW',3),(38,'ACCESS','membres::list','ALLOW',2),(39,'ACCESS','membres::listEmptyAdress','ALLOW',2),(40,'ACCESS','membres::listEmptyMail','ALLOW',2),(41,'ACCESS','membres::listEmptyPermis','ALLOW',2),(45,'ACCESS','events::list','ALLOW',4),(46,'ACCESS','parcours::list','ALLOW',3),(49,'ACCESS','parcours::show','ALLOW',1),(51,'ACCESS','parcours::show','ALLOW',2),(53,'ACCESS','parcours::show','ALLOW',4),(54,'ACCESS','parcours::show','ALLOW',3),(55,'ACCESS','account::new','ALLOW',4),(56,'ACCESS','account::edit','ALLOW',4),(57,'ACCESS','account::show','ALLOW',4),(58,'ACCESS','account::delete','ALLOW',4),(59,'ACCESS','events::show','ALLOW',4),(60,'ACCESS','events::new','ALLOW',4),(61,'ACCESS','events::edit','ALLOW',4),(62,'ACCESS','events::exportCSV','ALLOW',4),(63,'ACCESS','events::archiver','ALLOW',4),(64,'ACCESS','events::edit','ALLOW',3),(66,'ACCESS','events::exportCSV','ALLOW',2),(67,'ACCESS','events::exportCSV','ALLOW',3),(68,'ACCESS','events::new','ALLOW',3),(69,'ACCESS','events::show','ALLOW',1),(70,'ACCESS','events::show','ALLOW',2),(71,'ACCESS','events::show','ALLOW',3),(72,'ACCESS','events::list','ALLOW',1),(73,'ACCESS','events::list','ALLOW',2),(74,'ACCESS','events::list','ALLOW',3),(75,'ACCESS','groupe::edit','ALLOW',4),(76,'ACCESS','membres::show','ALLOW',4),(77,'ACCESS','membres::delete','ALLOW',4),(78,'ACCESS','membres::ajaxSignaleur','ALLOW',4),(79,'ACCESS','membres::ajaxJoinEventMembre','ALLOW',4),(81,'ACCESS','membres::delete','ALLOW',2),(82,'ACCESS','membres::delete','ALLOW',3),(83,'ACCESS','membres::ajaxSignaleur','ALLOW',2),(84,'ACCESS','membres::ajaxSignaleur','ALLOW',3),(85,'ACCESS','membres::ajaxJoinEventMembre','ALLOW',2),(86,'ACCESS','membres::ajaxJoinEventMembre','ALLOW',3),(87,'ACCESS','parcours::new','ALLOW',4),(88,'ACCESS','permission::addElement','ALLOW',4),(89,'ACCESS','permission::editPermission','ALLOW',4),(90,'ACCESS','membres::show','ALLOW',1),(91,'ACCESS','membres::show','ALLOW',2),(92,'ACCESS','membres::show','ALLOW',3),(93,'ACCESS','account::edit','ALLOW',3),(94,'ACCESS','account::list','ALLOW',3),(95,'ACCESS','account::new','ALLOW',3),(96,'ACCESS','account::show','ALLOW',3),(97,'ACCESS','events::archiver','ALLOW',3),(98,'ACCESS','events::edit','ALLOW',2),(100,'ACCESS','membres::reIndexAllMembers','ALLOW',2),(101,'ACCESS','membres::reIndexAllMembers','ALLOW',3),(102,'ACCESS','parcours::new','ALLOW',3),(103,'ACCESS','parcours::new','ALLOW',2),(104,'ACCESS','parcours::list','ALLOW',2);
+/*!40000 ALTER TABLE `permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `points`
+--
+
+DROP TABLE IF EXISTS `points`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `points` (
+  `idPoint` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `lat` varchar(20) DEFAULT NULL,
+  `lng` varchar(20) DEFAULT NULL,
+  `parcours_id` int(11) NOT NULL,
+  `typeofpoint_id` int(11) NOT NULL,
+  PRIMARY KEY (`idPoint`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `relationeventmemb`
 --
 
 DROP TABLE IF EXISTS `relationeventmemb`;
-CREATE TABLE IF NOT EXISTS `relationeventmemb` (
-  `idRelationEM` int(11) NOT NULL,
-  `idEvent` int(11) NOT NULL,
-  `idMembre` int(11) NOT NULL
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `relationeventmemb` (
+  `event_id` int(11) NOT NULL,
+  `membre_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table des relations entre les Events et les Membres';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `villes`
---
-
-DROP TABLE IF EXISTS `villes`;
-CREATE TABLE IF NOT EXISTS `villes` (
-`ville_id` mediumint(8) unsigned NOT NULL,
-  `ville_departement` varchar(3) DEFAULT NULL,
-  `ville_slug` varchar(255) DEFAULT NULL,
-  `ville_nom` varchar(45) DEFAULT NULL,
-  `ville_nom_simple` varchar(45) DEFAULT NULL,
-  `ville_nom_reel` varchar(45) DEFAULT NULL,
-  `ville_nom_soundex` varchar(20) DEFAULT NULL,
-  `ville_nom_metaphone` varchar(22) DEFAULT NULL,
-  `ville_code_postal` varchar(255) DEFAULT NULL,
-  `ville_commune` varchar(3) DEFAULT NULL,
-  `ville_code_commune` varchar(5) NOT NULL,
-  `ville_arrondissement` smallint(3) unsigned DEFAULT NULL,
-  `ville_canton` varchar(4) DEFAULT NULL,
-  `ville_amdi` smallint(5) unsigned DEFAULT NULL,
-  `ville_population_2010` mediumint(11) unsigned DEFAULT NULL,
-  `ville_population_1999` mediumint(11) unsigned DEFAULT NULL,
-  `ville_population_2012` mediumint(10) unsigned DEFAULT NULL COMMENT 'approximatif',
-  `ville_densite_2010` int(11) DEFAULT NULL,
-  `ville_surface` float DEFAULT NULL,
-  `ville_longitude_deg` float DEFAULT NULL,
-  `ville_latitude_deg` float DEFAULT NULL,
-  `ville_longitude_grd` varchar(9) DEFAULT NULL,
-  `ville_latitude_grd` varchar(8) DEFAULT NULL,
-  `ville_longitude_dms` varchar(9) DEFAULT NULL,
-  `ville_latitude_dms` varchar(8) DEFAULT NULL,
-  `ville_zmin` mediumint(4) DEFAULT NULL,
-  `ville_zmax` mediumint(4) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=36831 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Index pour les tables exportées
+-- Table structure for table `relationpointmemb`
 --
 
---
--- Index pour la table `account`
---
-ALTER TABLE `account`
- ADD PRIMARY KEY (`idAccount`);
+DROP TABLE IF EXISTS `relationpointmemb`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `relationpointmemb` (
+  `point_id` int(11) NOT NULL,
+  `membre_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Index pour la table `element`
---
-ALTER TABLE `element`
- ADD PRIMARY KEY (`idElement`), ADD UNIQUE KEY `element_UNIQUE` (`element`);
-
---
--- Index pour la table `events`
---
-ALTER TABLE `events`
- ADD PRIMARY KEY (`idEvent`);
-
---
--- Index pour la table `groupe`
---
-ALTER TABLE `groupe`
- ADD PRIMARY KEY (`idGroupe`);
-
---
--- Index pour la table `membres`
---
-ALTER TABLE `membres`
- ADD PRIMARY KEY (`idMembre`);
-
---
--- Index pour la table `parcours`
---
-ALTER TABLE `parcours`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `checksum` (`checksum`);
-
---
--- Index pour la table `permission`
---
-ALTER TABLE `permission`
- ADD PRIMARY KEY (`idPermission`);
-
---
--- Index pour la table `relationeventmemb`
---
-ALTER TABLE `relationeventmemb`
- ADD PRIMARY KEY (`idRelationEM`);
-
---
--- Index pour la table `villes`
---
-ALTER TABLE `villes`
- ADD PRIMARY KEY (`ville_id`), ADD UNIQUE KEY `ville_code_commune_2` (`ville_code_commune`), ADD UNIQUE KEY `ville_slug` (`ville_slug`), ADD KEY `ville_departement` (`ville_departement`), ADD KEY `ville_nom` (`ville_nom`), ADD KEY `ville_nom_reel` (`ville_nom_reel`), ADD KEY `ville_code_commune` (`ville_code_commune`), ADD KEY `ville_code_postal` (`ville_code_postal`), ADD KEY `ville_longitude_latitude_deg` (`ville_longitude_deg`,`ville_latitude_deg`), ADD KEY `ville_nom_soundex` (`ville_nom_soundex`), ADD KEY `ville_nom_metaphone` (`ville_nom_metaphone`), ADD KEY `ville_population_2010` (`ville_population_2010`), ADD KEY `ville_nom_simple` (`ville_nom_simple`);
-
---
--- AUTO_INCREMENT pour les tables exportées
+-- Table structure for table `typeofpoint`
 --
 
---
--- AUTO_INCREMENT pour la table `account`
---
-ALTER TABLE `account`
-MODIFY `idAccount` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
---
--- AUTO_INCREMENT pour la table `element`
---
-ALTER TABLE `element`
-MODIFY `idElement` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
---
--- AUTO_INCREMENT pour la table `events`
---
-ALTER TABLE `events`
-MODIFY `idEvent` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT pour la table `groupe`
---
-ALTER TABLE `groupe`
-MODIFY `idGroupe` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
---
--- AUTO_INCREMENT pour la table `membres`
---
-ALTER TABLE `membres`
-MODIFY `idMembre` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=307;
---
--- AUTO_INCREMENT pour la table `parcours`
---
-ALTER TABLE `parcours`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `permission`
---
-ALTER TABLE `permission`
-MODIFY `idPermission` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=46;
---
--- AUTO_INCREMENT pour la table `villes`
---
-ALTER TABLE `villes`
-MODIFY `ville_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36831;
+DROP TABLE IF EXISTS `typeofpoint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `typeofpoint` (
+  `idTypeofpoint` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `urlLogo` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idTypeofpoint`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-10-16 15:28:56
