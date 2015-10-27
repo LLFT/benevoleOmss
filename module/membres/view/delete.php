@@ -4,7 +4,7 @@ $oForm->setMessage($this->tMessage);
 ?>
 	
 	<fieldset class="col-sm-12">
-            <legend><?php echo $this->oMembres->indexMembre .' : '.$this->oMembres->nom .' '. $this->oMembres->prenom ?></legend>
+            <legend><?php echo $this->oMembres->nom .' '. $this->oMembres->prenom ?></legend>
         </fieldset>
 <form class="form-horizontal" action="" method="POST" >
     <div class="col-sm-offset-2 col-sm-10">
