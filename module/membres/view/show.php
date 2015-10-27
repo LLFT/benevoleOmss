@@ -9,7 +9,7 @@
             <legend>
                 <img <?php if($this->oMembre->chkSignaleur != 1): ?> style="display: none" <?php endif; ?> src="../css/images/chasuble-J-36x47.png" alt="Chasuble Jaune" height="15" width="15" TITLE="Signaleur Volontaire">
                 
-                <?php echo ' '.$this->oMembre->indexMembre; ?> : <?php if ($this->oMembre->active != 1) :?> <s> <?php endif; ?>  <?php echo $this->oMembre->nom .' '. $this->oMembre->prenom; ?> <?php if ($this->oMembre->active != 1) :?> </s> <?php endif; ?>
+                <?php if ($this->oMembre->active != 1) :?> <s> <?php endif; ?>  <?php echo $this->oMembre->nom .' '. $this->oMembre->prenom; ?> <?php if ($this->oMembre->active != 1) :?> </s> <?php endif; ?>
                 
                 <img <?php if($this->oMembre->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15" TITLE="Coord. Validées">
                 
@@ -95,9 +95,9 @@
         <?php endif; ?>
             
         <?php if ( _root::getACL()->can('ACCESS','membres::localizeMember')):?>   
-        <?php if (($this->oMembre->rue !="")&&($this->oMembre->coord !=1)&&($this->oMembre->active === 1)):?>            
+        <?php if (($this->oMembre->rue !="")&&($this->oMembre->coord !=1)&&($this->oMembre->active != 0)):?>            
             <a class="btn btn-default" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembre->idMembre))?>">Localiser</a>
-        <?php elseif (($this->oMembre->rue !="")&&($this->oMembre->coord == 1)&&($this->oMembre->active === 1)) :?>    
+        <?php elseif (($this->oMembre->rue !="")&&($this->oMembre->coord == 1)&&($this->oMembre->active != 0)) :?>    
             <a class="btn btn-default" href="<?php echo $this->getLink('membres::localizeMember',array( 'id'=>$this->oMembre->idMembre))?>">Re-Localiser</a>
         <?php endif;?> 
         <?php endif;?>

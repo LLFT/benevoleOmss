@@ -113,7 +113,7 @@ class model_membres extends abstract_model{
         }
         
         public function findParticipantOfEvent($idEvent) {
-            return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `indexMembre` ASC',$idEvent);
+            return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `idMembre` ASC',$idEvent);
         }      
 
 
@@ -144,11 +144,7 @@ class model_membres extends abstract_model{
             return $this->findMany($requete);
         }
         
-        public function findLastIndexMembre() {
-            $requete =  "SELECT `indexMembre` From omss.membres Where `indexMembre` IS NOT NULL ORDER BY `indexMembre` DESC LIMIT 1";
-            return $this->findOne($requete);
-        }
-        
+       
         public function getCoordOfParticipantOfEvent($idEvent) {
             $tab=$this->findParticipantOfEvent($idEvent);
 		$tSelect=array();

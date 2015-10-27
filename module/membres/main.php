@@ -205,24 +205,7 @@ class module_membres extends abstract_module{
             $oMembres=model_membres::getInstance()->findAllLocalisable();
             $nbOfLocalization = $this->findLocalisationForManyMembers($oMembres);
             _root::redirect('membres::list',array('nbFound'=>$nbOfLocalization));
-        }
-	
-        /**
-         * 
-         */
-        public function _reIndexAllMembers() {
-            if(!_root::getACL()->can('ACCESS','membres::reIndexAllMembers')){
-                        _root::redirect('default::index');
-                    }
-            $oMenbres=  model_membres::getInstance()->orderByName();            
-            $i=1;
-            foreach ($oMenbres as $oMembre) {
-                $this->saveIndexMembre($oMembre->idMembre, $i);
-                $i++;
-            }
-            _root::redirect('membres::list',array('nbFound'=>$i));            
-        }
-        
+        }        
         public function _undelete() {
             $iId= _root::getParam('id');
             $oMembre=model_membres::getInstance()->findById($iId );
@@ -310,12 +293,6 @@ class module_membres extends abstract_module{
 		$iId=_root::getParam('id',null);
 		if($iId==null){
 			$oMembres=new row_membres;
-                        $oLastIndex=model_membres::getInstance()->findLastIndexMembre();
-                        if($oLastIndex){
-                            $oMembres->indexMembre = (model_membres::getInstance()->findLastIndexMembre()->indexMembre + 1);
-                        }else{
-                            $oMembres->indexMembre = 1;
-                        }
                         $oMembres->creer=date('Y-m-d H:i:s',time());
                         $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
 		}else{
@@ -386,8 +363,7 @@ class module_membres extends abstract_module{
                 $oMembres->deleter=_root::getAuth()->getAccount()->idAccount;
                 
                 $oMembres->saveF();
-		//une fois la suppression enregistrée on reindex tous les membres
-                $this->_reIndexAllMembers();
+                _root::redirect('membres::list');
 		
 		
 	}
@@ -431,15 +407,7 @@ class module_membres extends abstract_module{
             }
             ini_restore('max_execution_time');
             return $i;
-        }
-        
-        private function saveIndexMembre($iIdMembre, $iIndex) {
-            $oMembreEdit = model_membres::getInstance()->findById($iIdMembre);
-            $oMembreEdit->indexMembre = $iIndex;
-            /*On effectue une sauvegarde sans se soucier des controles de validité*/
-            $oMembreEdit->saveF();           
-
-        }
+        }   
         
         
 //Les appels AJAX         

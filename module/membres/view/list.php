@@ -19,9 +19,7 @@
 		<?php foreach($this->tMembres as $oMembres):?>
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
                     
-                <td> 
-                    
-                    <?php echo ' '.$oMembres->indexMembre .' : '?>
+                <td>
                     <img TITLE="Coord. Validées" id="validForm_<?php echo $oMembres->getId();?>" <?php if($oMembres->chkFormulaire != 1): ?> style="display: none" <?php endif; ?> src="../css/images/coche_verte.gif" alt="Coche verte" height="15" width="15">
                 </td>
                 <td>
