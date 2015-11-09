@@ -138,6 +138,7 @@ class My_GoogleMapAPI {
     protected $coords = NULL;
     
     protected $iParcours_id = NULL;
+    protected $iEvent_id = NULL;
 
     
     /**
@@ -446,6 +447,11 @@ class My_GoogleMapAPI {
         
     }
     
+    public function setEvent_id($iEvent_id) {
+        
+        $this->iEvent_id = $iEvent_id;
+        
+    }
 
     /**
      * Get the google map content
@@ -617,27 +623,9 @@ class My_GoogleMapAPI {
      */
     
     
-    public function convertPhpArrayToJSArray($tCoord) {
-        
-        $tArrayJS = '[';
-        $i=0;
-        while($i < count($tCoord)) {
-            $tArrayJS .= '{lat: '.$tCoord[$i][1].', lng: '.$tCoord[$i][0].'},';            
-            $i++;      
-        }
-        $tArrayJS = substr($tArrayJS,0,-1);
-        $tArrayJS .= ']';        
-        
-        return $tArrayJS;
-        
-    }
+   
     
-    public function addPolyligne($tCoord) {
-        
-        $this->coords = $this->convertPhpArrayToJSArray($tCoord);
-        $this->enableParcours = TRUE;
-        
-    }
+
    
     
     public function addParticipants($tParticipants, $category) {
@@ -688,9 +676,9 @@ class My_GoogleMapAPI {
 
         if ($this->includeJs === TRUE) {
             // Google map JS
-            $this->content .= '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=' . $this->lang . '">';
+            $this->content .= '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&region=FR' . $this->lang . '">';
             $this->content .= '</script>' . "\n";
-
+            $this->content .= '<script type="text/javascript" src="./js/oms.min.js"></script>' . "\n";
             // Clusterer JS
             if ($this->useClusterer == TRUE) {
                 $this->content .= '<script src="' . $this->clustererLibraryPath . '" type="text/javascript"></script>' . "\n";
@@ -718,36 +706,31 @@ class My_GoogleMapAPI {
         $this->content .= "\t " . 'var mapcontainerMap;' . "\n";
         $this->content .= "\t " . 'var gmarkers = [];' . "\n";
         $this->content .= "\t " . 'var infowindow;' . "\n";
+        $this->content .= "\t " . 'var oms;' . "\n";
+        $this->content .= "\t " . 'var arrayListner = [];' . "\n";
+        $this->content .= "\t " . 'var Listner = [];' . "\n";
+        
+        $this->content .= "\t " . 'var Listener_2;' . "\n";
         $this->content .= "\t " . 'var directions = new google.maps.DirectionsRenderer();' . "\n";
         $this->content .= "\t " . 'var directionsService = new google.maps.DirectionsService();' . "\n";
         $this->content .= "\t " . 'var current_lat = 0;' . "\n";
         $this->content .= "\t " . 'var current_lng = 0;' . "\n";
         $this->content .= "\t " . 'var iParcours_id =' . $this->iParcours_id . ';' . "\n";
-
-        $this->content .= "\t " . 'var markerChasuble = {' . "\n";
-        $this->content .= "\t\t " . 'url: \'./css/images/chasuble-J-16x26.png\',' . "\n";
-        $this->content .= "\t\t " . 'size: new google.maps.Size(16, 26),' . "\n";
-        $this->content .= "\t\t " . 'origin: new google.maps.Point(0,0),' . "\n";
-        $this->content .= "\t\t " . 'anchor: new google.maps.Point(8, 25)' . "\n";
-        $this->content .= "\t " . '};' . "\n";
-
-        $this->content .= "\t " . 'var markerRelais = {' . "\n";
-        $this->content .= "\t\t " . 'url: \'./css/images/relais_30x30.png\',' . "\n";
-        $this->content .= "\t\t " . 'size: new google.maps.Size(30, 30),' . "\n";
-        $this->content .= "\t\t " . 'origin: new google.maps.Point(0,0),' . "\n";
-        $this->content .= "\t\t " . 'anchor: new google.maps.Point(30, 15)' . "\n";
-        $this->content .= "\t " . '};' . "\n";
-
-        $this->content .= "\t " . 'var markerdefault = {' . "\n";
-        $this->content .= "\t\t " . 'url: \'http://maps.gstatic.com/mapfiles/markers2/marker.png\',' . "\n";
-        $this->content .= "\t " . '};' . "\n";
-
-        $this->content .= "\t " . 'var markerHome = {' . "\n";
-        $this->content .= "\t\t " . 'url: \'./css/images/google-marker-32x43.png\',' . "\n";
-        $this->content .= "\t\t " . 'size: new google.maps.Size(32, 43),' . "\n";
-        $this->content .= "\t\t " . 'origin: new google.maps.Point(0,0),' . "\n";
-        $this->content .= "\t\t " . 'anchor: new google.maps.Point(15, 42)' . "\n";
-        $this->content .= "\t " . '};' . "\n";
+        $this->content .= "\t " . 'var iEvent_id =' . $this->iEvent_id . ';' . "\n";
+        $this->content .= "\t " . 'var remove_poi = [' . "\n";
+        $this->content .= "\t\t " . '{' . "\n";
+        $this->content .= "\t\t\t " .'"featureType": "poi",' . "\n";        
+        $this->content .= "\t\t\t " . '"stylers": [' . "\n";
+        $this->content .= "\t\t\t\t " . '  { "visibility": "off" }' . "\n";
+        $this->content .= "\t\t\t " . ']' . "\n";
+        $this->content .= "\t\t\t " . '},' . "\n";
+        $this->content .= "\t\t " . '{' . "\n";
+        $this->content .= "\t\t\t " .'"featureType": "transit",' . "\n";        
+        $this->content .= "\t\t\t " . '"stylers": [' . "\n";
+        $this->content .= "\t\t\t\t " . '  { "visibility": "off" }' . "\n";
+        $this->content .= "\t\t\t " . ']' . "\n";
+        $this->content .= "\t\t\t " . '}' . "\n";
+        $this->content .= "\t " . ']' . "\n";
 
         $this->content .= "\t " . 'function getCurrentLat() {' . "\n";
         $this->content .= "\t\t\t " . 'return current_lat;' . "\n";
@@ -758,35 +741,31 @@ class My_GoogleMapAPI {
         $this->content .= "\t " . '}' . "\n";
 
             // JS public function to add a  marker
-        $this->content .= "\t " . 'function addMarker(latlng,title,content,category,icon,currentmap,id) {' . "\n";
-        $this->content .= "\t\t " . 'var marker = new google.maps.Marker({' . "\n";
-        $this->content .= "\t\t\t " . 'map:  currentmap,' . "\n";
-        $this->content .= "\t\t\t " . 'title : title,' . "\n";
-        $this->content .= "\t\t\t " . 'icon:  icon,' . "\n";
-        $this->content .= "\t\t\t " . 'position: latlng' . "\n";
-        $this->content .= "\t\t " . '});' . "\n";
-
-        $this->content .= "\t\t " . 'var html = \'<div style="text-align:left;" class="infoGmaps">\'+content+\'</div>\';' . "\n";
-        $this->content .= "\t\t " . 'google.maps.event.addListener(marker, "click", function() {' . "\n";
-        $this->content .= "\t\t\t " . 'if (infowindow) infowindow.close();' . "\n";
-        $this->content .= "\t\t\t " . 'infowindow = new google.maps.InfoWindow({content: html,disableAutoPan: false});' . "\n";
-        $this->content .= "\t\t\t " . 'infowindow.open(currentmap,marker);' . "\n";
-
-        // Enable the zoom when you click on a marker
-        if ($this->enableWindowZoom == TRUE) {
-            $this->content .= "\t\t\t" . 'currentmap.setCenter(new google.maps.LatLng(latlng.lat(),latlng.lng()),' . $this->infoWindowZoom . ');' . "\n";
-        }
-
-        $this->content .= "\t\t" . '});' . "\n";
-        $this->content .= "\t\t" . 'marker.mycategory = category;' . "\n";
-        $this->content .= "\t\t" . 'if (id) marker.id = id; else marker.id = \'marker_\'+gmarkers.length;' . "\n";
-        $this->content .= "\t\t" . 'gmarkers.push(marker);' . "\n";
-        // Hide marker by default
-        if ($this->defaultHideMarker == TRUE) {
-            $this->content .= "\t\t" . 'marker.setVisible(false);' . "\n";
-            
-        }
-        $this->content .= "\t" . '}' . "\n";
+//        $this->content .= "\t " . 'function addMarker(latlng,title,content,category,icon,currentmap,id) {' . "\n";
+//        $this->content .= "\t\t " . 'var marker = new google.maps.Marker({' . "\n";
+//        $this->content .= "\t\t\t " . 'map:  currentmap,' . "\n";
+//        $this->content .= "\t\t\t " . 'title : title,' . "\n";
+//        $this->content .= "\t\t\t " . 'icon:  icon,' . "\n";
+//        $this->content .= "\t\t\t " . 'position: latlng' . "\n";
+//        $this->content .= "\t\t " . '});' . "\n";        
+//        $this->content .= "\t\t " . 'var html = \'<div style="text-align:left;" class="infoGmaps">\'+content+\'</div>\';' . "\n";
+//        $this->content .= "\t\t " . 'arrayListner[id] = google.maps.event.addListener(marker, "click", function() {' . "\n";
+//        $this->content .= "\t\t\t " . 'if (infowindow) infowindow.close();' . "\n";
+//        $this->content .= "\t\t\t " . 'infowindow = new google.maps.InfoWindow({content: html,disableAutoPan: false});' . "\n";
+//        $this->content .= "\t\t\t " . 'infowindow.open(currentmap,marker);' . "\n";
+//
+//        // Enable the zoom when you click on a marker
+//        if ($this->enableWindowZoom == TRUE) {
+//            $this->content .= "\t\t\t" . 'currentmap.setCenter(new google.maps.LatLng(latlng.lat(),latlng.lng()),' . $this->infoWindowZoom . ');' . "\n";
+//        }
+//
+//        $this->content .= "\t\t" . '});' . "\n";
+//        $this->content .= "\t\t" . 'marker.mycategory = category;' . "\n";
+//        $this->content .= "\t\t" . 'if (id) marker.id = id; else marker.id = \'marker_\'+gmarkers.length;' . "\n";
+//        $this->content .= "\t\t" . 'gmarkers.push(marker);' . "\n";
+//        $this->content .= "\t\t" . 'oms.addMarker(marker);' . "\n";
+//        //$this->content .= "\t\t" . 'marker.setVisible(false);' . "\n";        
+//        $this->content .= "\t" . '}' . "\n";
 
         // JS public function to add a geocode marker
         $this->content .= "\t" . 'function geocodeMarker(address,title,content,category,icon) {' . "\n";
@@ -856,7 +835,7 @@ class My_GoogleMapAPI {
         $this->content .= "\t\t " . 'if(infowindow) { infowindow.close(); }' . "\n";
         $this->content .= "\t " . '}' . "\n";
 
-        // JS public function to hide all the markers
+//        // JS public function to hide all the markers
         $this->content .= "\t" . 'function hideAll() {' . "\n";
         $this->content .= "\t\t" . 'for (var i=0; i<gmarkers.length; i++) {' . "\n";
         $this->content .= "\t\t\t" . 'gmarkers[i].setVisible(false);' . "\n";
@@ -883,142 +862,22 @@ class My_GoogleMapAPI {
         $this->content .= "\t\t\t " . 'if(infowindow) { infowindow.close(); }' . "\n";
         $this->content .= "\t " . '}' . "\n";
 
-        $this->content .= "\t " . 'function DeleteMarker(id) {' . "\n";        
-        $this->content .= "\t\t " . '//Find and remove the marker from the Array' . "\n";
-        $this->content .= "\t\t " . 'for (var i = 0; i < gmarkers.length; i++) {' . "\n";
-        $this->content .= "\t\t\t " . 'if (gmarkers[i].id == id) {' . "\n";
-        $this->content .= "\t\t\t\t " . '//Remove the marker from Map' . "\n";
-        $this->content .= "\t\t\t\t\t " . '$.ajax({' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'url: "index.php?:nav=parcours::ajaxDelPoints&iIdPoint="+id,' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'success: function() {' . "\n";
-        $this->content .= "\t\t\t\t\t\t " . 'gmarkers[i].setMap(null);' . "\n";
-        $this->content .= "\t\t\t\t\t\t " . '//Remove the marker from array.' . "\n";
-        $this->content .= "\t\t\t\t\t\t " . 'gmarkers.splice(i, 1);' . "\n";
-        $this->content .= "\t\t\t\t\t\t " . '}' . "\n";        
-        $this->content .= "\t\t\t\t\t " . '});' . "\n";
-        $this->content .= "\t\t\t\t " . 'return;' . "\n";
-        $this->content .= "\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t " . '}' . "\n";
+        
 
-        if ($this->enableParcours == TRUE) {
-        $this->content .= "\t " . 'function toggleHideShowParcours() {' . "\n";
-        $this->content .= "\t\t " . 'if (poly.visible){' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setMap(null);' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setVisible(false);' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setMap(map' . $this->googleMapId . ');' . "\n";
-        $this->content .= "\t\t\t " . 'map' . $this->googleMapId . '.fitBounds(bounds);' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setVisible(true);' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t " . '}' . "\n";
-        
-        $this->content .= "\t " . 'function clickParcours(){' . "\n";
-        $this->content .= "\t " . '   if ($("button#btnParcours").text()=== \'Afficher les parcours\'){' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnParcours").text(\'Masquer le parcours\');' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnParcours").text(\'Afficher le parcours\');' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t\t " . 'toggleHideShowParcours();' . "\n";
-        $this->content .= "\t " . '}' . "\n";
-        }
-        
-        $this->content .= "\t " . 'function clickVolon(){' . "\n";
-        $this->content .= "\t " . '   if ($("button#btnVolon").text()=== \'Afficher les volontaires\'){' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnVolon").text(\'Masquer les volontaires\');' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnVolon").text(\'Afficher les volontaires\');' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t\t " . 'toggleHideShowMarker(\'volontaires\');' . "\n";
-        $this->content .= "\t " . '}' . "\n";       
+//        if ($this->enableParcours == TRUE) {
         
         
-        $this->content .= "\t " . 'function clickSignaleur(){' . "\n";
-        $this->content .= "\t " . '   if ($("button#btnSignaleur").text()=== \'Afficher les signaleurs\'){' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnSignaleur").text(\'Masquer les signaleurs\');' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnSignaleur").text(\'Afficher les signaleurs\');' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t\t " . 'toggleHideShowMarker(\'chasubleSpot\');' . "\n";
-        $this->content .= "\t " . '}' . "\n";
+//        $this->content .= "\t " . 'function clickParcours(){' . "\n";
+//        $this->content .= "\t " . '   if ($("button#btnParcours").text()=== \'Afficher les parcours\'){' . "\n";
+//        $this->content .= "\t\t\t " . '$("button#btnParcours").text(\'Masquer le parcours\');' . "\n";
+//        $this->content .= "\t\t " . '}else{' . "\n";
+//        $this->content .= "\t\t\t " . '$("button#btnParcours").text(\'Afficher le parcours\');' . "\n";
+//        $this->content .= "\t\t " . '}' . "\n";
+//        $this->content .= "\t\t " . 'toggleHideShowParcours();' . "\n";
+//        $this->content .= "\t " . '}' . "\n";
+//        }
         
-        $this->content .= "\t " . 'function clickRelais(){' . "\n";
-        $this->content .= "\t\t " . '' . "\n";
-        $this->content .= "\t " . '   if ($("button#btnRelais").text()=== \'Afficher les relais\'){' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnRelais").text(\'Masquer les relais\');' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t " . '$("button#btnRelais").text(\'Afficher les relais\');' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t\t " . 'toggleHideShowMarker(\'relaisSpot\');' . "\n";
-        $this->content .= "\t " . '}' . "\n";
-        
-        $this->content .= "\t " . 'function addRelais(){' . "\n";
-        $this->content .= "\t\t " . 'showCategory(\'relaisSpot\');' . "\n";
-        $this->content .= "\t\t " . 'if(poly.get(\'clickable\')){' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setOptions({clickable: false});' . "\n";
-        $this->content .= "\t\t\t " . '$("button#ajoutRelais").text(\'Ajouter un relais\');' . "\n";
-        $this->content .= "\t\t\t " . '' . "\n";
-        $this->content .= "\t\t\t " . 'if ($("button#btnRelais").text()=== \'Afficher les relais\'){' . "\n";
-        $this->content .= "\t\t\t\t " . '$("button#btnRelais").text(\'Masquer les relais\');' . "\n";
-        $this->content .= "\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t\t " . 'google.maps.event.clearListeners(poly, \'click\');' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t " . '$("button#ajoutRelais").text(\'Arrêter d\\\'ajouter des relais\');' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setOptions({clickable: true});   ' . "\n";
-        $this->content .= "\t\t\t " . 'google.maps.event.addListener(poly, \'click\', function(event){' . "\n";
-        $this->content .= "\t\t\t\t " . 'var Lat=event.latLng.lat();' . "\n";
-        $this->content .= "\t\t\t\t " . 'var Lng=event.latLng.lng();' . "\n";
-        $this->content .= "\t\t\t\t " . 'var Typeofpoint_id=2;' . "\n";
-        $this->content .= "\t\t\t\t " . 'var relaisPos = new google.maps.LatLng(Lat, Lng);' . "\n";        
-        $this->content .= "\t\t\t\t " . 'var content = \'Latitude: \' + Lat + \'<br />Longitude: \' + Lng;' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'content += \'<br /><input type = "button" value = "Delete" onclick = "DeleteMarker(\\\'marker_\'+gmarkers.length+\'\\\');" />\';' . "\n";        
-        $this->content .= "\t\t\t\t\t " . '$.ajax({' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'url: "index.php?:nav=parcours::ajaxAddPoints&sLatVal="+Lat+"&sLngVal="+Lng+"&iParcours_id="+iParcours_id+"&iTypeofpoint_id="+Typeofpoint_id,' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'dataType: "json",' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'success: function(data) {' . "\n";
-        $this->content .= "\t\t\t\t\t\t " . 'if (data.etat == \'OK\') {' . "\n";
-        $this->content .= "\t\t\t\t\t\t\t " . 'var content = \'Latitude: \' + Lat + \'Longitude: \' + Lng + \' (\' + data.idPoint + \')\' ;' . "\n";
-        $this->content .= "\t\t\t\t\t\t\t " . 'content += \'<br /><input type = "button" value = "Delete" onclick = "DeleteMarker(\' + data.idPoint +\');" />\';' . "\n";        
-        $this->content .= "\t\t\t\t\t\t\t " . 'addMarker(relaisPos,data.idPoint,content,\'relaisSpot\',markerRelais,map' . $this->googleMapId . ',\'point_\'+data.idPoint)' . "\n";
-        $this->content .= "\t\t\t\t\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t\t\t\t " . '});' . "\n";  
-        $this->content .= "\t\t\t " . '});' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t " . '}' . "\n"; 
-        
-        $this->content .= "\t " . 'function addSpot(){' . "\n";
-        $this->content .= "\t\t " . 'showCategory(\'chasubleSpot\');' . "\n";
-        $this->content .= "\t\t " . 'if(poly.get(\'clickable\')){' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setOptions({clickable: false});' . "\n";
-        $this->content .= "\t\t\t " . '$("button#ajoutSign").text(\'Ajouter un signaleur\');' . "\n";
-        $this->content .= "\t\t\t " . 'if ($("button#btnSignaleur").text()=== \'Afficher les signaleurs\'){' . "\n";
-        $this->content .= "\t\t\t\t " . '$("button#btnSignaleur").text(\'Masquer les signaleurs\');' . "\n";
-        $this->content .= "\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t\t " . 'google.maps.event.clearListeners(poly, \'click\');' . "\n";
-        $this->content .= "\t\t " . '}else{' . "\n";
-        $this->content .= "\t\t\t\t " . '$("button#ajoutSign").text(\'Arrêter d\\\'ajouter des signaleur\');' . "\n";
-        $this->content .= "\t\t\t " . '' . "\n";
-        $this->content .= "\t\t\t " . 'poly.setOptions({clickable: true});' . "\n";
-        $this->content .= "\t\t\t " . 'google.maps.event.addListener(poly, \'click\', function(event){' . "\n";
-        $this->content .= "\t\t\t\t " . 'var Lat=event.latLng.lat();' . "\n";
-        $this->content .= "\t\t\t\t " . 'var Lng=event.latLng.lng();' . "\n";
-        $this->content .= "\t\t\t\t " . 'var Typeofpoint_id=1;' . "\n";
-        $this->content .= "\t\t\t\t " . 'var signaleurPos = new google.maps.LatLng(Lat, Lng);' . "\n";        
-        $this->content .= "\t\t\t\t\t " . '$.ajax({' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'url: "index.php?:nav=parcours::ajaxAddPoints&sLatVal="+Lat+"&sLngVal="+Lng+"&iParcours_id="+iParcours_id+"&iTypeofpoint_id="+Typeofpoint_id,' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'dataType: "json",' . "\n";
-        $this->content .= "\t\t\t\t\t " . 'success: function(data) {' . "\n";
-        $this->content .= "\t\t\t\t\t\t " . 'if (data.etat == \'OK\') {' . "\n";
-        $this->content .= "\t\t\t\t\t\t\t " . 'var content = \'Latitude: \' + Lat + \'Longitude: \' + Lng + \' (\' + data.idPoint + \')\' ;' . "\n";
-        $this->content .= "\t\t\t\t\t\t\t " . 'content += \'<br /><input type = "button" value = "Delete" onclick = "DeleteMarker(\' + data.idPoint +\');" />\';' . "\n";        
-        $this->content .= "\t\t\t\t\t\t\t " . 'addMarker(signaleurPos,data.idPoint,content,\'chasubleSpot\',markerChasuble,map' . $this->googleMapId . ',\'point_\'+data.idPoint)' . "\n";
-        $this->content .= "\t\t\t\t\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t\t\t\t " . '}' . "\n";
-        $this->content .= "\t\t\t\t\t " . '});' . "\n";  
-        $this->content .= "\t\t\t " . '});' . "\n";
-        $this->content .= "\t\t " . '}' . "\n";
-        $this->content .= "\t " . '}' . "\n";       
+             
         
     }
 
@@ -1042,32 +901,33 @@ class My_GoogleMapAPI {
 
         //Goole map Div Id
         $this->content .= "\t" . 'map' . $this->googleMapId . ' = new google.maps.Map(document.getElementById("' . $this->googleMapId . '"), myOptions);' . "\n";
-        
-        //Préchargement du parcours
-        if ($this->enableParcours == TRUE) {
-            $this->content .= "\t" . 'var myPoints = '. $this->coords .';'. "\n";
-
-            $this->content .= "\t" . 'poly = new google.maps.Polyline({' . "\n";
-         // use your own style here
-            $this->content .= "\t\t" . 'path: myPoints,'. "\n";
-            $this->content .= "\t\t" . 'strokeColor: "#FF00AA",' . "\n";
-            $this->content .= "\t\t" . 'strokeOpacity: .7,' . "\n";
-            $this->content .= "\t\t" . 'strokeWeight: 4,' . "\n";
-            $this->content .= "\t\t" . 'clickable: false' . "\n";
-            $this->content .= "\t" . '});' . "\n";
-            
-            $this->content .= "\t" . 'bounds = new google.maps.LatLngBounds();'. "\n";           
-            $this->content .= "\t" . 'for(var i = 1; i < myPoints.length; i++){'. "\n";
-            $this->content .= "\t\t" . 'bounds.extend(new google.maps.LatLng(myPoints[i].lat,myPoints[i].lng));'. "\n";
-
-            $this->content .= "\t" . '}'. "\n";
-            if ($this->sShowImmediatParcours == TRUE) {
-                $this->content .= "\t\t" . 'poly.setMap(map' . $this->googleMapId . ');' . "\n";
-                $this->content .= "\t\t" . 'map' . $this->googleMapId . '.fitBounds(bounds);' . "\n";
-            }
-            
-
-        }
+        $this->content .= "\t" . 'oms = new OverlappingMarkerSpiderfier(map' . $this->googleMapId . ');' . "\n";
+        $this->content .= "\t" . 'map' . $this->googleMapId . '.setOptions({styles: remove_poi})'. "\n";
+//        //PrÃ©chargement du parcours
+//        if ($this->enableParcours == TRUE) {
+//            $this->content .= "\t" . 'var myPoints = '. $this->coords .';'. "\n";
+//
+//            $this->content .= "\t" . 'poly = new google.maps.Polyline({' . "\n";
+//         // use your own style here
+//            $this->content .= "\t\t" . 'path: myPoints,'. "\n";
+//            $this->content .= "\t\t" . 'strokeColor: "#FF00AA",' . "\n";
+//            $this->content .= "\t\t" . 'strokeOpacity: .7,' . "\n";
+//            $this->content .= "\t\t" . 'strokeWeight: 4,' . "\n";
+//            $this->content .= "\t\t" . 'clickable: false' . "\n";
+//            $this->content .= "\t" . '});' . "\n";
+//            
+//            $this->content .= "\t" . 'bounds = new google.maps.LatLngBounds();'. "\n";           
+//            $this->content .= "\t" . 'for(var i = 1; i < myPoints.length; i++){'. "\n";
+//            $this->content .= "\t\t" . 'bounds.extend(new google.maps.LatLng(myPoints[i].lat,myPoints[i].lng));'. "\n";
+//
+//            $this->content .= "\t" . '}'. "\n";
+//            if ($this->sShowImmediatParcours == TRUE) {
+//                $this->content .= "\t\t" . 'poly.setMap(map' . $this->googleMapId . ');' . "\n";
+//                $this->content .= "\t\t" . 'map' . $this->googleMapId . '.fitBounds(bounds);' . "\n";
+//            }
+//            
+//
+//        }
         
         $this->content .= "\t" . 'google.maps.event.addListener(map' . $this->googleMapId . ',"click",function(event) { if (event) { current_lat=event.latLng.lat();current_lng=event.latLng.lng(); }}) ;' . "\n";
 
@@ -1075,8 +935,8 @@ class My_GoogleMapAPI {
 //        $this->content .= "\t" . 'directions.setPanel(document.getElementById("' . $this->googleMapDirectionId . '"))' . "\n";
 
         // add all the markers
-        $this->content .= $this->contentMarker;
-        $this->content .= "\t\t" . 'hideAll();' . "\n";
+//        $this->content .= $this->contentMarker;
+//        $this->content .= "\t\t" . 'hideAll();' . "\n";
         // Clusterer JS
         if ($this->useClusterer == TRUE) {
             $this->content .= "\t" . 'var markerCluster = new MarkerClusterer(map' . $this->googleMapId . ', gmarkers,{gridSize: ' . $this->gridSize . ', maxZoom: ' . $this->maxZoom . '});' . "\n";

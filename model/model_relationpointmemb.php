@@ -6,7 +6,7 @@ class model_relationpointmemb extends abstract_model{
 	protected $sTable='relationpointmemb';
 	protected $sConfig='benevoleOmss';
 	
-	protected $tId=array('point_id');
+	protected $tId=array('idRelationPointMemb');
 
 	public static function getInstance(){
 		return self::_getInstance(__CLASS__);
@@ -15,6 +15,15 @@ class model_relationpointmemb extends abstract_model{
 	public function findById($uId){
 		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE point_id=?',$uId );
 	}
+        
+        public function findByIdPoint($uIdPoint,$uIdParcours){
+		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE point_id=? AND parcours_id=?',$uIdPoint,$uIdParcours );
+	}
+        
+        public function findByIdMembre($uIdMembre,$uIdParcours){
+		return $this->findOne('SELECT * FROM '.$this->sTable.' WHERE membre_id=? AND parcours_id=?',$uIdMembre,$uIdParcours );
+	}
+        
 	public function findAll(){
 		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
@@ -31,6 +40,22 @@ class model_relationpointmemb extends abstract_model{
 		return $tSelect;
 	}
 	
+        
+        public function getSelectMembersOnPoint($idPoint,$idParcours){
+		$tab=$this->findByIdPoint($idPoint,$idParcours);
+                $tSelect=array();
+                
+                if($tab){
+                    foreach($tab as $oRow){
+                        
+                        $oMembre = model_membres::getInstance()->findById($oRow->membre_id);
+                        $tSelect[]=["nom"=>$oMembre->nom,"prenom"=>$oMembre->prenom,"idMembre"=>$oMembre->idMembre];
+                    }
+                }
+                return $tSelect;
+	}
+        
+        
 
 	
 }

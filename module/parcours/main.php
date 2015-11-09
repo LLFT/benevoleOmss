@@ -73,10 +73,11 @@ class module_parcours extends abstract_module{
                     }
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
                 $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
-                $tPointsOfChasuble=  model_points::getInstance()->getSelectPoints(_root::getParam('id'));
+                
 
 		$oView=new _view('parcours::show');
                 $oView->oParcours=$oParcours;
+                
                 
                 $gmap = new my_GoogleMapAPI();                
                 //Charge le contenu du GPX dans la class geoPHP
@@ -88,7 +89,7 @@ class module_parcours extends abstract_module{
                 // Coordonées du centre
                 $centLng = $centroid->getX();
                 $centLat = $centroid->getY();
-                $tGpx = $polygon->asArray(); 
+
                 
                 
                 $gmap->setDivId('containerMap');
@@ -102,16 +103,18 @@ class module_parcours extends abstract_module{
                 $gmap->setMaxZoom(20);
                 $gmap->setMinZoom(12);
                 $gmap->setLang('fr');
-                $gmap->setDefaultHideMarker(false);
-                $gmap->setShowImmediatParcours(true);
+//                $gmap->setDefaultHideMarker(false);
+                //$gmap->setShowImmediatParcours(true);
                 $gmap->setParcours_id(_root::getParam('id'));
-                $gmap->addPolyligne($tGpx);
-                $gmap->addParticipants($tMembresCoord,'volontaires');
-                $gmap->addPoints($tPointsOfChasuble);
+                $gmap->setEvent_id(_root::getParam('idEvent'));
+                //$gmap->addPolyligne($tGpx);
+                //$gmap->addParticipants($tMembresCoord,'volontaires');
+                //$gmap->addPoints($tPointsOfChasuble);
                 //$gmap->setStreetViewControl(FALSE);                
-                //$gmap->setClusterer(true,100,15,'./js/markerclusterer_compiled.js'); //Désactivé sinon les Markers sont réaffiché à chaque zoom
+                $gmap->setClusterer(true,100,15,'./js/markerclusterer_compiled.js'); //Désactivé sinon les Markers sont réaffiché à chaque zoom
             
                 $gmap->generate();
+                $oView->tMembresCoord=$tMembresCoord;
                 $oView->oModuleGoogleMap=$gmap;
 		$this->oLayout->add('main',$oView);
 	}
@@ -242,9 +245,9 @@ class module_parcours extends abstract_module{
          * index.php?:nav=parcours::ajaxAjoutPoints&sLatVal=45.431542895847286&sLngVal=4.3821185628411286&iParcours_id=1&iTypeofpoint_id=1
          */        
         public function _ajaxAddPoints() {
-            if(!_root::getACL()->can('ACCESS','parcours::ajaxAddPoints')){
-                        _root::redirect('membres::list');
-                    }
+//            if(!_root::getACL()->can('ACCESS','parcours::ajaxAddPoints')){
+//                        _root::redirect('membres::list');
+//                    }
             $retour=array();
            
             $oView=new _view('membres::ajaxOut');
@@ -267,20 +270,120 @@ class module_parcours extends abstract_module{
             }            
             $oView->sSortie=  json_encode($retour);            
         }
-        //index.php?:nav=parcours::ajaxDelPoints&iIdPoint=point_7
-        public function _ajaxDelPoints() {
-            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
-                        _root::redirect('membres::list');
-                    }
+        
+        
+        
+        
+        /*
+         * Récupère les points constituant le parcours.
+         */
+        public function _ajaxPointOfPoly() {
+//            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
             $retour=array();
             $sortie=array();            
             $oView=new _view('membres::ajaxOut');
             $this->oLayout->add('main',$oView);
             $this->oLayout->setLayout('ajax');            
-            $iIdPoint=substr(_root::getParam('iIdPoint'),(strrpos( _root::getParam('iIdPoint'),'_')+1));
+            $iParcoursId=_root::getParam('iParcoursId');
+            $oParcours=model_parcours::getInstance()->findById( $iParcoursId );
+                //Charge le contenu du GPX dans la class geoPHP
+            $polygon = geoPHP::load(file_get_contents($oParcours->url),'gpx');
+            $tGpx = $polygon->asArray(); 
             
-            $oPoints=model_points::getInstance()->findById( $iIdPoint );
-            $oPoints->delete();
+            foreach ($tGpx as $key => $coord){
+                $sortie[$key]['lat']=$coord[1];
+                $sortie[$key]['lng']=$coord[0];   
+            }                     
+            
+            if(true){
+                $retour['etat']='OK';
+            }else{
+                $retour['etat']='NOK';
+            }            
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour);            
+        }
+        /*
+         * return Array ('idPoint','name','lat','lng','typeofpoint_id');
+         */
+        public function _ajaxGetMarker(){
+            //            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
+            $retour=array();
+                      
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $iParcoursId=_root::getParam('iParcoursId');
+            $typeofpointId = _root::getParam('typeofpointId');
+            $sortie=  model_points::getInstance()->getSelectPoints($iParcoursId,$typeofpointId);
+            if(true){
+                $retour['etat']='OK';
+            }else{
+                $retour['etat']='NOK';
+            }
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour); 
+        }
+        
+        public function _ajaxGetPositionMembers(){
+            //            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
+            $retour=array();
+                       
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $iParcoursId=_root::getParam('iParcoursId');            
+            $sortie= model_membres::getInstance()->getCoordOfParticipantOfEvent($iParcoursId);
+            if(true){
+                $retour['etat']='OK';
+            }else{
+                $retour['etat']='NOK';
+            }
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour); 
+        }
+        
+        public function _ajaxGetInfoMember(){
+            //            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
+            $retour=array();
+                       
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $idMember=_root::getParam('idMember');            
+            $sortie= model_membres::getInstance()->getInfoMenber($idMember);
+            if(true){
+                $retour['etat']='OK';
+            }else{
+                $retour['etat']='NOK';
+            }
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour); 
+        }
+        
+   
+        public function _ajaxDelPoints() {
+//            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
+            $tPoints = json_decode(stripslashes($_POST['tPoints']));
+            $retour=array();
+            $sortie=array();            
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
+            foreach($tPoints as $iIdPoint){
+                $oPoints=model_points::getInstance()->findById( $iIdPoint );
+                $oPoints->delete();
+            }
             if(true){
                 $sortie['reponse']='OK';
             }else{
@@ -289,5 +392,57 @@ class module_parcours extends abstract_module{
             $retour['reponse']=$sortie;
             $oView->sSortie=  json_encode($retour);            
         }
+        
+        public function _ajaxShowMemberSpot() {
+            //http://benevoleomss.lan/index.php?:nav=parcours::ajaxShowMemberSpot&idPoint=2&idEvent=1
+//            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
+            if(_root::getRequest()->isPost() ){ //si ce n'est pas une requete POST on ne soumet pas
+                $oView=new _view('membres::edit');
+                
+                $oPoints=model_points::getInstance()->findById( _root::getParam('PointID' ));
+                if($oPoints->name != _root::getParam('Label' )){
+                    $oPoints->name = _root::getParam('Label' );
+                    $oPoints->save();
+                }
+                if((strlen(_root::getParam('AjoutMembre' ))!=0)&&(is_numeric(_root::getParam('AjoutMembre' )))){
+                    $oRelationpointmemb=new row_relationpointmemb;
+                    $oRelationpointmemb->membre_id=_root::getParam('AjoutMembre' );
+                    $oRelationpointmemb->point_id=_root::getParam('PointID' );
+                    $oRelationpointmemb->parcours_id=_root::getParam('ParcoursID' );                    
+                    $oRelationpointmemb->save();                    
+                }
+                foreach ($_POST as $key => $value) {
+                    if (substr($key, 0, 4)==='chk_'){
+                        $idMember= substr($key, 4);
+                        
+                        if($value!=1){
+                            $oRelation=model_relationpointmemb::getInstance()->findByIdMembre($idMember,$oPoints->parcours_id);
+                            $oRelation->delete();                           
+                        }
+                    }
+                }
+            }
+                 
+            $idPoint=_root::getParam('idPoint');            
+            $idEvent = _root::getParam('idEvent');
+            
+            $oPoints=model_points::getInstance()->findById( $idPoint );
+            if($oPoints){
+                $idParcours = $oPoints->parcours_id;
+                $tMembres=  model_relationpointmemb::getInstance()->getSelectMembersOnPoint( $idPoint, $idParcours);
+                $tFreeMembres = model_relationeventmemb::getInstance()->getListMembresLibres( $idEvent, $idParcours);
+                $oView=new _view('parcours::showPointFiche');
+                $oView->oPoints=$oPoints;
+                $oView->tMembres=$tMembres;
+                $oView->tFreeMembres=$tFreeMembres;
+            }else{
+                $oView=new _view('parcours::showPointFicheNew');
+            }
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');
+        }
+        
 }
 

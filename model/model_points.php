@@ -19,8 +19,8 @@ class model_points extends abstract_model{
 		return $this->findMany('SELECT * FROM '.$this->sTable);
 	}
 	
-	public function findByParcoursId($iParcoursId){
-		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE parcours_id=?',$iParcoursId );
+	public function findByParcoursId($iParcoursId,$typeofpointId ){
+		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE parcours_id=? AND typeofpoint_id=?',$iParcoursId,$typeofpointId );
 	}
         
         public function getSelect(){
@@ -34,8 +34,8 @@ class model_points extends abstract_model{
 		return $tSelect;
 	}
         
-        public function getSelectPoints($iParcoursId){
-            $tab=$this->findByParcoursId($iParcoursId);
+        public function getSelectPoints($iParcoursId,$typeofpointId){
+            $tab=$this->findByParcoursId($iParcoursId,$typeofpointId);
 
             $tSelect=array();
             if($tab){

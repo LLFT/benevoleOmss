@@ -113,7 +113,7 @@ class model_membres extends abstract_model{
         }
         
         public function findParticipantOfEvent($idEvent) {
-            return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `idMembre` ASC',$idEvent);
+            return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `nom` ASC, `prenom` ASC',$idEvent);
         }      
 
 
@@ -158,6 +158,22 @@ class model_membres extends abstract_model{
             
         }
         
+        public function getInfoMenber($idMember){
+                    
+                $oRow=$this->findById($idMember);
+		$tSelect=array();
+                $addresse=html_entity_decode($oRow->numero.' '.$oRow->rue.' '.$oRow->complement." \n ".$oRow->ville.' '.$oRow->codePostal,ENT_QUOTES);
+                $comment=html_entity_decode($oRow->comment,ENT_QUOTES);
+                $tSelect[]=array(
+                    "idMembre"=>"$oRow->idMembre",
+                    "nom"=>"$oRow->nom",
+                    "prenom"=>"$oRow->prenom",
+                    "adresse"=>"$addresse",
+                    "comment"=>"$comment"
+                );
+                    
+		return $tSelect;
+        }
 }
 
 class row_membres extends abstract_row{

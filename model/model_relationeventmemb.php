@@ -48,6 +48,10 @@ class model_relationeventmemb extends abstract_model{
 		return $tSelect;
 	}
         
+        /**
+         * Retourne un tableau contenant les personnes étant déclaré comme signaleur et qui sont affectés à un évènement.
+         * @return array
+         */
         public function getListOfMembresByIdEvent($uId){
 		$tab =  $this->findMany('SELECT nom, prenom, idMembre FROM omss.membres as M,'.$this->sTable.' as E WHERE E.event_id=? and M.idMembre = E.membre_id order by nom',$uId );                
                 $tSelect=array();
@@ -73,6 +77,24 @@ class model_relationeventmemb extends abstract_model{
 		}
 		return $tSelect;
         }
+        
+        
+        /**
+         * Retourne un tableau contenant les personnes étant déclaré comme signaleur mais qui ne sont pas affecté à un point.
+         * @return array
+         */
+        public function getListMembresLibres($uEventId, $uParcoursId) {
+            $tab =  $this->findMany('SELECT nom, prenom, idMembre FROM omss.membres as M,omss.relationeventmemb as E WHERE E.event_id=? and M.idMembre = E.membre_id and M.idMembre not in (SELECT membre_id FROM omss.relationpointmemb where parcours_id =?) order by nom',$uEventId, $uParcoursId );
+            
+            $tSelect=array();
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[]=array('nom'=>$oRow->nom,'prenom'=>$oRow->prenom,'idMembre'=>$oRow->idMembre);
+                    }
+		}
+		return $tSelect;
+        }
+        
         
         public function joinMemberEvent($idMembre,$idEvent){
         $this->unJoinMemberEvent($idMembre,$idEvent);

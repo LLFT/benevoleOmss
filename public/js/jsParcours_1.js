@@ -3,7 +3,6 @@
     //var iParcours_id = <?php echo $this->oParcours->iParcours_id ;?>;
     var polyLineParcours;
     var g = google.maps;
-    var iw = new g.InfoWindow();
     var map;
     //var tmpPolyLine;
     var startMarker;
@@ -12,14 +11,9 @@
     var polyPoints = [];
     var pointsArray = [];
     var toolID = 1;
-    var mylistenerTemp;
+    var mylistener;
     var bEditing = false;
     var bDelete = false;
-    var bRemoveChasuble = false;
-    var bAddChasuble = false;
-    var bVisibleChasuble = false;
-    var tPointSup =[];
-    
     
 
 
@@ -93,32 +87,261 @@ var imageNormal = {
     var btnDeleteImageUrl = {
         url: './css/images/Delete.png'      
     };
+
+//function clickRemoveBetPoint(){
+//        if(bDelete){
+//            bDelete=false;
+//        }else{
+//            bDelete=true;
+//        }
+//    }
+//
+//
+//function setmidmarkers(point) {
+//    var prevpoint = markers[markers.length-2].getPosition();
+//    var marker = new g.Marker({
+//    	position: new g.LatLng(
+//    		point.lat() - (0.5 * (point.lat() - prevpoint.lat())),
+//    		point.lng() - (0.5 * (point.lng() - prevpoint.lng()))
+//    	),
+//    	map: mapcontainerMap,
+//    	icon: imageNormalMidpoint,
+//        raiseOnDrag: false,
+//    	draggable: true
+//    });
+//    g.event.addListener(marker, "mouseover", function() {
+//    	marker.setIcon(imageNormal);
+//    });
+//    g.event.addListener(marker, "mouseout", function() {
+//    	marker.setIcon(imageNormalMidpoint);
+//    });
+//    g.event.addListener(marker, "dragend", function() {
+//    	for (var i = 0; i < midmarkers.length; i++) {
+//    		if (midmarkers[i] === marker) {
+//    			var newpos = marker.getPosition();
+//    			var startMarkerPos = markers[i].getPosition();
+//    			var firstVPos = new g.LatLng(
+//    				newpos.lat() - (0.5 * (newpos.lat() - startMarkerPos.lat())),
+//    				newpos.lng() - (0.5 * (newpos.lng() - startMarkerPos.lng()))
+//    			);
+//    			var endMarkerPos = markers[i+1].getPosition();
+//    			var secondVPos = new g.LatLng(
+//    				newpos.lat() - (0.5 * (newpos.lat() - endMarkerPos.lat())),
+//    				newpos.lng() - (0.5 * (newpos.lng() - endMarkerPos.lng()))
+//    			);
+//    			var newVMarker = setmidmarkers(secondVPos);
+//    			newVMarker.setPosition(secondVPos);//apply the correct position to the midmarker
+//    			var newMarker = setmarkers(newpos);
+//    			markers.splice(i+1, 0, newMarker);
+//    			polyLineParcours.getPath().insertAt(i+1, newpos);
+//    			marker.setPosition(firstVPos);
+//    			midmarkers.splice(i+1, 0, newVMarker);
+//    			break;
+//    		}
+//    	}
+//        polyPoints = polyLineParcours.getPath();
+//        var stringtobesaved = newpos.lat().toFixed(6) + ',' + newpos.lng().toFixed(6);
+//        pointsArray.splice(i+1,0,stringtobesaved);
+//        
+//    });
+//    return marker;
+//}
+//
+//function setmarkers(point) {
+//    var marker = new g.Marker({
+//    	position: point,
+//    	map: mapcontainerMap,
+//    	icon: imageNormal,
+//        raiseOnDrag: false,
+//    	draggable: true
+//    });
+//    g.event.addListener(marker, "mouseover", function() {
+//    	marker.setIcon(imageHover);
+//    });
+//    g.event.addListener(marker, "mouseout", function() {
+//    	marker.setIcon(imageNormal);
+//    });
+//    g.event.addListener(marker, "drag", function() {
+//        for (var i = 0; i < markers.length; i++) {
+//            if (markers[i] === marker) {
+//                polyLineParcours.getPath().setAt(i, marker.getPosition());
+//                movemidmarker(i);
+//                break;
+//            }
+//        }
+//        polyPoints = polyLineParcours.getPath();
+//        var stringtobesaved = marker.getPosition().lat().toFixed(6) + ',' + marker.getPosition().lng().toFixed(6);
+//        pointsArray.splice(i,1,stringtobesaved);
+//        
+//    });
+//    
+//    return marker;
+//}
+//
+//
+//function stopediting(){
+//for(var i = 0; i < markers.length; i++) {
+//            markers[i].setMap(null);
+//        }
+//        polyPoints = polyLineParcours.getPath();
+//        markers = [];
+//        bEditing = false;
+//        $( "span.icon32ShowPoint" ).toggleClass( "icon32ShowPointAct" );
+//}
+//
+// function editlines(){
+//    if(bEditing !== false){
+//        stopediting();
+//    }else{
+//        
+//        //On s'assure qu'une trace est bien chargée
+//        if (typeof polyLineParcours !== 'undefined') {
+//            $( "span.icon32ShowPoint" ).toggleClass( "icon32ShowPointAct" );
+//            polyPoints = polyLineParcours.getPath();
+//            if(polyPoints.length > 0){
+//                //On s'assure que cette trace est bien affichée.
+//                if(!polyLineParcours.visible){
+//                    polyLineParcours.setMap(mapcontainerMap);
+//                    mapcontainerMap.fitBounds(bounds);
+//                    polyLineParcours.setVisible(true);
+//                }
+//                if(markers.length === 0){
+//                    for(var i = 0; i < polyPoints.length; i++) {
+//                        var marker = setmarkers(polyPoints.getAt(i));
+//                        markers.push(marker);
+//    //                    if(i > 0) {
+//    //                        var midmarker = setmidmarkers(polyPoints.getAt(i));
+//    //                        midmarkers.push(midmarker);
+//    //                    }
+//                    }
+//                }
+//                bEditing = true;            
+//            }
+//        }
+//    }
+//}       
+   
+        
+
     
-    function addMarker(latlng,title,content,category,icon,currentmap,id) {
-        var marker = new google.maps.Marker({
-        map:  currentmap,
-        title : title,
-        icon:  icon,
-        position: latlng
-        });
-        if (id) marker.id = id; else marker.id = 'marker_'+gmarkers.length;
-        var html = '<div style="text-align:left;" class="infoGmaps" id= '+marker.id+'>'+content+'</div>';
-        arrayListner[id] = google.maps.event.addListener(marker, "click", function() {
-            if (infowindow) infowindow.close();
-            $.ajax({  
-                url: "index.php?:nav=parcours::ajaxShowMemberSpot&idPoint="+id+"&idEvent="+iEvent_id,
-                dataType : 'html',
-                success: function(data) {  
-                    iw.setContent('<div style="text-align:left;" class="infoGmaps">'+data+'</div>');  
-                    iw.open(map, marker.id);  
-                }  
-            });  
-        });
-        marker.mycategory = category;
-        
-        gmarkers.push(marker);
-        oms.addMarker(marker);
-        
+// function editlines(){
+//    if(bEditing !== false){
+//        
+//        polyLineParcours.setEditable(false);
+//        bEditing = false;
+//        $( "span.icon32ShowPoint" ).toggleClass( "icon32ShowPointAct" );
+//        
+//    }else{
+//        
+//        //On s'assure qu'une trace est bien chargée
+//        if (typeof polyLineParcours !== 'undefined') {
+//            $( "span.icon32ShowPoint" ).toggleClass( "icon32ShowPointAct" );
+//            polyLineParcours.setEditable(true);
+//            bEditing = true;
+//            addDeleteButton(polyLineParcours, 'http://i.imgur.com/RUrKV.png');
+//
+//        }
+//    }
+//}       
+//
+//function addDeleteButton(poly, imageUrl) {
+//  var path = poly.getPath();
+//  path["btnDeleteClickHandler"] = {};
+//  path["btnDeleteImageUrl"] = imageUrl;
+//  
+//  google.maps.event.addListener(poly.getPath(),'set_at',pointUpdated);
+//  google.maps.event.addListener(poly.getPath(),'insert_at',pointUpdated);
+//}
+//
+//function pointUpdated(index) {
+//  var path = this;
+//  var btnDelete = getDeleteButton(path.btnDeleteImageUrl);
+//  
+//  if(btnDelete.length === 0) 
+//  {
+//    var undoimg = $("img[src$='https://maps.gstatic.com/mapfiles/undo_poly.png']");
+//    
+//    undoimg.parent().css('height', '21px !important');
+//    undoimg.parent().parent().append('<div style="overflow-x: hidden; overflow-y: hidden; position: absolute; width: 30px; height: 27px;top:21px;"><img src="' + path.btnDeleteImageUrl + '" class="deletePoly" style="height:auto; width:auto; position: absolute; left:0;"/></div>');
+//    
+//    // now get that button back again!
+//    btnDelete = getDeleteButton(path.btnDeleteImageUrl);
+//    btnDelete.hover(function() { $(this).css('left', '-30px'); return false;}, 
+//                    function() { $(this).css('left', '0px'); return false;});
+//    btnDelete.mousedown(function() { $(this).css('left', '-60px'); return false;});
+//  }
+//  
+//  // if we've already attached a handler, remove it
+//  if(path.btnDeleteClickHandler) 
+//    btnDelete.unbind('click', path.btnDeleteClickHandler);
+//    
+//  // now add a handler for removing the passed in index
+//  path.btnDeleteClickHandler = function() {
+//    path.removeAt(index); 
+//    return false;
+//  };
+//  btnDelete.click(path.btnDeleteClickHandler);
+//}
+//
+//function getDeleteButton(imageUrl) {
+//  return  $("img[src$='" + imageUrl + "']");
+//}
+//    
+     
+
+    
+    
+
+    function addRelais(){
+        showCategory('relaisSpot');
+        if(polyLineParcours.get('clickable')){
+            polyLineParcours.setOptions({clickable: false});
+            $("button#ajoutRelais").text('Ajouter un relais');
+            
+            if ($("button#btnRelais").text()=== 'Afficher les relais'){
+                $("button#btnRelais").text('Masquer les relais');
+            }
+            g.event.clearListeners(polyLineParcours, 'click');
+        }else{
+            $("button#ajoutRelais").text('Arràªter d\'ajouter des relais');
+            polyLineParcours.setOptions({clickable: true});                
+            g.event.addListener(polyLineParcours, 'click', function(event){
+                var Lat=event.latLng.lat();
+                var Lng=event.latLng.lng();
+                var relaisPos = new g.LatLng(Lat, Lng);
+                var address=geocodeAddress(relaisPos);
+                var content = 'Latitude: ' + Lat + '<br />Longitude: ' + Lng + '<br />Adresse: '+ address;
+                    content += '<br /><input type = "button" value = "Delete" onclick = "DeleteMarker(\'marker_'+gmarkers.length+'\');" />';
+                addMarker(relaisPos,'Position '+gmarkers.length,content,'relaisSpot',markerRelais,mapcontainerMap)
+                geocodePosition(relaisPos);                                        
+            });
+        }        
+    }
+    
+    function addSpot(){
+        showCategory('chasubleSpot');
+        if(polyLineParcours.get('clickable')){
+            polyLineParcours.setOptions({clickable: false});
+            $("button#ajoutSign").text('Ajouter un signaleur');            
+            if ($("button#btnSignaleur").text()=== 'Afficher les signaleurs'){
+                $("button#btnSignaleur").text('Masquer les signaleurs');
+            }
+            g.event.clearListeners(polyLineParcours, 'click');
+        }else{
+                $("button#ajoutSign").text('Arràªter d\'ajouter des signaleur');
+            
+            polyLineParcours.setOptions({clickable: true});                
+            g.event.addListener(polyLineParcours, 'click', function(event){
+                var Lat=event.latLng.lat();
+                var Lng=event.latLng.lng();
+                var signaleurPos = new g.LatLng(Lat, Lng);
+                var address=geocodeAddress(signaleurPos);
+                var content = 'Latitude: ' + Lat + '<br />Longitude: ' + Lng + '<br />Adresse: '+ address;
+                    content += '<br /><input type = "button" value = "Delete" onclick = "DeleteMarker(\'marker_'+gmarkers.length+'\');" />';
+                addMarker(signaleurPos,'Position '+gmarkers.length,content,'chasubleSpot',markerChasuble,mapcontainerMap)
+                geocodePosition(signaleurPos);                                        
+            });
+        }
     }
     
     function clickShowVolon(){
@@ -133,7 +356,6 @@ var imageNormal = {
         //S'ils ne sont pas présent on interroge le serveur    
         if (!arr) {
             getVolon();
-            
         }else{
             toggleHideShowMarker(catego);
         }
@@ -184,16 +406,7 @@ var imageNormal = {
             toggleHideShowMarker(catego);
         }  
         
-        if(bVisibleChasuble){
-            bVisibleChasuble=false;
-            $( "span.icon32ShowSignaleurs" ).removeClass( "icon32ShowSignaleursAct" );
-        }else{
-            bVisibleChasuble=true;
-            $( "span.icon32ShowSignaleurs" ).addClass( "icon32ShowSignaleursAct" );
-        }
-            
-        
-       
+       $( "span.icon32ShowSignaleurs" ).toggleClass( "icon32ShowSignaleursAct" );
                    
     }
     
@@ -254,40 +467,29 @@ var imageNormal = {
     
     
    
-    /*
-     * Interroge la Base de donnée afin d'obtenir les positions de membres participant à l'évènement
-     * 
-     */
+    
     function getVolon(){
         $.ajax({
             dataType: "json",
-            url: "index.php?:nav=parcours::ajaxGetPositionMembers&iParcoursId="+iParcours_id,
+            url: "index.php?:nav=parcours::ajaxGetPositionMember&iParcoursId="+iParcours_id,
             success: function(data) {
                     if(data.etat==='OK'){                           
-                    listMembers = data.reponse;
-                    for(var i = 0; i < listMembers.length; i++){
-                        idMem = listMembers[i].idMembre;
-
-                        latlng = new g.LatLng(listMembers[i].lat,listMembers[i].lng);
-                        icon = markerHome;
-                        category = 'markerHome';
-                        currentmap = mapcontainerMap;
-                        id = category +"_"+ listMembers[i].idMembre;
-                        title = id;  
-                        content = listMembers[i].nom +' '+ listMembers[i].prenom + '( '+idMem+' )';
-
-                        addMarker(latlng,title,content,category,icon,currentmap,id);
-                        
+                       listMembers = data.reponse;
+                       for(var i = 0; i < listMembers.length; i++){
+                            id = listMembers[i].idMembre;
+                            title = id;            
+                            latlng = new g.LatLng(listMembers[i].lat,listMembers[i].lng);
+                            icon = markerHome;
+                            currentmap = mapcontainerMap;
+                            id = listMembers[i].idMembre;
+                            content = listMembers[i].nom +' '+ listMembers[i].prenom + '( '+id+' )';
+                            category = 'markerHome';
+                            addMarker(latlng,title,content,category,icon,currentmap,id);
+                        }                       
                     }
-
-                    
                 }
-                //On affiche le panneau seulement lorsque tous les Marker on été créé
-                ActiverSelect();
-            }
-        });
+            });
     }
-    
     
     function getPoints(typeofpoint){
         switch(typeofpoint){
@@ -333,7 +535,7 @@ var imageNormal = {
                         latlng = new g.LatLng(listPoints[i].lat,listPoints[i].lng);            
                         currentmap = mapcontainerMap;
                         id = listPoints[i].idPoint;
-                        content = '';
+                        content = id;
                         addMarker(latlng,title,content,category,icon,currentmap,id);                        
                     }
                     
@@ -383,39 +585,16 @@ var imageNormal = {
     
 /*Les Actions Sur la Carte*/	
 	
-    function clickAddRelais(){        
+	function clickAddRelais(){        
        $( "span.icon32RelaisNew" ).toggleClass( "icon32RelaisNewAct" );
 		activeLogo();
 	   $( "span.icon32RelaisNew" ).addClass("activ");
     }
-    function clickAddChasuble(){
-        if (typeof polyLineParcours !== 'undefined') {
-            if(polyLineParcours.visible){
-                if(bVisibleChasuble){
-                    if(bAddChasuble){
-                        bAddChasuble=false;
-                        addSpot();
-                        $( "span.icon32ChasubleNew" ).removeClass( "icon32ChasubleNewAct" );
-                        $( "span.icon32ChasubleNew" ).removeClass("activ");
-                        
-                    }else{
-                        bAddChasuble=true;
-                        addSpot();
-                        $( "span.icon32ChasubleNew" ).addClass( "icon32ChasubleNewAct" );
-                        $( "span.icon32ChasubleNew" ).addClass("activ");
-                        
-                    }		   
-                }else{
-                    alert('Afficher en premier les Signaleurs');
-                }	
-            }else{
-            alert('Afficher en premier le parcours');
-        }
-        }else{
-            alert('Afficher en premier le parcours');
-        }
-      }
-                
+	function clickAddChasuble(){        
+		   $( "span.icon32ChasubleNew" ).toggleClass( "icon32ChasubleNewAct" );
+		   activeLogo();
+		   $( "span.icon32ChasubleNew" ).addClass("activ");
+		}
 	function clickAddPm(){        
 		$( "span.icon32PmNew" ).toggleClass( "icon32PmNewAct" );
 		activeLogo();
@@ -439,27 +618,12 @@ var imageNormal = {
 		$( "span.icon32RelaisDel" ).addClass("activ");
 		                  
 		}
-	function clickRemoveChasuble(){
-            if(bVisibleChasuble){            
-                
-                if(bRemoveChasuble){
-                    bRemoveChasuble=false;
-                    $( "span.icon32ChasubleDel" ).removeClass( "icon32ChasubleDelAct" );
-                    $( "span.icon32ChasubleDel" ).removeClass("activ");
-                    RemoveChasuble();
-                }else{
-                    bRemoveChasuble=true;
-                    $( "span.icon32ChasubleDel" ).addClass( "icon32ChasubleDelAct" );
-                    $( "span.icon32ChasubleDel" ).addClass("activ");
-                    RemoveChasuble();
-                }	
-		//activeLogo();
-		
-            }else{
-                alert('Afficher en premier les Signaleurs');
-            }
+	function clickRemoveChasuble(){        
+		$( "span.icon32ChasubleDel" ).toggleClass( "icon32ChasubleDelAct" );
+		activeLogo();
+		$( "span.icon32ChasubleDel" ).addClass("activ");
 		                  
-        }
+		}
 	function clickRemovePm(){        
 		$( "span.icon32PmDel" ).toggleClass( "icon32PmDelAct" );
 		activeLogo();
@@ -507,7 +671,7 @@ var imageNormal = {
 		}
                 
         /*
-         * Désactive les Boutons qui ne peuvent/doivent pas être actifs ensemble
+         * Désactive les Boutons qui ne peuvent être actifs ensemble
          * @returns {undefined}
          */
 	function activeLogo(){
@@ -524,207 +688,22 @@ var imageNormal = {
 		$( "span.activ").removeClass("activ");
 		
 	}
-    /*
-     * Afficher le Panneau Latéral Droit
-     * Ajouter l'action de relation entre les marker et le select
-     */   
+       
     function ActiverSelect(){
-      
-        for (var i=0; i<gmarkers.length; i++) {            
-            if (gmarkers[i].mycategory === 'markerHome') {  
-                
-                gmarkers[i].addListener('click', function() {
-                    idMember = this.id.substring(11);                    
-                    $('#ListName option[value="'+idMember+'"]').prop('selected', true);
-                    showMarkerVolon();
-                });
-            }
-        }
-        $('#rightcolumn').show();
-        $('#AdresseTextArea').val('');
-        $('#CommentTextArea').val('');
         $("#ListName").removeAttr('disabled');
         $("#CommentTextArea").removeAttr('disabled');
         $('#ListName').change(function() {
-            showMarkerVolon();
-        });
-        
-        
-    }
-    
-    // Affiche et centre le volontaire choisie dans le select, ainsi que sont InfoView.
-   
-    function showMarkerVolon() {
-        var idMember = $("#ListName option:selected").val();
-        $("#ListName option:selected").dblclick(function(){
-            $("#ListName option:selected").removeAttr('selected');
-            hideMarkerVolon(idMember);
-        });
-        
-        $.ajax({
-        dataType: "json",
-        url: "index.php?:nav=parcours::ajaxGetInfoMember&idMember="+idMember,
-        success: function(data) {
-                if(data.etat==='OK'){
-                    var detail = data.reponse[0];
-                    html = detail.nom +' '+ detail.prenom + '( '+detail.idMembre+' )';
-                    $('#AdresseTextArea').val(detail.adresse);
-                    $('#CommentTextArea').val(detail.comment);
-                    for (var i=0; i<gmarkers.length; i++) {
-                        if (gmarkers[i].id == 'markerHome_'+idMember) {
-                            mapcontainerMap.setCenter(gmarkers[i].position);
-                            if (infowindow) infowindow.close();
-                            infowindow = new google.maps.InfoWindow({content: html,disableAutoPan: false});
-                            infowindow.open(currentmap,gmarkers[i]);
-                        }
-
-                    }
-                }
-            }
-        });
-    }
-  
-    function RemoveChasuble(){
-        if(bRemoveChasuble){
-                suppClick('markerChasuble'); //On supprime tout les évènements click sur les Marker de categorie markerChasuble
-                for (var i=0; i<gmarkers.length; i++) {            
-                    if (gmarkers[i].mycategory === 'markerChasuble') {  //Pour chaque markerChasuble on ajoute une nouvelle action Click
-                        gmarkers[i].addListener('click', function() {
-                            tPointSup.push(this.id.substring(15)); //On capitalise les id des points supprimés.
-                            this.setMap(null);  //On masque le Marker
-                            gmarkers.splice(this.id,1); //On le supprime du array des marker                            
-                        });
-                    }
-                }
-            }else{                
-                suppClick('markerChasuble');//On supprime tout les évènements click sur les Marker de categorie markerChasuble
-                sendRemovePoint();//On lance la purge en base.
-            }        
+            var val = $("#ListName option:selected").val();
             
-    }
-    
-    function suppClick(category){
-        for (var i=0; i<gmarkers.length; i++) {            
-            if (gmarkers[i].mycategory === category) {
-                g.event.clearListeners(gmarkers[i], 'click');                        
-            }
-        }
-    }
-    
-    function hideMarkerVolon(idMember) {
-        //hideCategory('markerHome');
-        id = 'markerHome_'+idMember;
+            showMarkerVolon(val);
+            
+        });
+}
+
+    function showMarkerVolon(id) {
         for (var i=0; i<gmarkers.length; i++) {
             if (gmarkers[i].id == id) {
-                gmarkers[i].setVisible(false);
+                gmarkers[i].setVisible(true);
             }
         }
-        $('#AdresseTextArea').val('');
-        $('#CommentTextArea').val('');
-    }
-    
-    function centerOnMarkerHome(){        
-        var idMember = $("#ListName option:selected").val();
-        if ((typeof idMember !== 'undefined')){
-            for (var i=0; i<gmarkers.length; i++) {
-                if (gmarkers[i].id == 'markerHome_'+idMember) {
-                    mapcontainerMap.setCenter(gmarkers[i].position);
-                    gmarkers[i].setVisible(true);
-                }
-
-            }
-        }
-    }
-    
-    
- //   Actions d'ajout de Marker
-
-    function addRelais(){
-        showCategory('relaisSpot');
-        if(polyLineParcours.get('clickable')){
-            polyLineParcours.setOptions({clickable: false});
-            $("button#ajoutRelais").text('Ajouter un relais');
-            
-            if ($("button#btnRelais").text()=== 'Afficher les relais'){
-                $("button#btnRelais").text('Masquer les relais');
-            }
-            g.event.clearListeners(polyLineParcours, 'click');
-        }else{
-            $("button#ajoutRelais").text('Arràªter d\'ajouter des relais');
-            polyLineParcours.setOptions({clickable: true});                
-            g.event.addListener(polyLineParcours, 'click', function(event){
-                var Lat=event.latLng.lat();
-                var Lng=event.latLng.lng();
-                var relaisPos = new g.LatLng(Lat, Lng);
-                var content = 'Latitude: ' + Lat + '<br />Longitude: ' + Lng ;
-                    content += '<br /><input type = "button" value = "Delete" onclick = "DeleteMarker(\'marker_'+gmarkers.length+'\');" />';
-                addMarker(relaisPos,'Position '+gmarkers.length,content,'relaisSpot',markerRelais,mapcontainerMap)
-                geocodePosition(relaisPos);                                        
-            });
-        }        
-    }
-    
-    function addSpot(){
-        
-        if(polyLineParcours.get('clickable')){
-            polyLineParcours.setOptions({clickable: false});
-            g.event.clearListeners(polyLineParcours, 'click');
-        }else{
-            polyLineParcours.setOptions({clickable: true});                
-            g.event.addListener(polyLineParcours, 'click', function(event){
-                var Lat=event.latLng.lat();
-                var Lng=event.latLng.lng();
-                var latlng = new g.LatLng(Lat, Lng);
-                var title = 'Position '+gmarkers.length;                
-                var category= markerChasuble + gmarkers.length;
-                var icon = markerChasuble;
-                var id = gmarkers.length;
-                var currentmap = mapcontainerMap;
-                var content = '<div id="TabOfSpot"  ><table><tr><th class="Editable" ondblclick="editNameOfSpot();">Position : 2</th></tr><tr><td>Marcel Buttner</td></tr></table></div>';
-                
-                $.ajax({
-                    type: "POST",
-                    url: "index.php?:nav=parcours::ajaxAddPoints",
-                    data: {sLatVal : Lat,
-                            sLngVal: Lng,
-                            iParcours_id: iParcours_id,
-                            iTypeofpoint_id: 1 
-                            }, 
-                    cache: false,
-                    success: function(data){
-                        id=data.idPoint;
-                        addMarker(latlng,title,content,category,icon,currentmap,id);
-                    }
-                });
-                
-                                  
-            });
-        }
-    }
-    
-    function sendRemovePoint(){
-        var jsonString = JSON.stringify(tPointSup);
-        $.ajax({
-            type: "POST",
-            url: "index.php?:nav=parcours::ajaxDelPoints",
-            data: {tPoints : jsonString}, 
-            cache: false,
-
-            success: function(){
-                tPointSup = [];
-            }
-        });
-    }
-    
-    function editNameOfSpot(){
-        var currentEle = $("#TabOfSpot .Editable");
-		value = currentEle.text();
-        $(currentEle).html('<input class="thVal" type="text" value="' + value + '" />');
-		$(".thVal").focus();
-		$(".thVal").keyup(function (event) {
-		if (event.keyCode == 13) {
-				  $(currentEle).html($(".thVal").val().trim());
-			  }
-		  });
-        
     }
