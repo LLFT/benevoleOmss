@@ -203,9 +203,16 @@ class module_membres extends abstract_module{
                         _root::redirect('default::index');
                     }
             $oMembres=model_membres::getInstance()->findAllLocalisable();
-            $nbOfLocalization = $this->findLocalisationForManyMembers($oMembres);
-            _root::redirect('membres::list',array('nbFound'=>$nbOfLocalization));
-        }        
+            $tLocalizationFail = $this->findLocalisationForManyMembers($oMembres);
+            if (count($tLocalizationFail)>1) {
+                $oView=new _view('membres::rapport');            
+                $oView->tLocalizationFail=$tLocalizationFail; 
+                $this->oLayout->add('main',$oView);
+            }else{
+                _root::redirect('membres::list');
+            }
+        }    
+        
         public function _undelete() {
             $iId= _root::getParam('id');
             $oMembre=model_membres::getInstance()->findById($iId );
@@ -394,19 +401,26 @@ class module_membres extends abstract_module{
         private function findLocalisationForOneMember($oMembre){
             $sAdressPostal = $oMembre->numero.','.$oMembre->rue.','.$oMembre->ville.','.$oMembre->codePostal;
             $oGoogleGeoCode = new my_GoogleMapAPI();
+            $retour=array();
+            
             $tCoord = $oGoogleGeoCode->geocoding($sAdressPostal);
-            $this->setCoordInTable($oMembre->idMembre, $tCoord);
+            if($tCoord){
+                $this->setCoordInTable($oMembre->idMembre, $tCoord);
+            }else{
+                $retour[]=array($oMembre->idMembre,$oMembre->nom,$oMembre->prenom);
+            }
+            return $retour;
         }
 
         private function findLocalisationForManyMembers($oMembres){
-            ini_set('max_execution_time', 0);
-            $i=0;
+            ini_set('max_execution_time', 0);            
+            $retour=array();
             foreach ($oMembres as $oMembre) {
-                $this->findLocalisationForOneMember($oMembre);
-                $i++;
+                $retour[]=$this->findLocalisationForOneMember($oMembre);
+                
             }
             ini_restore('max_execution_time');
-            return $i;
+            return $retour;
         }   
         
         
