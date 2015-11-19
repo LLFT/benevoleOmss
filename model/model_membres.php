@@ -112,9 +112,15 @@ class model_membres extends abstract_model{
             return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE (`coord` IS NULL or `coord`=0) and `rue` != "" and `ville` != "" AND `active`=1');
         }
         
+
         public function findParticipantOfEvent($idEvent) {
             return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `nom` ASC, `prenom` ASC',$idEvent);
         }      
+//=======
+//        public function findCoordParticipantOfEvent($idEvent) {
+//            return $this->findMany('SELECT m.idMembre, nom, prenom, lat, lng FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.idMembre and r.idEvent=?',$idEvent);
+//        }
+//>>>>>>> Stashed changes
 
 
 //        public function findDistinctAlpha() {
@@ -174,6 +180,20 @@ class model_membres extends abstract_model{
                     
 		return $tSelect;
         }
+        
+//        public function getCoordOfParticipantOfEvent($idEvent) {
+//            $tab=$this->findCoordParticipantOfEvent($idEvent);
+//		$tSelect=array();
+//                
+//		if($tab){
+//                    foreach($tab as $oRow){
+//                            $tSelect[]=array("idMembre"=>"$oRow->idMembre" ,"nom"=>"$oRow->nom","prenom"=>"$oRow->prenom","lat"=>"$oRow->lat","lng"=>"$oRow->lng");
+//                    }
+//		}
+//		return $tSelect;
+//            
+//        }
+        
 }
 
 class row_membres extends abstract_row{

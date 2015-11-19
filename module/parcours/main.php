@@ -116,6 +116,7 @@ class module_parcours extends abstract_module{
                 $gmap->generate();
                 $oView->tMembresCoord=$tMembresCoord;
                 $oView->oModuleGoogleMap=$gmap;
+
 		$this->oLayout->add('main',$oView);
 	}
 

@@ -86,5 +86,6 @@
 <div class="col-sm-offset-1 btn-group">
         <a class="btn btn-info" href="<?php echo $this->getLink('events::show',array('id'=>_root::getParam('idEvent')))?>">Retour à l'évènement</a>
 </div>
+
  
 <script type="text/javascript" src="./js/jsParcours.js"></script>

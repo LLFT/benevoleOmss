@@ -219,7 +219,20 @@ class module_membres extends abstract_module{
             $oMembre->active=1;
             $oMembre->saveF();
             _root::redirect('membres::show',array('id'=>$iId));
+//=======
+//            $oGoogleGeoCode = new my_googleGeocode;
+//            $nbOfLocalization = $oGoogleGeoCode->findLocalisationForManyMembers($oMembres);
+//            _root::redirect('membres::list',array('nbFound'=>$nbOfLocalization));
         }
+	
+//        
+//        public function _reIndexAllMembers() {
+//            $oMenbres=  model_membres::getInstance()->orderByName();
+//            $oToolsOMSS = new my_toolsOmss;
+//            $nbOfReindexion = $oToolsOMSS->reIndexMembers($oMenbres);
+//            _root::redirect('membres::list',array('nbFound'=>$nbOfReindexion));
+//
+//        }
    
         
 	public function _delete(){
@@ -380,8 +393,8 @@ class module_membres extends abstract_module{
 	public function after(){
 		$this->oLayout->show();
 	}
-        
-        private function setCoordInTable($oMembreID,$tCoord=NULL){
+ 
+        private function setCoordInTable($uMembreID,$tCoord=NULL){
             if(!empty($tCoord)){
                 if(count($tCoord)>1){
                     $oMembreEdit = model_membres::getInstance()->findById($oMembreID);
@@ -391,7 +404,7 @@ class module_membres extends abstract_module{
                     $oMembreEdit->modifier=date('Y-m-d H:i:s',time());
                     $oMembreEdit->saveF();
                 }else{
-                    echo 'Problème avec le membre dont l\'ID est '.$oMembreID."\n\r . Le géocoadage multiple est limité par Google 5 requetes/sec.(OVER_QUERY_LIMIT) \n\r Je vous invite à recommencer plus tard.";
+                    echo 'Problème avec le membre dont l\'ID est '.$uMembreID."\n\r . Le géocoadage multiple est limité par Google 5 requetes/sec.(OVER_QUERY_LIMIT) \n\r Je vous invite à recommencer plus tard.";
                     var_dump($tCoord);
                     die();
                 }
@@ -423,7 +436,7 @@ class module_membres extends abstract_module{
             return $retour;
         }   
         
-        
+
 //Les appels AJAX         
         /*
          * Déclare le membre comme étant un signaleur.
@@ -438,7 +451,7 @@ class module_membres extends abstract_module{
             $this->oLayout->add('main',$oView);
             $this->oLayout->setLayout('ajax');
             $sortie['reponse']='NOK';
-            
+
             $oMembres=model_membres::getInstance()->findById( _root::getParam('id',null) );
             $oMembres->modifier=date('Y-m-d H:i:s',time());
             $oMembres->owner=_root::getAuth()->getAccount()->idAccount;
@@ -454,12 +467,15 @@ class module_membres extends abstract_module{
             $oMembres->saveF();
             $retour['reponse']=$sortie;
             $oView->sSortie=  json_encode($retour);
-
+            
+            $oMembres->saveF();
+            return true;
         }
         /*
-         * Inscrit au Désincrit un membre d'un évènement
+         * Inscrit ou Désincrit un membre d'un évènement
          */
         public function _ajaxJoinEventMembre() {
+
             if(!_root::getACL()->can('ACCESS','membres::ajaxJoinEventMembre')){
                         _root::redirect('default::index');
                     }
@@ -477,10 +493,7 @@ class module_membres extends abstract_module{
                 $action=_root::getParam('action');
                 $idMembre = _root::getParam('idMembre');
                 $idEvent =_root::getParam('idEvent');
-            }
-            
-            
-            
+            } 
             
             if($action === 'join'){
                 model_relationeventmemb::getInstance()->joinMemberEvent($idMembre,$idEvent);
@@ -506,6 +519,15 @@ class module_membres extends abstract_module{
             $oView->sSortie=  json_encode($retour);
            
         }        
+
+        /*
+         * Obtenir les coordonées de tous les membres participant à un evenement.
+         */
+        public function _ajaxGetEventMembre() {
+            $oMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+            return json_encode($oMembresCoord);
+        }
+        
 	
 }
 
