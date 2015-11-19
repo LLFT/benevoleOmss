@@ -160,6 +160,9 @@ height: 16px;
 .icon32ShowPointAct{background-position: -32px -160px;}
 .icon32ShowBenev{background-position: -64px -160px;}
 .icon32ShowBenevAct{background-position: -96px -160px;}
+.icon32ShowBenevFree{background-position: -64px -352px;}
+.icon32ShowBenevFreeAct{background-position: -96px -352px;}
+
 .icon32AddLastPoint{background-position: 0px -192px;}
 .icon32AddLastPointAct{background-position: -32px -192px;}
 .icon32AddBetweenPoint{background-position: 0px -224px;}

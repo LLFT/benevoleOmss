@@ -94,7 +94,7 @@ var imageNormal = {
         url: './css/images/Delete.png'      
     };
     
-    function addMarker(latlng,title,content,category,icon,currentmap,id) {
+    function addMarkerSub(latlng,title,content,category,icon,currentmap,id) {
         var marker = new google.maps.Marker({
         map:  currentmap,
         title : title,
@@ -138,7 +138,26 @@ var imageNormal = {
             toggleHideShowMarker(catego);
         }
         $( "span.icon32ShowBenev" ).toggleClass( "icon32ShowBenevAct" );
-    }   
+    }
+    
+    function clickShowFreeVolon(){
+        var arr = false;
+        var catego = "markerHomeFree";
+        // On vérifie que le tableau gmarkers ne contienne pas déjà les Marker "markerHome"
+        jQuery.map(gmarkers,function (marker) {
+            if (marker.mycategory === catego) {
+                arr = true;
+            }
+        });            
+        //S'ils ne sont pas présent on interroge le serveur    
+        if (!arr) {
+            getFreeVolon();
+            
+        }else{
+            toggleHideShowMarker(catego);
+        }
+        $( "span.icon32ShowBenevFree" ).toggleClass( "icon32ShowBenevFreeAct" );
+    }  
     
     function clickShowParcours(){
        if (typeof polyLineParcours !== 'undefined') {
@@ -287,7 +306,41 @@ var imageNormal = {
             }
         });
     }
-    
+  
+/*
+     * Interroge la Base de donnée afin d'obtenir les positions de membres participant à l'évènement
+     * 
+     */
+    function getFreeVolon(){
+        $.ajax({
+            dataType: "json",
+            url: "index.php?:nav=parcours::ajaxGetPositionAllMembersFree&iParcoursId="+iParcours_id,
+            success: function(data) {
+                    if(data.etat==='OK'){                           
+                    listMembers = data.reponse;
+                    for(var i = 0; i < listMembers.length; i++){
+                        idMem = listMembers[i].idMembre;
+
+                        latlng = new g.LatLng(listMembers[i].lat,listMembers[i].lng);
+                        icon = markerHome;
+                        category = 'markerHomeFree';
+                        currentmap = mapcontainerMap;
+                        id = category +"_"+ listMembers[i].idMembre;
+                        title = id;  
+                        content = listMembers[i].nom +' '+ listMembers[i].prenom + '( '+idMem+' )';
+
+                        addMarker(latlng,title,content,category,icon,currentmap,id);
+                        
+                    }
+
+                    
+                }
+                //On affiche le panneau seulement lorsque tous les Marker on été créé
+                ActiverSelect();
+            }
+        });
+    }
+  
     
     function getPoints(typeofpoint){
         switch(typeofpoint){

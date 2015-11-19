@@ -741,31 +741,31 @@ class My_GoogleMapAPI {
         $this->content .= "\t " . '}' . "\n";
 
             // JS public function to add a  marker
-//        $this->content .= "\t " . 'function addMarker(latlng,title,content,category,icon,currentmap,id) {' . "\n";
-//        $this->content .= "\t\t " . 'var marker = new google.maps.Marker({' . "\n";
-//        $this->content .= "\t\t\t " . 'map:  currentmap,' . "\n";
-//        $this->content .= "\t\t\t " . 'title : title,' . "\n";
-//        $this->content .= "\t\t\t " . 'icon:  icon,' . "\n";
-//        $this->content .= "\t\t\t " . 'position: latlng' . "\n";
-//        $this->content .= "\t\t " . '});' . "\n";        
-//        $this->content .= "\t\t " . 'var html = \'<div style="text-align:left;" class="infoGmaps">\'+content+\'</div>\';' . "\n";
-//        $this->content .= "\t\t " . 'arrayListner[id] = google.maps.event.addListener(marker, "click", function() {' . "\n";
-//        $this->content .= "\t\t\t " . 'if (infowindow) infowindow.close();' . "\n";
-//        $this->content .= "\t\t\t " . 'infowindow = new google.maps.InfoWindow({content: html,disableAutoPan: false});' . "\n";
-//        $this->content .= "\t\t\t " . 'infowindow.open(currentmap,marker);' . "\n";
-//
-//        // Enable the zoom when you click on a marker
-//        if ($this->enableWindowZoom == TRUE) {
-//            $this->content .= "\t\t\t" . 'currentmap.setCenter(new google.maps.LatLng(latlng.lat(),latlng.lng()),' . $this->infoWindowZoom . ');' . "\n";
-//        }
-//
-//        $this->content .= "\t\t" . '});' . "\n";
-//        $this->content .= "\t\t" . 'marker.mycategory = category;' . "\n";
-//        $this->content .= "\t\t" . 'if (id) marker.id = id; else marker.id = \'marker_\'+gmarkers.length;' . "\n";
-//        $this->content .= "\t\t" . 'gmarkers.push(marker);' . "\n";
-//        $this->content .= "\t\t" . 'oms.addMarker(marker);' . "\n";
-//        //$this->content .= "\t\t" . 'marker.setVisible(false);' . "\n";        
-//        $this->content .= "\t" . '}' . "\n";
+        $this->content .= "\t " . 'function addMarker(latlng,title,content,category,icon,currentmap,id) {' . "\n";
+        $this->content .= "\t\t " . 'var marker = new google.maps.Marker({' . "\n";
+        $this->content .= "\t\t\t " . 'map:  currentmap,' . "\n";
+        $this->content .= "\t\t\t " . 'title : title,' . "\n";
+        $this->content .= "\t\t\t " . 'icon:  icon,' . "\n";
+        $this->content .= "\t\t\t " . 'position: latlng' . "\n";
+        $this->content .= "\t\t " . '});' . "\n";        
+        $this->content .= "\t\t " . 'var html = \'<div style="text-align:left;" class="infoGmaps">\'+content+\'</div>\';' . "\n";
+        $this->content .= "\t\t " . 'arrayListner[id] = google.maps.event.addListener(marker, "click", function() {' . "\n";
+        $this->content .= "\t\t\t " . 'if (infowindow) infowindow.close();' . "\n";
+        $this->content .= "\t\t\t " . 'infowindow = new google.maps.InfoWindow({content: html,disableAutoPan: false});' . "\n";
+        $this->content .= "\t\t\t " . 'infowindow.open(currentmap,marker);' . "\n";
+
+        // Enable the zoom when you click on a marker
+        if ($this->enableWindowZoom == TRUE) {
+            $this->content .= "\t\t\t" . 'currentmap.setCenter(new google.maps.LatLng(latlng.lat(),latlng.lng()),' . $this->infoWindowZoom . ');' . "\n";
+        }
+
+        $this->content .= "\t\t" . '});' . "\n";
+        $this->content .= "\t\t" . 'marker.mycategory = category;' . "\n";
+        $this->content .= "\t\t" . 'if (id) marker.id = id; else marker.id = \'marker_\'+gmarkers.length;' . "\n";
+        $this->content .= "\t\t" . 'gmarkers.push(marker);' . "\n";
+        $this->content .= "\t\t" . 'oms.addMarker(marker);' . "\n";
+        //$this->content .= "\t\t" . 'marker.setVisible(false);' . "\n";        
+        $this->content .= "\t" . '}' . "\n";
 
         // JS public function to add a geocode marker
         $this->content .= "\t" . 'function geocodeMarker(address,title,content,category,icon) {' . "\n";

@@ -108,7 +108,7 @@ class module_events extends abstract_module{
             $sFileName ="";
             $idEvent = _root::getParam('idEvent');
             $nomEvent = _root::getParam('nomEvent');
-            $tMembres=model_membres::getInstance()->findParticipantOfEvent($idEvent);
+            $tMembres=model_membres::getInstance()->findParticipantInEvent($idEvent);
             $sFileName = 'ExportSignaleurs_'.$nomEvent.'_'.$sDate.'.csv';
             
             $oView=new _view('membres::exportCSV');

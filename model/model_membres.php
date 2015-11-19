@@ -113,9 +113,13 @@ class model_membres extends abstract_model{
         }
         
 
-        public function findParticipantOfEvent($idEvent) {
+        public function findParticipantInEvent($idEvent) {
             return $this->findMany('SELECT * FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.membre_id and r.event_id=? ORDER BY `nom` ASC, `prenom` ASC',$idEvent);
-        }      
+        }
+        
+        public function findParticipantNotInEvent($idEvent) {
+            return $this->findMany('SELECT * FROM omss.membres WHERE idMembre not in (SELECT membre_id FROM omss.relationeventmemb where event_id =?) ORDER BY `nom` ASC, `prenom` ASC',$idEvent);
+        }
 //=======
 //        public function findCoordParticipantOfEvent($idEvent) {
 //            return $this->findMany('SELECT m.idMembre, nom, prenom, lat, lng FROM omss.membres as m, omss.relationeventmemb as r WHERE m.idMembre=r.idMembre and r.idEvent=?',$idEvent);
@@ -151,8 +155,21 @@ class model_membres extends abstract_model{
         }
         
        
-        public function getCoordOfParticipantOfEvent($idEvent) {
-            $tab=$this->findParticipantOfEvent($idEvent);
+        public function getCoordOfParticipantInEvent($idEvent) {
+            $tab=$this->findParticipantInEvent($idEvent);
+		$tSelect=array();
+                
+		if($tab){
+                    foreach($tab as $oRow){
+                            $tSelect[]=array("idMembre"=>"$oRow->idMembre" ,"nom"=>"$oRow->nom","prenom"=>"$oRow->prenom","lat"=>"$oRow->lat","lng"=>"$oRow->lng");
+                    }
+		}
+		return $tSelect;
+            
+        }
+        
+               public function getCoordOfParticipantNotInEvent($idEvent) {
+            $tab=$this->findParticipantNotInEvent($idEvent);
 		$tSelect=array();
                 
 		if($tab){

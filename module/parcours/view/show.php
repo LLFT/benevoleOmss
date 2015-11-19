@@ -5,13 +5,14 @@
 		<div id="menuShow">
 		<ul>
 		
-			<li><a href="#" onclick="clickShowVolon();"><span class="btnParcours icon32parcours icon32ShowBenev" title="Afficher/Masquer les Bénévoles"></span></a></li>
+			<li><a href="#" onclick="clickShowVolon();"><span class="btnParcours icon32parcours icon32ShowBenev" title="Afficher/Masquer les Bénévoles"></span></a></li>                        
 			<li><a href="#" onclick="clickShowParcours();"><span id="clickShowParcours" class="btnParcours icon32parcours icon32ShowParcours" title="Afficher/Masquer le Parcours"></span></a></li>
 			<li><a href="#" onclick="clickShowRelais();"><span class="btnParcours icon32parcours icon32ShowRelais" title="Afficher/Masquer les Relais"></span></a></li>
 			<li><a href="#" onclick="clickShowSignaleur();"><span class="btnParcours icon32parcours icon32ShowSignaleurs" title="Afficher/Masquer les Signaleurs"></span></a></li>
 			<li><a href="#" onclick="clickShowPatrouilles();"><span class="btnParcours icon32parcours icon32ShowPatrouilles" title="Afficher/Masquer les Patrouilles"></span></a></li>
 			<li><a href="#" onclick="clickShowAnimations();"><span class="btnParcours icon32parcours icon32ShowAnimations" title="Afficher/Masquer les Animations"></span></a></li>
 			<li><a href="#" onclick="clickShowStands();"><span class="btnParcours icon32parcours icon32ShowStands" title="Afficher/Masquer les Stands"></span></a></li>
+                        <li><a href="#" onclick="clickShowFreeVolon();"><span class="btnParcours icon32parcours icon32ShowBenevFree" title="Afficher/Masquer les Bénévoles non Volontaires"></span></a></li>
 		</ul>
 		</div>
 	

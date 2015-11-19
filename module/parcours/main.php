@@ -72,7 +72,7 @@ class module_parcours extends abstract_module{
                         _root::redirect('membres::list');
                     }
 		$oParcours=model_parcours::getInstance()->findById( _root::getParam('id') );
-                $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantOfEvent(_root::getParam('idEvent'));
+                $tMembresCoord=model_membres::getInstance()->getCoordOfParticipantInEvent(_root::getParam('idEvent'));
                 
 
 		$oView=new _view('parcours::show');
@@ -340,7 +340,27 @@ class module_parcours extends abstract_module{
             $this->oLayout->add('main',$oView);
             $this->oLayout->setLayout('ajax');            
             $iParcoursId=_root::getParam('iParcoursId');            
-            $sortie= model_membres::getInstance()->getCoordOfParticipantOfEvent($iParcoursId);
+            $sortie= model_membres::getInstance()->getCoordOfParticipantInEvent($iParcoursId);
+            if(true){
+                $retour['etat']='OK';
+            }else{
+                $retour['etat']='NOK';
+            }
+            $retour['reponse']=$sortie;
+            $oView->sSortie=  json_encode($retour); 
+        }
+        
+        public function _ajaxGetPositionAllMembersFree(){
+            //            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
+//                        _root::redirect('membres::list');
+//                    }
+            $retour=array();
+                       
+            $oView=new _view('membres::ajaxOut');
+            $this->oLayout->add('main',$oView);
+            $this->oLayout->setLayout('ajax');            
+            $iParcoursId=_root::getParam('iParcoursId');            
+            $sortie= model_membres::getInstance()->getCoordOfParticipantNotInEvent($iParcoursId);
             if(true){
                 $retour['etat']='OK';
             }else{
@@ -394,6 +414,10 @@ class module_parcours extends abstract_module{
             $oView->sSortie=  json_encode($retour);            
         }
         
+        
+        /*
+         * Formulaire que j'aimerais afficher dans le ViewInfo des Marker de GM.
+         */
         public function _ajaxShowMemberSpot() {
             //http://benevoleomss.lan/index.php?:nav=parcours::ajaxShowMemberSpot&idPoint=2&idEvent=1
 //            if(!_root::getACL()->can('ACCESS','parcours::ajaxDelPoints')){
