@@ -69,13 +69,13 @@ $oForm->setMessage($this->tMessage);
     <fieldset>
         <legend>Informations Complémentaires</legend>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Coordonnées validées ? : </label>
+            <label class="col-sm-3 control-label">Coordonnées validées ? *** : </label>
                 <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkFormulaire',1, array('class'=>'form-control'))?></div>
-            <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? : </label>
+            <label class="col-sm-3 control-label">Souhaite-t-il être signaleur ? *** : </label>
                 <div class="col-sm-2"><?php echo $oForm->getInputCheckbox('chkSignaleur',1, array('class'=>'form-control'))?></div>
         
         </div>
-
+    <p style="font-size:10px" class="col-sm-offset-1"> <i>*** Ces informations ne sont valables que pour un an</i></p>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Club / Association </label>
 		<div class="col-sm-10"><?php echo $oForm->getInputText('club',array('class'=>'form-control','maxlength'=>"40"))?></div>

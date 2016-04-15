@@ -8,11 +8,15 @@
 		<tr <?php echo plugin_tpl::alternate(array('','class="alt"'))?>>
 			
 		<td><a  href="<?php echo $this->getLink('parcours::show',array(
-										'id'=>$oParcours->idParcours,'idEvent'=>$oParcours->event_id
-									) 
+                            'id'=>$oParcours->idParcours,'idEvent'=>$oParcours->event_id
+                            ) 
                         )?>"><?php echo $oParcours->label ?></a></td>
 
-		<td><?php echo $this->tJoinmodelEvents[$oParcours->event_id] ?></td>
+		<td><a  href="<?php echo $this->getLink('events::show',array(
+                    'id'=>$oParcours->event_id
+                        )
+                    )?>">
+                    <?php echo $this->tJoinmodelEvents[$oParcours->event_id] ?></a></td>
 		</tr>
                 
 

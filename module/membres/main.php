@@ -169,8 +169,8 @@ class module_membres extends abstract_module{
             $oView=new _view('membres::show');
             //On liste les informations propres au participant
             $oMembre=model_membres::getInstance()->findById( _root::getParam('id') );
-            //On liste tous les évènements connus et actifs 
-            $tJoinEvents=model_events::getInstance()->getSelect();
+            //On liste tous les évènements 
+            $tJoinEvents=model_events::getInstance()->findAll();
             //On Vérifie que l'ID fournie offre bien un résultat
             if($oMembre){
                 $oOwner =  model_account::getInstance()->findById($oMembre->owner);

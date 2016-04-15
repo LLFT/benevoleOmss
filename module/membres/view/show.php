@@ -47,10 +47,13 @@
     <?php if($this->tJoinEvents):?>
       <div class="container">
         <fieldset>
-            <legend>Participe aux évènements : </legend>
+            <legend>Evènements : </legend>            
             <div id="checkboxs" class=" ">
    
-                   <?php foreach ($this->tJoinEvents as $key => $sNameEvent) :?> 
+                   <?php foreach ($this->tJoinEvents as $oEvent) :?> 
+                <?php $key=$oEvent->idEvent; ?>
+                <?php  if ($oEvent->active >=1) : ?>
+                
                     <div class="col-sm-offset-1 checkbox">
                         <form  action="<?php echo $this->getLink('membres::ajaxJoinEventMembre'); ?>" method="POST" >
                         <INPUT id="chk_Ev_<?php echo $key;?>" type="checkbox" name="action" value="<?php echo $key;?>" 
@@ -64,7 +67,7 @@
                                     echo $this->getLink('events::show',array('id'=>$key));                               
                                }?>
                                
-                               "><?php echo $sNameEvent ?></a>
+                               "><?php echo $oEvent->nomEvent ?></a>
                         <noscript>
                         <input id='EventHidden' type='hidden' value='<?php echo $key;?>' name='EventHidden'>
                         <input type='hidden' value='<?php echo $key;?>' name='idEventHidden'>
@@ -72,12 +75,26 @@
                         <button value="Ajouter">Ajouter ce membre à cet évènement</button></noscript>
                         </form>  
                     </div>
+                <?php else :?>
+                    <div class="col-sm-offset-1 checkbox">
+                        <INPUT type="checkbox" name="action"  
+                               <?php if(in_array($key, $this->tJoinIdEvents)) :?> checked="checked" <?php endif;?>
+                               disabled="disabled" 
+                             >
+                        <a  href="
+                               <?php 
+                               if ( _root::getACL()->can('ACCESS','events::show')){
+                                    echo $this->getLink('events::show',array('id'=>$key));                               
+                               }?>
+                               
+                            "><s><?php echo $oEvent->nomEvent ?></s></a>
+                    </div>
+                <?php endif;?>
 
                    <?php endforeach;?>
 
                
-           </div>
-        
+           </div>            
         </fieldset>
         </div>
     <?php endif;?>

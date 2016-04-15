@@ -19,6 +19,10 @@ class model_events extends abstract_model{
 		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE active=1');
 	}
         
+        public function findAll(){
+		return $this->findMany('SELECT * FROM '.$this->sTable);
+	}
+        
         public function findAllArchive(){
 		return $this->findMany('SELECT * FROM '.$this->sTable.' WHERE active=0' );
 	}
@@ -27,17 +31,23 @@ class model_events extends abstract_model{
 //            return $this->findMany('SELECT distinct e.nomEvent, e.idEvent FROM relationeventmemb as r, '.$this->sTable.' as e, membres as m where r.idMembre = ? and r.idEvent = e.idEvent and e.active=1',$uId );
 //        }
 	
-	public function getSelect(){
-		$tab=$this->findAllActif();
+	public function getSelectAll(){
+		$tab=$this->findAll();
 		$tSelect=array();
-		if($tab){
 		foreach($tab as $oRow){
-			$tSelect[ $oRow->idEvent ]=$oRow->nomEvent;
-		}
-		}
+                    $tSelect[ $oRow->idEvent ]=$oRow->nomEvent;
+                }
 		return $tSelect;
 	}
 	
+        public function getSelectAllActif(){
+		$tab=$this->findAllActif();
+		$tSelect=array();
+		foreach($tab as $oRow){
+                    $tSelect[ $oRow->idEvent ]=$oRow->nomEvent;
+                }
+		return $tSelect;
+	}
 
 	
 }

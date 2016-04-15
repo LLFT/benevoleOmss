@@ -3,6 +3,8 @@ class module_events extends abstract_module{
 	
 	public function before(){
 		$this->oLayout=new _layout('bootstrap');
+                $autoAction = new my_BackAction();
+                $autoAction->listEventArchi();
 		
 		$this->oLayout->addModule('menu','menu::index');
 	}

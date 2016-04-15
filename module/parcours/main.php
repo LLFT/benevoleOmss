@@ -28,7 +28,7 @@ class module_parcours extends abstract_module{
                     }
 		
 		$oParcours=model_parcours::getInstance()->findAll();
-                $oEvents=model_events::getInstance()->getSelect();
+                $oEvents=model_events::getInstance()->getSelectAll();
                 
 		
 		$oView=new _view('parcours::list');

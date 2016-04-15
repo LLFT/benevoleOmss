@@ -4,6 +4,7 @@
             <th>Nom</th>                
             <th>Prénom</th>
             <th>État</th>
+            <th>Last (Y-M-D H:M:S)</th>
             <th>Groupe</th>
             <th>Actions</th>
 	</tr>
@@ -21,6 +22,7 @@
                                 Inactif
                             <?php endif; ?>                        
                         </td>
+                        <td><?php echo $oAccount->lastLogin ?></td>
                         <td><?php if(isset($this->tJoinmodel_groupe[$oAccount->groupe_id])){ echo $this->tJoinmodel_groupe[$oAccount->groupe_id];}else{ echo $oAccount->groupe_id ;}?></td>
 			<td>
 				
