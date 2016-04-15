@@ -63,7 +63,11 @@ class My_BackAction {
         $date1->sub(new DateInterval('P1Y'));
         $oMembers = model_membres::getInstance()->findAll();
         foreach ($oMembers as $oMember) {
-            $date2 = new DateTime($oMember->modifier); //Convertit la date reformaté en DateTime            
+            if (!$oMember->modifier){
+                $date2 = new DateTime($oMember->creer); 
+            }else{
+                $date2 = new DateTime($oMember->modifier); 
+            }
             if($date1 > $date2){ 
                 $oMember->chkSignaleur = 0;
                 $oMember->chkFormulaire = 0;
