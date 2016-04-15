@@ -56,7 +56,25 @@ class My_BackAction {
         }            
         $this->bArchiveEventAuto = FALSE;
     }
-        
+    
+    
+    public function listInfoMember() {
+        $date1 = new DateTime("now");   //Date du Jour
+        $date1->sub(new DateInterval('P1Y'));
+        $oMembers = model_membres::getInstance()->findAll();
+        foreach ($oMembers as $oMember) {
+            $date2 = new DateTime($oMember->modifier); //Convertit la date reformaté en DateTime            
+            if($date1 > $date2){ 
+                $oMember->chkSignaleur = 0;
+                $oMember->chkFormulaire = 0;
+                $oMember->saveF();
+            }       
+            
+        }
+        if ($this->bArchiveEventAuto){
+            $this->archiveEvent(); //Exécute l'archivage Auto.
+        }   
+    }
     
     
     

@@ -12,7 +12,8 @@ class module_membres extends abstract_module{
                     if(!_root::getACL()->can('ACCESS','membres::list')){
                         _root::redirect('default::index');
                     }
-                }
+                }   
+                
         }	
         
         public function _index(){

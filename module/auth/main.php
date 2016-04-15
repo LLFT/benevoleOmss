@@ -85,6 +85,10 @@ class module_auth extends abstract_module{
 	}
 
 	public function after(){
+            // Lancement des actions automatisés en fin de session
+                $autoAction = new my_BackAction();
+                $autoAction->listInfoMember();
+                $autoAction->listEventArchi();
 		$this->oLayout->show();
 	}
 }
